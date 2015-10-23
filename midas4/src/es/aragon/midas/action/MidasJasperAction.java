@@ -12,15 +12,15 @@ import es.aragon.midas.dao.ReportsDAO;
 
 
 /**
- * Clase que implementa las funciones básicas para la gestión de Reports JASPER
+ * Clase que implementa las funciones basicas para la gestion de Reports JASPER
  * como un tipo de resultado en el modelo Struts2.
  * 
- * Las Actions de una aplicación que gestionen la generacione de informes Jasper, deben extender esta clase.
- * Además, es importante que asignen el valor del informe a generar (setReportID), y el formato del informe, 
+ * Las Actions de una aplicacion que gestionen la generacione de informes Jasper, deben extender esta clase.
+ * Ademas, es importante que asignen el valor del informe a generar (setReportID), y el formato del informe, 
  * salvo que se quiera utilizar el formato por defecto (PDF).
  * 
- * La asignación del ReportID puede hacerse explícitamente, o implícitamente desde parámetros de llamada a la Action, o 
- * desde formulario JSP (asignación automática del parámetro desde el Value Stack).
+ * La asignacion del ReportID puede hacerse explicitamente, o implicitamente desde parametros de llamada a la Action, o 
+ * desde formulario JSP (asignacion automatica del parametro desde el Value Stack).
  * 
  * 
  * @author Carlos
@@ -51,7 +51,7 @@ public class MidasJasperAction extends MidasActionSupport {
 	private String format = "PDF";
 	
 	/**
-	 * Conexión a B.D. para la generación del informe
+	 * Conexion a B.D. para la generaciï¿½n del informe
 	 */
 	private Connection connection;
 	
@@ -76,7 +76,7 @@ public class MidasJasperAction extends MidasActionSupport {
 	
 
 	/**
-	 * Ejecución del informe por defecto
+	 * Ejecucion del informe por defecto
 	 */
 	@Override
 	public String execute() {
@@ -146,7 +146,7 @@ public class MidasJasperAction extends MidasActionSupport {
 	}
 	
 	/**
-	 * Devuelve la conexión a la B.D., obtenida desde el Entity Manager del paquete Midas
+	 * Devuelve la conexion a la B.D., obtenida desde el Entity Manager del paquete Midas
 	 * @return
 	 */
 	public Connection getConnection() {
@@ -156,7 +156,7 @@ public class MidasJasperAction extends MidasActionSupport {
 
 	
 	/**
-	 * Libera la conexión a la B.D., obtenida desde el Entity Manager del paquete Midas
+	 * Libera la conexion a la B.D., obtenida desde el Entity Manager del paquete Midas
 	 * @return
 	 */
 	public void closeConnection(Connection conn) {
@@ -164,7 +164,7 @@ public class MidasJasperAction extends MidasActionSupport {
 	}	
 	
 	/**
-	 * Asigna una conexión a B.D.
+	 * Asigna una conexion a B.D.
 	 * @param connection
 	 */
 	public void setConnection(Connection connection) {

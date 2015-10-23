@@ -13,8 +13,6 @@ package com.altova;
 
 import java.math.BigDecimal;
 import java.math.BigInteger;
-import java.lang.String;
-import java.lang.ArithmeticException;
 import com.altova.types.*;
 import java.text.DecimalFormat;
 import java.text.DecimalFormatSymbols;
@@ -52,11 +50,13 @@ public class CoreTypes
 				sign = "";
 				input = input.substring(1);
 			}
-			else
+			else {
 				sign = "";
+			}
 			int indexOfE = input.indexOf('e');
-			if (indexOfE < 0)
+			if (indexOfE < 0) {
 				indexOfE = input.indexOf('E');
+			}
 			if (indexOfE < 0)
 			{
 				mantissa = input;
@@ -68,22 +68,27 @@ public class CoreTypes
 				exponent = input.substring(indexOfE + 1);
 			}
 
-			if (mantissa.startsWith("."))
+			if (mantissa.startsWith(".")) {
 				mantissa = "0" + mantissa;
-			if (mantissa.endsWith("."))
+			}
+			if (mantissa.endsWith(".")) {
 				mantissa = mantissa + "0";
-			if (mantissa.length() == 0)
+			}
+			if (mantissa.length() == 0) {
 				mantissa = "0";
-			if (exponent.endsWith("+") || exponent.endsWith("-"))
+			}
+			if (exponent.endsWith("+") || exponent.endsWith("-")) {
 				exponent = exponent + "0";
+			}
 		}
 
 		public String toString()
 		{
-			if (exponent.length() > 0)
+			if (exponent.length() > 0) {
 				return sign + mantissa + "E" + exponent;
-			else
+			} else {
 				return sign + mantissa;
+			}
 		}
 
 		public double toDouble()
@@ -94,10 +99,11 @@ public class CoreTypes
 		public long toLong()
 		{
 			int dot = mantissa.indexOf('.');
-			if (dot >= 0)
+			if (dot >= 0) {
 				return Long.parseLong(sign + mantissa.substring(0, dot));
-			else
+			} else {
 				return Long.parseLong(sign + mantissa);
+			}
 		}
 
 		public BigDecimal toBigDecimal()
@@ -108,10 +114,11 @@ public class CoreTypes
 		public BigInteger toBigInteger()
 		{
 			int dot = mantissa.indexOf('.');
-			if (dot >= 0)
+			if (dot >= 0) {
 				return new BigInteger(sign + mantissa.substring(0, dot));
-			else
+			} else {
 				return new BigInteger(sign + mantissa);
+			}
 		}
 	}
 
@@ -218,15 +225,7 @@ public class CoreTypes
 	}
 
 
-	/*
-	private static String integerize(String s)
-	{
-		int i = s.indexOf(".");
-		
-		if (i == -1)
-			return s;
-		return s.substring(0, i);
-	}*/
+
 
 	
 	public static int castToInt(boolean b)
@@ -446,11 +445,13 @@ public class CoreTypes
 
 	public static BigInteger castToBigInteger(String s)
 	{
-		if (s == null)
+		if (s == null) {
 			return null;
+		}
 
-		if (s.equals("INF") || s.equals("-INF") || s.equals("NaN"))
+		if (s.equals("INF") || s.equals("-INF") || s.equals("NaN")) {
 			throw new ArithmeticException("'" + s + "' is too large for integer.");
+		}
 
 		s = s.trim();
 		java.lang.StringBuffer buf = new java.lang.StringBuffer();
@@ -505,7 +506,7 @@ public class CoreTypes
 		{
 			int nStartDigit = (int) (Math.log(dAbs) / Math.log(10.0));
 			scale = 14 - nStartDigit;
-			if( scale < 0 ) scale = 0;
+			if( scale < 0 ) { scale = 0; }
 		}
 		return new BigDecimal( d ).setScale(scale, BigDecimal.ROUND_HALF_UP);
 	}
@@ -527,11 +528,13 @@ public class CoreTypes
 
 	public static BigDecimal castToBigDecimal(String s)
 	{
-		if (s == null)
+		if (s == null) {
 			return null;
+		}			
 
-		if (s.equals("INF") || s.equals("-INF") || s.equals("NaN"))
+		if (s.equals("INF") || s.equals("-INF") || s.equals("NaN")) {
 			throw new ArithmeticException("'" + s + "' is too large for decimal.");
+		}
 
 		s = s.trim();
 		java.lang.StringBuffer buf = new java.lang.StringBuffer();
@@ -590,29 +593,35 @@ public class CoreTypes
 	public static double castToDouble(BigInteger n)
 	{
 		BigDecimal dec = new BigDecimal( n );
-		if( dec.compareTo( new BigDecimal(Double.MAX_VALUE) ) > 0 )
+		if( dec.compareTo( new BigDecimal(Double.MAX_VALUE) ) > 0 ) {
 			throw new ArithmeticException("Numeric value overflow");
+		}
 		return dec.doubleValue();
 	}
 
 	public static double castToDouble(BigDecimal n)
 	{
-		if( n.compareTo( new BigDecimal(Double.MAX_VALUE) ) > 0 )
+		if( n.compareTo(BigDecimal.valueOf(Double.MAX_VALUE) ) > 0 ) {
 			throw new ArithmeticException("Numeric value overflow");
+		}
 		return n.doubleValue();
 	}
 
 	public static double castToDouble(String s)
 	{
-		if (s == null)
+		if (s == null) {
 			return 0;
+		}
 
-		if (s.equals("INF"))
+		if (s.equals("INF")) {
 			return Double.POSITIVE_INFINITY;
-		else if (s.equals("-INF"))
+		}
+		else if (s.equals("-INF")) {
 			return Double.NEGATIVE_INFINITY;
-		else if (s.equals("NaN"))
+		}
+		else if (s.equals("NaN")) {
 			return Double.NaN;
+		}
 
 		s = s.trim();
 		java.lang.StringBuffer buf = new java.lang.StringBuffer();

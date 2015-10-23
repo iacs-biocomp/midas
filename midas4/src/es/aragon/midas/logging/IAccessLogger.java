@@ -11,29 +11,36 @@ public interface IAccessLogger {
      */
     public void error() throws Exception;
 
+   
     /**
      * Registra un username o password en blanco
      */
     public void blank() throws Exception;
+    
+    
     /**
-     * Registra una autenticación fallida
+     * Registra una autenticaciï¿½n fallida
      */
     public void fail() throws Exception;
 
+    
     /**
      * Registra un acceso correcto
      */
     public void access() throws Exception;
 
+    
     /**
      * Registra un intento de acceso no autorizado
      */
     public void noAutorizado() throws Exception;
     
+    
     /**
-     * Registra una salida de la aplicación
+     * Registra una salida de la aplicaciÃ³n
      */
     public void exit() throws Exception;
+    
     
     
     /**
@@ -41,6 +48,7 @@ public interface IAccessLogger {
      */
     public void setUser(String user);
 
+    
     /**
      * @param ip the ip to set
      */

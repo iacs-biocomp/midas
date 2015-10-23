@@ -53,7 +53,7 @@ public class LoggerLevelChangerAction extends ActionSupport {
 
 
     
-    /* Beans de presentación */
+    /* Beans de presentaciÃ³n */
     public Map<String, String> getLoggers() {
         return loggers;
     }

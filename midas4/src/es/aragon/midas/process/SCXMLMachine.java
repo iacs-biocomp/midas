@@ -6,13 +6,13 @@ package es.aragon.midas.process;
 
 import es.aragon.midas.config.AppProperties;
 import es.aragon.midas.logging.Logger;
-import es.aragon.midas.process.scxml.scxml2;
-import es.aragon.midas.process.scxml.scxml_datamodel_type.MemberElement_data;
-import es.aragon.midas.process.scxml.scxml_final_type;
-import es.aragon.midas.process.scxml.scxml_scxml_type;
-import es.aragon.midas.process.scxml.scxml_state_type;
-import es.aragon.midas.process.scxml.scxml_transition_type;
-import es.aragon.midas.process.scxml.scxml_transition_type.MemberElement_assign;
+import es.aragon.midas.process.scxml.Scxml2;
+import es.aragon.midas.process.scxml.ScxmlDatamodelType.MemberElement_data;
+import es.aragon.midas.process.scxml.ScxmlFinalType;
+import es.aragon.midas.process.scxml.ScxmlScxmlType;
+import es.aragon.midas.process.scxml.ScxmlStateType;
+import es.aragon.midas.process.scxml.ScxmlTransitionType;
+import es.aragon.midas.process.scxml.ScxmlTransitionType.MemberElement_assign;
 import java.util.HashMap;
 
 /**
@@ -49,14 +49,14 @@ public class SCXMLMachine extends FSMAbstractMachine {
     public SCXMLMachine (String scFile) {
         super();
         try {
-            scxml2 doc = scxml2.loadFromFile(scFile);
-            scxml_scxml_type root = doc.scxml3.first();
+            Scxml2 doc = Scxml2.loadFromFile(scFile);
+            ScxmlScxmlType root = doc.scxml3.first();
             initState = root.initial.getValue();
             int count = root.state.count();
 
             // Recorremos los estados
             for (int i = 0; i < count; ++i ) {
-                scxml_state_type state = root.state.at(i);
+                ScxmlStateType state = root.state.at(i);
                 String code = state.id.getValue();
                 String name = code;
                 String color = "#000000";
@@ -81,7 +81,7 @@ public class SCXMLMachine extends FSMAbstractMachine {
                 // Recorremos las transiciones
                 int ntrans = state.transition.count();
                 for (int k = 0; k < ntrans; ++k) {
-                    scxml_transition_type transition = state.transition.at(k);
+                    ScxmlTransitionType transition = state.transition.at(k);
                     String event = transition.event.getValue();
                     String target = transition.target.getValue();
                     String condition;
@@ -120,7 +120,7 @@ public class SCXMLMachine extends FSMAbstractMachine {
             // Leemos estado final
 
             if (root.final2.exists()) {
-                scxml_final_type finalState = root.final2.at(0);
+                ScxmlFinalType finalState = root.final2.at(0);
                 String finalName = finalState.id.getValue();
                 states.put(finalName, new FSMState(finalName, finalName, "#000000"));
             }
@@ -128,7 +128,7 @@ public class SCXMLMachine extends FSMAbstractMachine {
             
         } catch (Exception e) {
             log.error("Error leyendo maquina " + scFile);
-            log.error("Error general leyendo máquina", e);
+            log.error("Error general leyendo mï¿½quina", e);
         }        
 
     }    

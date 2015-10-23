@@ -34,7 +34,7 @@ public class LoginAction extends ActionSupport implements SessionAware, ServletR
     private String password;
     private String ticket;
     private LoginValidator loginValidator;
-    private IAccessLogger accessLog;
+    private IAccessLogger accessLogService;
     private ILOPDLogger lopd;
     private HttpServletRequest request;
     private Logger log = new Logger();
@@ -52,35 +52,39 @@ public class LoginAction extends ActionSupport implements SessionAware, ServletR
         try {
              dao = (UsersDAO) new InitialContext().lookup("java:module/UsersDAO");
         } catch (NamingException e) {
-            //TODO log.error("Error accediendo a EJB UsersDAO");
+            log.error("Error accediendo a EJB UsersDAO");
             return ERROR;
         }
         
         try {
-            if(accessLog != null) {
-                accessLog.setIp(request.getRemoteAddr());
-            }            
+            if(accessLogService != null) {
+            	accessLogService.setIp(request.getRemoteAddr());
+            } else {
+            	log.error("accessLog Nulo. No se puede asignar IP ni grabar acceso");
+            }
 
             if (!StringUtils.nb(ticket)) {
                 user = loginValidator.authenticate(ticket);
             }else{ 
                 if (StringUtils.nb(username)) {
                     addFieldError("username", "El nombre no puede estar en blanco");
+                    log.error("El nombre no puede estar en blanco");
                 }
                 if (StringUtils.nb(password)) {
-                    addFieldError("password", "La contraseña no puede estar en blanco");
+                    addFieldError("password", "La contraseÃ±a no puede estar en blanco");
+                    log.error("La contraseÃ±a no puede estar en blanco");                    
                 }
 
                 if (StringUtils.nb(username) || StringUtils.nb(password)) {
-                    accessLog.blank();
+                	accessLogService.blank();
                     return INPUT;
                 }
                 
                 // Comprobamos si el usuario existe ya en BD
                 user = dao.find(username);
                 if (user == null && validateLocal) {
-                    accessLog.noAutorizado();
-                    addFieldError("username", "El usuario no está autorizado");
+                	accessLogService.noAutorizado();
+                    addFieldError("username", "El usuario no estï¿½ autorizado");
                     log.warn("Usuario " + username + "No registrado en Base de datos");
                 } else {
     	            if (AppProperties.getParameter(Constants.CFG_AUTH_IGNOREPASS) == null ||
@@ -106,21 +110,21 @@ public class LoginAction extends ActionSupport implements SessionAware, ServletR
 
                 //user.grantLdapRole("APP-MID-ADMIN");
                 session.put(Constants.USER, user);
-                accessLog.setUser(user.getUserName());
+                accessLogService.setUser(user.getUserName());
                 lopd.setUser(user.getUserName());
-                accessLog.access();
-                log.debug("Creando sesión de usuario " + username);
+                accessLogService.access();
+                log.debug("Creando sesiï¿½n de usuario " + username);
                 return SUCCESS;
             } else {
-                accessLog.fail();
-                addFieldError("username", "El usuario o la contraseña no son correctos");
-                log.warn("El usuario o la contraseña no son correctos: " + username);
+            	accessLogService.fail();
+                addFieldError("username", "El usuario o la contraseï¿½a no son correctos");
+                log.warn("El usuario o la contraseï¿½a no son correctos: " + username);
                 return INPUT;               
             }
         } catch (Exception ce) {           
             try {
-                accessLog.error();
                 log.error("Error autenticando usuario", ce);
+                accessLogService.error();
             } catch (Exception ex) { 
                 log.error("Error autenticando usuario", ex);
             }
@@ -143,7 +147,7 @@ public class LoginAction extends ActionSupport implements SessionAware, ServletR
      * @param accessLogger_ 
      */
     public void setAccessLogService(IAccessLogger accessLogger_) {
-        this.accessLog = accessLogger_;
+        this.accessLogService = accessLogger_;
     }
     
     /**
@@ -156,7 +160,7 @@ public class LoginAction extends ActionSupport implements SessionAware, ServletR
     
     
     /**
-     * Asigna la sesión en la que se está ejecutando el autenticador
+     * Asigna la sesiï¿½n en la que se estï¿½ ejecutando el autenticador
      */
     @Override
     public void setSession(Map<String, Object> session) {
@@ -179,8 +183,8 @@ public class LoginAction extends ActionSupport implements SessionAware, ServletR
      */
     public void setUsername(String username) {
         this.username = username;
-        if(accessLog != null) {
-            accessLog.setUser(username);
+        if(accessLogService != null) {
+        	accessLogService.setUser(username);
         }
     }
 

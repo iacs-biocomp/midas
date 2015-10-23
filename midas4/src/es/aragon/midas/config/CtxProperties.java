@@ -9,8 +9,8 @@ import javax.servlet.http.HttpServletRequest;
  * Clase con diversas utilidades y constantes.
  */
 public class CtxProperties {
-    /** Propiedades de la aplicación **/
-    public static Properties appProperties;
+    /** Propiedades de la aplicaciï¿½n **/
+    static Properties appProperties;
     
 
 	/**
@@ -26,7 +26,8 @@ public class CtxProperties {
                 p = (Properties) ctx.getAttribute("configProperties");
             }
 		} catch(Exception e) {
-		  System.err.println("Error al obtener las propiedades de la aplicación: "+e.getLocalizedMessage());
+		  System.err.println("Error al obtener las propiedades de la aplicaciÃ³n: "+e.getLocalizedMessage());
+		  e.printStackTrace();
 		}
 
 		return p;
@@ -43,7 +44,7 @@ public class CtxProperties {
     
 
 	/**
-	 * Obtiene el valor de una propiedad a partir del archivo de propiedades de la aplicación.
+	 * Obtiene el valor de una propiedad a partir del archivo de propiedades de la aplicaciï¿½n.
 	 * @param request
 	 * @param propertyName
 	 * @return
@@ -57,6 +58,7 @@ public class CtxProperties {
             }
 		}catch(Exception e) {
 		  System.err.println("Error al obtener la propiedad del properties: "+e.getLocalizedMessage());
+		  e.printStackTrace();
 		}
 
 		return value;
@@ -64,7 +66,7 @@ public class CtxProperties {
     
     
     /**
-     * Obtiene el valor de una propiedad a partir del archivo de propiedades de la aplicación.
+     * Obtiene el valor de una propiedad a partir del archivo de propiedades de la aplicaciï¿½n.
      * @param propertyName Nombre de la propiedad
      * @return String con el valor de la propiedad
      */
@@ -76,6 +78,7 @@ public class CtxProperties {
             }
         }catch(Exception e) {
             System.err.println("Error al obtener la propiedad del properties: "+e.getLocalizedMessage());
+            e.printStackTrace();
         }
 
         return value;
@@ -97,6 +100,7 @@ public class CtxProperties {
             }
 		}catch(Exception e) {
 		  System.err.println("Error al obtener la propiedad del web.xml: "+e.getLocalizedMessage());
+		  e.printStackTrace();
 		}
 
 		return value;
@@ -120,7 +124,7 @@ public class CtxProperties {
         //Si falla, lo intenta con el web.xml
         if (tmpValue == null) {
             tmpValue = getFromWebContextProperties(request, propertyName);
-            //Si también falla, devuelve el valor por defecto
+            //Si tambiï¿½n falla, devuelve el valor por defecto
             if (tmpValue == null) {
                 tmpValue = defaultValue;
             }

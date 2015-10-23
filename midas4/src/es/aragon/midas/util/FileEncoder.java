@@ -12,7 +12,7 @@ public class FileEncoder  {
   /**
    * Clave de encriptacion.
    */
-  static public String key = "@#12aK%_";
+  private static String key = "@#12aK%_";
 
 
 
@@ -31,7 +31,7 @@ public class FileEncoder  {
       FileOutputStream fos = new FileOutputStream(new File(outFile));
       DESKeySpec dke = new DESKeySpec(key.getBytes("UTF-8"));
       SecretKeyFactory skf = SecretKeyFactory.getInstance("DES");
-      Cipher cipher = Cipher.getInstance("DES/ECB/PKCS5Padding");
+      Cipher cipher = Cipher.getInstance("AES/ECB/PKCS5Padding");
       cipher.init(Cipher.ENCRYPT_MODE, skf.generateSecret(dke));
       CipherOutputStream cos = new CipherOutputStream(fos, cipher);
       GZIPOutputStream gzos = new GZIPOutputStream(cos);
@@ -103,7 +103,7 @@ public class FileEncoder  {
       FileOutputStream fos = new FileOutputStream(new File(outFile));
       DESKeySpec dke = new DESKeySpec(key.getBytes("UTF-8"));
       SecretKeyFactory skf = SecretKeyFactory.getInstance("DES");
-      Cipher cipher = Cipher.getInstance("DES/ECB/PKCS5Padding");
+      Cipher cipher = Cipher.getInstance("AES/ECB/PKCS5Padding");
       cipher.init(Cipher.DECRYPT_MODE, skf.generateSecret(dke));
       CipherInputStream cis = new CipherInputStream(fis, cipher);
       GZIPInputStream gzis = new GZIPInputStream(cis);
@@ -172,7 +172,7 @@ public class FileEncoder  {
       ByteArrayOutputStream baos = new ByteArrayOutputStream();
       DESKeySpec dke = new DESKeySpec(key.getBytes("UTF-8"));
       SecretKeyFactory skf = SecretKeyFactory.getInstance("DES");
-      Cipher cipher = Cipher.getInstance("DES/ECB/PKCS5Padding");
+      Cipher cipher = Cipher.getInstance("AES/ECB/PKCS5Padding");
       cipher.init(Cipher.ENCRYPT_MODE, skf.generateSecret(dke));
       CipherOutputStream cos = new CipherOutputStream(baos, cipher);
       
@@ -207,7 +207,7 @@ public class FileEncoder  {
       ByteArrayOutputStream baos = new ByteArrayOutputStream();
       DESKeySpec dke = new DESKeySpec(key.getBytes("UTF-8"));
       SecretKeyFactory skf = SecretKeyFactory.getInstance("DES");
-      Cipher cipher = Cipher.getInstance("DES/ECB/PKCS5Padding");
+      Cipher cipher = Cipher.getInstance("AES/ECB/PKCS5Padding");
       cipher.init(Cipher.DECRYPT_MODE, skf.generateSecret(dke));
       CipherInputStream cis = new CipherInputStream(bais, cipher);
       

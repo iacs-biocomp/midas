@@ -30,13 +30,14 @@ public class EnvProperties {
 		try {
 			cargarProperties(FICHERO_CONFIG);
 		} catch (MidasException e) {
+			System.out.println("Error leyendo propiedades de entorno. " + e.getMessage());
 			e.printStackTrace();
 		}
 
 	}
 
 	/**
-	 * Constructor vacío
+	 * Constructor vacï¿½o
 	 */
 	private EnvProperties() {
 	}
@@ -71,7 +72,7 @@ public class EnvProperties {
 						.getBundle(ficheroProperties, locale, Thread.currentThread().getContextClassLoader());
 			}
 		} catch (MissingResourceException me) {
-			String msg = "Ha sido imposible recuperar el fichero de propiedades de la conexión.";
+			String msg = "Ha sido imposible recuperar el fichero de propiedades de la conexiï¿½n.";
 
 			throw new MidasException(msg, me);
 		}
@@ -95,7 +96,7 @@ public class EnvProperties {
 	}
 
 	/**
-	 * Este método devuelve el valor de configuración asociado a la key
+	 * Este mï¿½todo devuelve el valor de configuraciï¿½n asociado a la key
 	 * introducida.
 	 * 
 	 * @param keyValorConfiguracion
@@ -106,7 +107,7 @@ public class EnvProperties {
 	}
 
 	/**
-	 * Añade un parámetro a la lista de parametros del sistema
+	 * Aï¿½ade un parï¿½metro a la lista de parametros del sistema
 	 * 
 	 * @param codigo
 	 * @param valor
@@ -117,7 +118,7 @@ public class EnvProperties {
 	}
 
 	/**
-	 * Actualiza un parámetro de la lista de parametros del sistema
+	 * Actualiza un parï¿½metro de la lista de parametros del sistema
 	 * 
 	 * @param codigo
 	 * @param valor

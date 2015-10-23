@@ -35,7 +35,7 @@ public abstract class MidasActionSupport extends ActionSupport
     
     
     /**
-     * User vinculado a la sesión que ejecuta la acción
+     * User vinculado a la sesiÃ³n que ejecuta la acciÃ³n
      */
     protected MidUser user;
     /**
@@ -75,7 +75,7 @@ public abstract class MidasActionSupport extends ActionSupport
     }
 
     /**
-     * Devuelve el user vinculado a la sesión que ejecuta esta acción.
+     * Devuelve el user vinculado a la sesiï¿½n que ejecuta esta acciï¿½n.
      *
      * @return
      */

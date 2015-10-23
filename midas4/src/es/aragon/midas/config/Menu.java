@@ -9,15 +9,15 @@ public class Menu {
 	
 	public static MidMenu getMainMenu(){
 
-                if (mainmenu == null) {
-                    try{
-                        MenuDAO dao = (MenuDAO) new InitialContext().lookup("java:module/MenuDAO");
-                        //MenuDAO dao = new MenuDAO();
-			mainmenu = dao.getMenuTree(dao.find());
-                    }catch (Exception e) {
-
-                    }
-                }
+        if (mainmenu == null) {
+            try{
+                MenuDAO dao = (MenuDAO) new InitialContext().lookup("java:module/MenuDAO");
+                mainmenu = dao.getMenuTree(dao.find());
+            }catch (Exception e) {
+            	e.printStackTrace();
+            	System.out.println("Error leyendo menu de BD. " + e.getMessage());
+            }
+        }
 		return mainmenu;
 	}
 	

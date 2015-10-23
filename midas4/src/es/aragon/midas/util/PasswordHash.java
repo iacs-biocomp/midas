@@ -16,7 +16,7 @@ public class PasswordHash {
 
      try {
        buf = password.getBytes("ISO-8859-1");
-       algorithm = MessageDigest.getInstance("SHA-1");
+       algorithm = MessageDigest.getInstance("SHA-256");
        algorithm.reset();
        algorithm.update(buf);
        digest1 = algorithm.digest();

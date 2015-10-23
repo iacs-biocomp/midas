@@ -176,14 +176,14 @@ public class DBUtils {
 
 	// Debug option. When it is true, writes A LOT of debug lines
 	// public static boolean TRACE = true;
-	public static boolean TRACE = false;
+	public static final boolean TRACE = false;
 
 	static Logger log = new Logger();
 
 	// If true, call strings are stored in a HashMap and build only one time
-	public static boolean cachedCalls = true;
+	public static final boolean cachedCalls = true;
 	// Map where call strings are stored if cachedCalls == true
-	public static HashMap<String, String> callCache = new HashMap<String, String>();
+	public static final HashMap<String, String> callCache = new HashMap<String, String>();
 
 	/**
 	 * Prints all data in a ResultSet into a string. Useful for debugging.

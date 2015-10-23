@@ -91,7 +91,7 @@
             <result>logout</result>
         </action>
 
-        <action name="logChanger" class="es.aragon.midas.logging.LoggerLevelChangerAction">
+        <action name="logChanger" class="es.aragon.midas.action.LoggerLevelChangerAction">
             <result name="input">logChanger</result>
         </action>
 

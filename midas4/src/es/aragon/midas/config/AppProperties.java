@@ -10,7 +10,7 @@ import org.apache.log4j.Logger;
  * Clase que encapsula y permite el acceso a parametros de la aplicacion a
  * partir del fichero de propiedades ubicado en la ruta interna
  * midasApplication.properties o desde Base de Datos, y que cachea esas
- * propiedades para ser utilizadas desde cualquier punto de la aplicación
+ * propiedades para ser utilizadas desde cualquier punto de la aplicaciï¿½n
  */
 //TODO eliminar printStackTrace y gestionar excepciones
 public class AppProperties {
@@ -23,7 +23,7 @@ public class AppProperties {
      * Cache de ficheros de properties
      */
     private static HashMap<String, MidAppProperty> tablaProperties = new HashMap<String, MidAppProperty>();
-    // TODO Gestión Logger
+    // TODO GestiÃ³n Logger
     //private static Logger objLog = Logger.getLogger("debuglog");
     // Indica si los parametros estan en base de datos o en fichero
     private static boolean parameterDatabased = 
@@ -34,13 +34,13 @@ public class AppProperties {
             // cargarProperties(FICHERO_CONFIG);
             cargarPropertiesBD();
         } catch (MidasException e) {
-            System.out.println("Error cargando propiedades de aplicación");
-            //objLog.error("Error cargando propiedades de aplicación", e);
+            System.out.println("Error cargando propiedades de aplicaciÃ³n.");
+            e.printStackTrace();        	
         }
     }
 
     /**
-     * Constructor vacío
+     * Constructor vacÃ­o
      */
     public AppProperties() {
     }
@@ -75,7 +75,7 @@ public class AppProperties {
                         .getBundle(ficheroProperties, locale);
             }
         } catch (MissingResourceException me) {
-            String msg = "Ha sido imposible recuperar el fichero de propiedades de la conexión.";
+            String msg = "Ha sido imposible recuperar el fichero de propiedades de la conexiï¿½n.";
             throw new MidasException(msg, me);
         }
 
@@ -94,20 +94,24 @@ public class AppProperties {
      */
     private static synchronized void cargarPropertiesBD() throws MidasException {
         try {
+        	tablaProperties = null;
             if (parameterDatabased) {
                 try {
                     AppPropertiesDAO dao = (AppPropertiesDAO) new InitialContext().lookup("java:module/AppPropertiesDAO");
-                    //objLog.debug("Cargando parametros de BD");
                     tablaProperties = dao.find();
                 } catch (Exception e) {
-                    //objLog.error("Error conectando con AppPropertiesDAO.", e);
-                    cargarProperties(FICHERO_CONFIG);
+                	e.printStackTrace();
+                	System.out.println("Error leyendo properties de BD. Leemos de fichero");
+                }
+                
+                if (tablaProperties == null) {
+                	cargarProperties(FICHERO_CONFIG);
                 }
             } else {
                 cargarProperties(FICHERO_CONFIG);
             }
         } catch (Exception e) {
-            String msg = "Ha sido imposible recuperar el fichero de propiedades de la conexión.";
+            String msg = "Ha sido imposible recuperar el fichero de propiedades de la conexiï¿½n.";
             throw new MidasException(msg, e);           
         }
     }
@@ -138,7 +142,7 @@ public class AppProperties {
 
 
     /**
-     * Este método devuelve el valor de configuración asociado a la key
+     * Este mï¿½todo devuelve el valor de configuraciï¿½n asociado a la key
      * introducida. Si la clave no existe, devuelve null.
      *
      * @param keyValorConfiguracion
@@ -153,7 +157,7 @@ public class AppProperties {
 
 
     /**
-     * Añade un parámetro a la lista de parametros del sistema
+     * Aï¿½ade un parï¿½metro a la lista de parametros del sistema
      *
      * @param codigo
      * @param valor
@@ -166,13 +170,13 @@ public class AppProperties {
             dao.create(codigo, valor, descripcion);
             reload();
         } catch (Exception e) {
-            throw new MidasException("Error añadiendo parametro", e);
+            throw new MidasException("Error aï¿½adiendo parametro", e);
         }
     }
 
 
     /**
-     * Actualiza un parámetro de la lista de parametros del sistema
+     * Actualiza un parï¿½metro de la lista de parametros del sistema
      *
      * @param codigo
      * @param valor

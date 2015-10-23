@@ -11,7 +11,7 @@ import javax.naming.InitialContext;
  * Logger para registrar los accesos e intentos de acceso al sistema
  * @author carlos
  */
-public class AccessLoggerDB implements IAccessLogger{
+public class AccessLoggerDB extends AccessLoggerBase {
 
     private String user;
     private String ip;
@@ -23,55 +23,6 @@ public class AccessLoggerDB implements IAccessLogger{
     }
     
 
-    /**
-     * Registra un error no controlado
-     */
-    @Override
-    public void error() throws Exception {
-        register("ERROR");
-    }
-
-    /**
-     * Registra un username o password en blanco
-     */
-    @Override
-    public void blank() throws Exception {
-        register("BLANCO");
-    }
-
-    /**
-     * Registra una autenticación fallida
-     */
-    @Override
-    public void fail() throws Exception {
-        register("PASSWD");
-    }
-
-    /**
-     * Registra un acceso correcto
-     */
-    @Override
-    public void access() throws Exception {
-        register("ACCESO");
-    }
-
-    /**
-     * Registra un intento de acceso no autorizado
-     */
-    @Override
-    public void noAutorizado() throws Exception {
-        register("NO_AUT");
-    }
-    
-    /**
-     * Registra una salida de la aplicación
-     */
-    @Override
-    public void exit() throws Exception {
-        register("EXIT");
-    }
-    
-    
     /**
      * @param user the user to set
      */
@@ -89,10 +40,10 @@ public class AccessLoggerDB implements IAccessLogger{
     }
     
     /**
-     * Efectúa el registro en la tabla MID_LOGIN
+     * Efectï¿½a el registro en la tabla MID_LOGIN
      * @param cod 
      */
-    private void register(String cod) throws MidasJPAException {
+    protected void register(String cod) throws MidasJPAException {
         MidLogin ml = new MidLogin();
         ml.setLgDate(Calendar.getInstance().getTime());
         ml.setLgIp(ip);

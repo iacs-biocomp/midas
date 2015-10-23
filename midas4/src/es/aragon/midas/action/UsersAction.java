@@ -13,6 +13,12 @@ import es.aragon.midas.dao.ContextsDAO;
 import es.aragon.midas.dao.RolesDAO;
 import es.aragon.midas.dao.UsersDAO;
 
+
+/**
+ * Acciones para la gestión de usuarios de una aplicación
+ * @author Carlos
+ *
+ */
 public class UsersAction extends MidasActionSupport {
 	
 	static final long serialVersionUID = 1L;
@@ -36,15 +42,33 @@ public class UsersAction extends MidasActionSupport {
 	
 	private MidUser userNew = new MidUser();
 	
+	/* *****************************************
+	 * Métodos de action
+	 *******************************************/		
+	
+	/**
+	 * Acción por defecto. Lleva a la página principal de gestión de usuarios
+	 */
 	@Override
 	public String execute() {
 		return "users";
 	}
 
+	
+	
+	/**
+	 * Redirige a la página de listado de usuarios
+	 * @return
+	 */
 	public String list() {
 		return "users";
 	}
 	
+	
+	/**
+	 * Guarda en BD un nuevo usuario
+	 * @return
+	 */
 	public String nuevo() {
 		if(!GenericValidator.isBlankOrNull(userNew.getUserName()) && null == usersDAO.find(userNew.getUserName())){
 			userNew.setUserName(userNew.getUserName().toUpperCase());
@@ -55,6 +79,11 @@ public class UsersAction extends MidasActionSupport {
 		return "users";
 	}
 	
+	
+	/**
+	 * Activa/desactiva un usuario
+	 * @return
+	 */
 	public String activar() {
 		Character activo = userMod.getActive();
 		if(!GenericValidator.isBlankOrNull(userMod.getUserName()) && activo != null){
@@ -66,6 +95,12 @@ public class UsersAction extends MidasActionSupport {
 		return "users";
 	}
 	
+	
+	
+	/**
+	 * Selecciona un usuario
+	 * @return
+	 */
 	public String select() {
 		if(!GenericValidator.isBlankOrNull(userMod.getUserName())){
 			userMod = usersDAO.findByUserName(userMod.getUserName());
@@ -110,7 +145,7 @@ public class UsersAction extends MidasActionSupport {
 	
 	
 	/**
-	 * A�ade un contexto a un usuario
+	 * A�ade un contexto a un usuario
 	 * @return
 	 */
 	public String nuevoUC() {
@@ -144,54 +179,114 @@ public class UsersAction extends MidasActionSupport {
 	
 	
 	
+	/* *****************************************
+	 * SET/GET
+	 *******************************************/		
+	
+	
+	/**
+	 * Devuelve el usuario desde variable de sesión
+	 * @return
+	 */
 	public MidUser getUserMod() {
 		return userMod;
 	}
 	
+	
+	/**
+	 * Asocia un usuario a una variable de sesión
+	 * @param user
+	 */
 	public void setUserMod(MidUser user) {
 		this.userMod = user;
 	}
 	
+	
+	/**
+	 * Devuelve la lista de usuarios
+	 * @return
+	 */
 	public List<MidUser> getUsers(){
 		return usersDAO.findAll();
 	}
 	
+	/**
+	 * Devuelve la lista de roles desde BD
+	 * @return
+	 */
 	public List<MidRole> getRoles(){
 		return rolesDAO.findAll();
 	}
 	
+	
+	/**
+	 * Devuelve la lista de roles no asignados aún, desde BD
+	 * @return
+	 */
 	public List<MidRole> getRolesUngiven(){
 		return rolesDAO.findAllUngiven(userMod);
 	}
 	
+	
+	/**
+	 * Devuelve la lista de contextos desde BD
+	 * @return
+	 */
 	public List<MidContext> getContexts(){
 		return contextsDAO.findAll();
 	}
 
-	/*public List<MidContext> getContextsUngiven(){
-		return contextsDAO.findAllUngiven(userMod);
-	}*/
 	
+	/**
+	 * Devuelve el rol de usuario
+	 * @return
+	 */
 	public MidRole getUserRol() {
 		return userRol;
 	}
 
+	
+	
+	/**
+	 * Asigna el rol de usuario
+	 * @param userRol
+	 */
 	public void setUserRol(MidRole userRol) {
 		this.userRol = userRol;
 	}
 
+	
+	/**
+	 * Devuelve el contexto de un usuario
+	 * @return
+	 */
 	public MidContext getUserContext() {
 		return userContext;
 	}
 
+	
+	/**
+	 * Asigna el contexto de un usuario
+	 * @param userContext
+	 */
 	public void setUserContext(MidContext userContext) {
 		this.userContext = userContext;
 	}
 
+	
+	/**
+	 * Devuelve el nuevo usuario
+	 * @return
+	 */
 	public MidUser getUserNew() {
 		return userNew;
 	}
 
+	
+	/**
+	 * Asigna el nuevo usuario
+	 * @param userNew
+	 */
 	public void setUserNew(MidUser userNew) {
 		this.userNew = userNew;
 	}

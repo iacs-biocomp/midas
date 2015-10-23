@@ -15,10 +15,19 @@ public class MidasJPAException extends MidasException {
 	 */
 	private static final long serialVersionUID = 4191851569708782214L;
 
+	/**
+	 * 
+	 * @param message
+	 * @param ex
+	 */
 	public MidasJPAException (String message, Exception ex) {
 		
 	}
 	
+	/**
+	 * 
+	 * @param message
+	 */
 	public MidasJPAException (String message) {
 		
 	}

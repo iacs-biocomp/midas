@@ -9,7 +9,7 @@ import java.util.Map;
 import org.apache.commons.beanutils.PropertyUtils;
 
 public class Utils {
-    public final static String[] LETRAS_DNI = {"T","R","W","A","G","M","Y","F","P","D","X","B","N","J","Z","S","Q","V","H","L","C","K","E"};
+    private final static String[] LETRAS_DNI = {"T","R","W","A","G","M","Y","F","P","D","X","B","N","J","Z","S","Q","V","H","L","C","K","E"};
     
     public final static String JAVA_DATE_FORMAT = "dd/MM/yyyy";
     public final static String JAVA_TIME_FORMAT = "HH:mm";

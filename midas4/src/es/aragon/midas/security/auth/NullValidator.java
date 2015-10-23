@@ -17,31 +17,31 @@ import es.aragon.midas.util.StringUtils;
 public class NullValidator implements LoginValidator {
 
     Logger log = new Logger();
-	
+    
     //@Override
     @Override
     public MidUser authenticate(String username, String password) {
-    	UsersDAO dao; 
-    	MidUser savedUser;
-    	
+        UsersDAO dao; 
+        MidUser savedUser;
+        
         if (StringUtils.nb(username) || StringUtils.nb(password)) {
             return null;
         } else {
-        	try {
-	        	dao = (UsersDAO) new InitialContext().lookup("java:module/UsersDAO");
-	            savedUser = dao.find(username);
-	            if (savedUser == null) {// el usuario no existia previamente
-	                savedUser = new MidUser();
-	                savedUser.setActive('Y');
-	                savedUser.setUserName(username);
-	                savedUser.setName(username);
-	                dao.create(savedUser);
-	            }
-        	} catch (Exception e) {
+            try {
+                dao = (UsersDAO) new InitialContext().lookup("java:module/UsersDAO");
+                savedUser = dao.find(username);
+                if (savedUser == null) {// el usuario no existia previamente
+                    savedUser = new MidUser();
+                    savedUser.setActive('Y');
+                    savedUser.setUserName(username);
+                    savedUser.setName(username);
+                    dao.create(savedUser);
+                }
+            } catch (Exception e) {
                 log.error("Error autenticando usuario NullValidator", e);
                 return null;
-        	}
-	      return savedUser;
+            }
+          return savedUser;
         }
     }
 

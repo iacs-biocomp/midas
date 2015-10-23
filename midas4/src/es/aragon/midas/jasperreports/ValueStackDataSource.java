@@ -24,9 +24,11 @@ package es.aragon.midas.jasperreports;
 import com.opensymphony.xwork2.util.ValueStack;
 import com.opensymphony.xwork2.util.logging.Logger;
 import com.opensymphony.xwork2.util.logging.LoggerFactory;
+
 import net.sf.jasperreports.engine.JRException;
 import net.sf.jasperreports.engine.JRField;
 import net.sf.jasperreports.engine.JRRewindableDataSource;
+
 import org.apache.struts2.util.MakeIterator;
 
 import java.util.Iterator;
@@ -42,7 +44,7 @@ public class ValueStackDataSource implements JRRewindableDataSource {
     private static Logger LOG = LoggerFactory.getLogger(ValueStackDataSource.class);
 
 
-    Iterator iterator;
+    Iterator<Object> iterator;
     ValueStack valueStack;
     String dataSource;
     boolean firstTimeThrough = true;
@@ -56,22 +58,12 @@ public class ValueStackDataSource implements JRRewindableDataSource {
      */
     public ValueStackDataSource(ValueStack valueStack, String dataSourceParam) {
         this.valueStack = valueStack;
-
         dataSource = dataSourceParam;
-        Object dataSourceValue = valueStack.findValue(dataSource);
-
-        if (dataSourceValue != null) {
-            if (MakeIterator.isIterable(dataSourceValue)) {
-                iterator = MakeIterator.convert(dataSourceValue);
-            } else {
-                Object[] array = new Object[1];
-                array[0] = dataSourceValue;
-                iterator = MakeIterator.convert(array);
-            }
-        } else {
-            if (LOG.isWarnEnabled()) {
-                LOG.warn("Data source value for data source " + dataSource + " was null");
-            }
+        try {
+        	moveFirst();
+        } catch (JRException jre) {
+        	jre.printStackTrace();
+        	LOG.error("Error leyendo value stack", jre);
         }
     }
 
@@ -118,8 +110,10 @@ public class ValueStackDataSource implements JRRewindableDataSource {
      * @throws JRException if there is a problem with moving to the first
      *                     data element
      */
-    public void moveFirst() throws JRException {
+    @SuppressWarnings("unchecked")
+	public void moveFirst() throws JRException {
         Object dataSourceValue = valueStack.findValue(dataSource);
+
         if (dataSourceValue != null) {
             if (MakeIterator.isIterable(dataSourceValue)) {
                 iterator = MakeIterator.convert(dataSourceValue);
@@ -130,12 +124,14 @@ public class ValueStackDataSource implements JRRewindableDataSource {
             }
         } else {
             if (LOG.isWarnEnabled()) {
-                LOG.warn("Data source value for data source [" + dataSource + "] was null");
+                LOG.warn("Data source value for data source " + dataSource + " was null");
             }
         }
     }
 
-    /**
+
+
+	/**
      * Is there any more data
      *
      * @return <code>true</code> if there are more elements to iterate over and

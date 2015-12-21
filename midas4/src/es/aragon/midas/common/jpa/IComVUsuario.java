@@ -304,6 +304,11 @@ public interface IComVUsuario {
 	public abstract String getUsDni();
     /**
      * 
+     * @param usDni
+     */
+	public abstract void setUsDni(String usDni);
+    /**
+     * 
      * @param usEmail
      */
 	public abstract void setUsEmail(String usEmail);
@@ -312,12 +317,7 @@ public interface IComVUsuario {
      * @return
      */
 	public abstract String getUsEmail();
-    /**
-     * 
-     * @param usDni
-     */
-	public abstract void setUsDni(String usDni);
-    /**
+	/**
      * 
      * @return
      */

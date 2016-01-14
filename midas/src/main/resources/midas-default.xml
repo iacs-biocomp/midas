@@ -1,0 +1,120 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!--
+/*
+ * $Id: midas-default.xml 
+ *
+ * Licensed to the Apache Software Foundation (ASF) under one
+ * or more contributor license agreements.  See the NOTICE file
+ * distributed with this work for additional information
+ * regarding copyright ownership.  The ASF licenses this file
+ * to you under the Apache License, Version 2.0 (the
+ * "License"); you may not use this file except in compliance
+ * with the License.  You may obtain a copy of the License at
+ *
+ *  http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing,
+ * software distributed under the License is distributed on an
+ * "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
+ * KIND, either express or implied.  See the License for the
+ * specific language governing permissions and limitations
+ * under the License.
+ */
+-->
+<!DOCTYPE struts PUBLIC
+    "-//Apache Software Foundation//DTD Struts Configuration 2.3//EN"
+    "http://struts.apache.org/dtds/struts-2.3.dtd">
+
+<struts>
+    <constant name="struts.action.excludePattern" value="/rest/.*" />
+
+    <package name="midas-default" extends="struts-default" abstract="true">
+       <result-types>
+       	 <result-type name="tiles" class="org.apache.struts2.views.tiles.TilesResult" default="true"></result-type>
+	     <result-type name="jasper" class="es.aragon.midas.jasperreports.JasperReportsResult"></result-type>
+       </result-types>
+
+       <interceptors>
+            <interceptor name="loginInterceptor" class="es.aragon.midas.interceptors.AuthenticationInterceptor"/>
+
+            <!-- Midas stack -->
+            <interceptor-stack name="midasStack">
+                <interceptor-ref name="loginInterceptor"/>
+                <interceptor-ref name="exception"/>
+                <interceptor-ref name="alias"/>
+                <interceptor-ref name="servletConfig"/>
+                <interceptor-ref name="i18n"/>
+                <interceptor-ref name="prepare"/>
+                <interceptor-ref name="chain"/>
+                <interceptor-ref name="scopedModelDriven"/>
+                <interceptor-ref name="modelDriven"/>
+                <interceptor-ref name="fileUpload"/>
+                <interceptor-ref name="checkbox"/>
+                <interceptor-ref name="multiselect"/>
+                <interceptor-ref name="staticParams"/>
+                <interceptor-ref name="actionMappingParams"/>
+                <interceptor-ref name="params">
+                    <param name="excludeParams">dojo\..*,^struts\..*,^session\..*,^request\..*,^application\..*,^servlet(Request|Response)\..*,parameters\...*</param>
+                    <param name="ordered">true</param>
+                </interceptor-ref>
+                <interceptor-ref name="conversionError"/>
+                <interceptor-ref name="validation">
+                    <param name="excludeMethods">input,back,cancel,browse</param>
+                </interceptor-ref>
+                <interceptor-ref name="workflow">
+                    <param name="excludeMethods">input,back,cancel,browse</param>
+                </interceptor-ref>
+                <interceptor-ref name="debugging"/>            
+           </interceptor-stack>
+       </interceptors>
+
+        <default-interceptor-ref name="midasStack"/>
+
+        <global-results>
+            <result name="login" >login</result>
+            <result name="logout" >logout</result>
+            <result name="forbidden">forbidden</result>
+            <result name="blank" >blank</result>
+			<result type="dispatcher" name="error">/error.jsp</result>            
+        </global-results>
+
+        <global-exception-mappings>
+            <exception-mapping exception="java.lang.Exception" result="error"/>
+        </global-exception-mappings>
+        
+        <action name="login" class="es.aragon.midas.security.LoginAction">
+            <result type="redirectAction">index</result>
+            <result name="input">login</result>
+        </action>
+
+        <action name="logout" class="es.aragon.midas.security.LogoutAction">
+            <result>logout</result>
+        </action>
+
+        <action name="logChanger" class="es.aragon.midas.action.LoggerLevelChangerAction">
+            <result name="input">logChanger</result>
+        </action>
+
+        <action name="reloadParameters" class="es.aragon.midas.action.ReloadAction">
+            <result>blank</result>
+        </action>
+        
+        <action name="*Roles" class="es.aragon.midas.action.RolesAction" method="{1}">
+			<result name="roles">roles</result>
+        </action>
+
+		<action name="*Grants" class="es.aragon.midas.action.GrantsAction" method="{1}">
+			<result name="grants">grants</result>
+        </action>
+
+        <action name="*Contexts" class="es.aragon.midas.action.ContextsAction" method="{1}">
+			<result name="contexts">contexts</result>
+        </action>
+
+        <action name="*Users" class="es.aragon.midas.action.UsersAction" method="{1}">
+			<result name="users">users</result>
+        </action>
+
+    </package>
+
+</struts>

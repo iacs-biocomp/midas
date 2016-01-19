@@ -19,9 +19,9 @@ public class CIA  {
      * @parameter cia Cadena a evaluar
      * @return True si la cadena es un CIA valido
      */
-    boolean isCIA(String cia) {
+    public boolean isCIA(String cia) {
         char [] charArray = cia.toCharArray();
-        if (charArray[1] != 'A' || charArray[2] != 'R') return false;
+        if (charArray[0] != 'A' || charArray[1] != 'R') return false;
         if (charArray.length != 12) return false;
         String letraCIA = this.getLetraCIA(new String(charArray, 2, 9));
         if (letraCIA == null || !letraCIA.equals(String.valueOf(charArray[11]))) return false;
@@ -34,7 +34,7 @@ public class CIA  {
      * @param numero en formato String
      * @return la letra del cia
      */
-    String getLetraCIA(String numero) {
+    public String getLetraCIA(String numero) {
         char [] charArray = numero.toCharArray();
         int res = -1;
         try {
@@ -84,7 +84,7 @@ public class CIA  {
      * @param numero
      * @return la letra del CIA
      */
-    String getLetraCIA(int numero) {
+    public String getLetraCIA(int numero) {
         return this.getLetraCIA(new Integer(numero).toString());
     }
     
@@ -93,7 +93,7 @@ public class CIA  {
      * @param numero en formato String
      * @return el CIA completo
      */
-    String getCIA(String numero) {
+    public String getCIA(String numero) {
         return "AR"+numero+this.getLetraCIA(numero);
     }
     
@@ -102,7 +102,7 @@ public class CIA  {
      * @param numero
      * @return el CIA completo
      */
-    String getCIA(int numero) {
+    public String getCIA(int numero) {
         return this.getCIA(new Integer(numero).toString());
     }
     

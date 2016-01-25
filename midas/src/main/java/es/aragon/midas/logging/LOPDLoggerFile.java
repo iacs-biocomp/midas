@@ -22,12 +22,10 @@ public class LOPDLoggerFile implements ILOPDLogger {
     /**
      * Reasigna el nombre de usuario.
      */
-    @Override
     public void setUser(String user) {
         this.user = user;
     }
 
-    @Override
     public void setIdd(String idd) {
         this.idd = idd;
     }
@@ -35,7 +33,6 @@ public class LOPDLoggerFile implements ILOPDLogger {
     /**
      * Registra un debug en el log LOPD.
      */
-    @Override
     public void log(String key, String desc, String a, String b) {
         logLOPD.debug(key + " | " + desc);
     }

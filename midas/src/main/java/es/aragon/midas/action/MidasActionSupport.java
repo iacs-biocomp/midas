@@ -63,7 +63,6 @@ public abstract class MidasActionSupport extends ActionSupport
      * (non-Javadoc) @see
      * es.aragon.midas.security.UserAware#setUser(es.aragon.midas.security.User)
      */
-    @Override
     public void setUser(MidUser user) {
         this.user = user;
         if (EnvProperties.getProperty(Constants.CFG_MENUDB).equals("true")) {

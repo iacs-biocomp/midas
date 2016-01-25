@@ -33,7 +33,6 @@ public class BduQuery implements es.aragon.midas.dao.IBduQuery {
      * @param pCia
      * @return
      */
-    @Override
     public IPerson getByCIA(String pCia){
         cia.setCIA(pCia);
         respcia = servicio.getConsultaBDUSoapHttpPort().getByCIA(cia);
@@ -47,7 +46,6 @@ public class BduQuery implements es.aragon.midas.dao.IBduQuery {
      * @param pDni
      * @return 
      */
-    @Override
     public IPerson getByDNI(String pDni) {
         dni.setDni(pDni);
         respdni = servicio.getConsultaBDUSoapHttpPort().getByDNI(dni);

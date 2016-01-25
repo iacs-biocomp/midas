@@ -162,7 +162,6 @@ public class LoginAction extends ActionSupport implements SessionAware, ServletR
     /**
      * Asigna la sesi�n en la que se est� ejecutando el autenticador
      */
-    @Override
     public void setSession(Map<String, Object> session) {
         this.session = session;
     }
@@ -206,7 +205,6 @@ public class LoginAction extends ActionSupport implements SessionAware, ServletR
         this.password = password;
     }
 
-    @Override
     public void setServletRequest(HttpServletRequest hsr) {
         this.request = hsr;
     }

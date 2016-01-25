@@ -9,7 +9,6 @@ import javax.servlet.ServletContextListener;
 public final class ProcessContextListener implements ServletContextListener {
 
     
-    @Override
     public void contextInitialized(ServletContextEvent event) {
         ServletContext context = event.getServletContext();
         String info = context.getServerInfo();
@@ -28,7 +27,6 @@ public final class ProcessContextListener implements ServletContextListener {
         //ConnectionFactory.getMidasEMF();
     }
 
-    @Override
     public void contextDestroyed(ServletContextEvent event) {
         ServletContext context = event.getServletContext();
         String info = context.getServerInfo();

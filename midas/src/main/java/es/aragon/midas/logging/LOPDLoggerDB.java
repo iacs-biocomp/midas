@@ -25,7 +25,6 @@ public class LOPDLoggerDB implements ILOPDLogger {
 	}
 
 
-    @Override
 	public void setIdd(String idd) {
 		this.idd = idd;
 	}
@@ -92,7 +91,6 @@ public class LOPDLoggerDB implements ILOPDLogger {
     /**
      * Reasigna el nombre de usuario.
      */
-    @Override
     public void setUser(String user) {
         this.user = user;
     }
@@ -101,7 +99,6 @@ public class LOPDLoggerDB implements ILOPDLogger {
     /**
      * Registra un debug en el log LOPD.
      */
-    @Override
     public void log(String _oper, String _entidad, String _pk, String _data) {
     	MidAudit au = new MidAudit();
     	au.setAuUser(user);

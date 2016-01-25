@@ -18,8 +18,7 @@ public class NullValidator implements LoginValidator {
 
     Logger log = new Logger();
     
-    //@Override
-    @Override
+
     public MidUser authenticate(String username, String password) {
         UsersDAO dao; 
         MidUser savedUser;
@@ -45,7 +44,6 @@ public class NullValidator implements LoginValidator {
         }
     }
 
-    @Override
     public MidUser authenticate(String ticket) {
         return null;
     }

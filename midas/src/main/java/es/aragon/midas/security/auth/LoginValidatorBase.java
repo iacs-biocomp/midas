@@ -19,8 +19,6 @@ public abstract class LoginValidatorBase implements LoginValidator {
     Logger log = new Logger();
     MidUser savedUser;  
     
-    //@Override
-    @Override
     public MidUser authenticate(String username, String password) {
         UsersDAO dao; 
 
@@ -51,7 +49,6 @@ public abstract class LoginValidatorBase implements LoginValidator {
         }
     }
 
-    @Override
     public MidUser authenticate(String ticket) {
         return null;
     }

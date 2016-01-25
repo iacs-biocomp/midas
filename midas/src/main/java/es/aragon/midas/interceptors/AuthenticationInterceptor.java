@@ -30,15 +30,12 @@ public class AuthenticationInterceptor implements Interceptor {
     private static final long serialVersionUID = 1L;
     private Logger log = new Logger();
     
-    @Override
     public void destroy() {
     }
 
-    @Override
     public void init() {
     }
 
-    @Override
     public String intercept(ActionInvocation actionInvocation)
             throws Exception {
         Map<String, Object> session = actionInvocation.getInvocationContext().getSession();

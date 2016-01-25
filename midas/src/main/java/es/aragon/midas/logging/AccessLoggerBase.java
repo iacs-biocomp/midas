@@ -17,7 +17,6 @@ public abstract class AccessLoggerBase implements IAccessLogger{
     /**
      * Registra un error no controlado
      */
-    @Override
     public void error() throws Exception {
         register("ERROR");
     }
@@ -25,7 +24,6 @@ public abstract class AccessLoggerBase implements IAccessLogger{
     /**
      * Registra un username o password en blanco
      */
-    @Override
     public void blank() throws Exception {
         register("BLANCO");
     }
@@ -33,7 +31,6 @@ public abstract class AccessLoggerBase implements IAccessLogger{
     /**
      * Registra una autenticaci�n fallida
      */
-    @Override
     public void fail() throws Exception {
         register("PASSWD");
     }
@@ -41,7 +38,6 @@ public abstract class AccessLoggerBase implements IAccessLogger{
     /**
      * Registra un acceso correcto
      */
-    @Override
     public void access() throws Exception {
         register("ACCESO");
     }
@@ -49,7 +45,6 @@ public abstract class AccessLoggerBase implements IAccessLogger{
     /**
      * Registra un intento de acceso no autorizado
      */
-    @Override
     public void noAutorizado() throws Exception {
         register("NO_AUT");
     }
@@ -59,7 +54,6 @@ public abstract class AccessLoggerBase implements IAccessLogger{
     /**
      * Registra una salida de la aplicación
      */
-    @Override
     public void exit() throws Exception {
         register("EXIT");
     }
@@ -68,13 +62,11 @@ public abstract class AccessLoggerBase implements IAccessLogger{
     /**
      * @param user the user to set
      */
-    @Override
     abstract public void setUser(String user) ;
 
     /**
      * @param ip the ip to set
      */
-    @Override
     abstract public void setIp(String ip);
     
     /**

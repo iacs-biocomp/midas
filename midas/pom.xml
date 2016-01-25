@@ -103,6 +103,7 @@
 			<groupId>org.activiti</groupId>
 			<artifactId>activiti-engine</artifactId>
 			<version>5.19.0.1</version>
+			<optional>true</optional>
 		</dependency>
 		<dependency>
 			<groupId>log4j</groupId>
@@ -123,6 +124,7 @@
 			<groupId>org.mongodb</groupId>
 			<artifactId>mongo-java-driver</artifactId>
 			<version>3.2.1</version>
+			<optional>true</optional>
 		</dependency>
 	</dependencies>
 </project>

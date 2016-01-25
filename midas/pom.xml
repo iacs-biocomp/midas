@@ -3,7 +3,7 @@
 	<modelVersion>4.0.0</modelVersion>
 	<groupId>es.aragon</groupId>
 	<artifactId>midas</artifactId>
-	<version>4.2.3</version>
+	<version>4.3.0</version>
 
 	<properties>
 		<strutsVersion>2.3.4.1</strutsVersion>
@@ -39,7 +39,7 @@
 			<version>4.0.1.Final</version>
 			<scope>provided</scope>
 		</dependency>
-		
+
 		<!-- Librerias de Struts -->
 		<dependency>
 			<groupId>org.apache.struts</groupId>
@@ -61,7 +61,7 @@
 			<artifactId>struts2-bootstrap-plugin</artifactId>
 			<version>1.5.2</version>
 		</dependency>
-		
+
 		<!-- Librerias de Spring -->
 		<dependency>
 			<groupId>org.springframework</groupId>
@@ -83,7 +83,7 @@
 			<artifactId>spring-beans</artifactId>
 			<version>${springVersion}</version>
 		</dependency>
-		
+
 		<dependency>
 			<groupId>commons-validator</groupId>
 			<artifactId>commons-validator</artifactId>
@@ -118,6 +118,11 @@
 			<groupId>cn.agrael</groupId>
 			<artifactId>ejb-struts-jboss-plugin</artifactId>
 			<version>2.3.4.1</version>
+		</dependency>
+		<dependency>
+			<groupId>org.mongodb</groupId>
+			<artifactId>mongo-java-driver</artifactId>
+			<version>3.2.1</version>
 		</dependency>
 	</dependencies>
 </project>

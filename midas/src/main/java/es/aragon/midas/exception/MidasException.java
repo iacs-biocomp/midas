@@ -17,6 +17,7 @@ public class MidasException extends Exception {
      * @param ex
      */
 	public MidasException (String message, Exception ex) {
+		super(message, ex);
 		
 	}
 	
@@ -26,6 +27,7 @@ public class MidasException extends Exception {
 	 * @param message
 	 */
 	public MidasException (String message) {
+		super(message);
 		
 	}
 

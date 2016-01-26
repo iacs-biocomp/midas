@@ -21,6 +21,7 @@ public class MidasJPAException extends MidasException {
 	 * @param ex
 	 */
 	public MidasJPAException (String message, Exception ex) {
+		super(message, ex);
 		
 	}
 	
@@ -29,7 +30,7 @@ public class MidasJPAException extends MidasException {
 	 * @param message
 	 */
 	public MidasJPAException (String message) {
-		
+		super(message);
 	}
     
 }

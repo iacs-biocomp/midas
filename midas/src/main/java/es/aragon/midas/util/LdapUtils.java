@@ -112,7 +112,7 @@ public class LdapUtils {
 			return "No se puede acceder en éstos momentos";
 		}
 		if (message.contains("data 531")) {
-			return "No se puede accedes desde éste equipo";
+			return "No se puede acceder desde éste equipo";
 		}
 		if (message.contains("data 532")) {
 			return "La contraseña ha caducado."
@@ -130,7 +130,7 @@ public class LdapUtils {
 			return "Cuenta caducada";
 		}
 		if (message.contains("data 773")) {
-			return "La contraseña ha caducado."
+			return "Se necesita cambiar la contraseña."
 					+ " <br><a href=\""
 					+ portal
 					+ "\">Diríjase al portal del empleado para cambiar la contraseña</a>";

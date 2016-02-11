@@ -17,7 +17,7 @@ public class LdapUtils {
 
 	private static Logger log;
 
-	public LdapUtils() {
+	static {
 		log = new Logger();
 	}
 
@@ -40,8 +40,11 @@ public class LdapUtils {
 				.getParameter("midas.ldap.validUser");
 		String validPassword;
 		try {
-			validPassword = FileEncoder.decryptString(AppProperties
-					.getParameter("midas.ldap.validPassword"));
+			// Desencripta la contraseña en AES recuperada de base de datos que
+			// la almacena en Base64
+			validPassword = FileEncoder.decryptString(new String(Base64
+					.decode(AppProperties
+							.getParameter("midas.ldap.validPassword"))));
 		} catch (Exception e) {
 			validPassword = "";
 			e.printStackTrace();

@@ -13,6 +13,8 @@ import es.aragon.midas.ws.guia.GuiaConnection;
  */
 public class GuiaValidator extends LoginValidatorBase {
 
+	private Throwable guiaException;
+
     
     /**
      * 
@@ -44,4 +46,13 @@ public class GuiaValidator extends LoginValidatorBase {
     
     }
   
+	/*
+	 * (non-Javadoc)
+	 * 
+	 * @see es.aragon.midas.security.auth.LoginValidator#getException()
+	 */
+	public Throwable getException() {
+		return guiaException;
+	}
+
 }

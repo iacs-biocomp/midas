@@ -113,6 +113,7 @@
 
         <action name="*Users" class="es.aragon.midas.action.UsersAction" method="{1}">
 			<result name="users">users</result>
+			<result name="newUserName" type="dispatcher">/midas/newUserName.jsp</result>
         </action>
 
     </package>

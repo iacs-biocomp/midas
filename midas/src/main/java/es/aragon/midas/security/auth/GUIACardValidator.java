@@ -15,6 +15,8 @@ import javax.naming.InitialContext;
  * @author j2ee.salud
  */
 public class GUIACardValidator extends LoginValidatorBase {
+	
+	private Throwable guiaException;
         
     @Override
     public MidUser authenticate(String ticket) {
@@ -89,5 +91,15 @@ public class GUIACardValidator extends LoginValidatorBase {
     	return retval;
     	
     }
+    
+    
+	/*
+	 * (non-Javadoc)
+	 * 
+	 * @see es.aragon.midas.security.auth.LoginValidator#getException()
+	 */
+	public Throwable getException() {
+		return guiaException;
+	}
     
 }

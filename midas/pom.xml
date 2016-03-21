@@ -3,12 +3,13 @@
 	<modelVersion>4.0.0</modelVersion>
 	<groupId>es.aragon</groupId>
 	<artifactId>midas</artifactId>
-	<version>4.3.1</version>
+	<version>4.3.2</version>
 
 
 	<properties>
 		<strutsVersion>2.3.4.1</strutsVersion>
 		<springVersion>4.2.4.RELEASE</springVersion>
+		<droolsVersion>6.3.0.Final</droolsVersion>
 	</properties>
 
 	<repositories>
@@ -47,7 +48,7 @@
 			<version>4.0.1.Final</version>
 			<scope>provided</scope>
 		</dependency>
-		
+
 
 		<!-- Librerias de Struts -->
 		<dependency>
@@ -137,6 +138,22 @@
 			<version>5.19.0.1</version>
 			<optional>true</optional>
 		</dependency>
+
+		<!-- Librerias de drools opcionales -->
+		<dependency>
+			<groupId>org.drools</groupId>
+			<artifactId>knowledge-api</artifactId>
+			<version>${droolsVersion}</version>
+			<optional>true</optional>
+		</dependency>
+		<dependency>
+			<groupId>org.drools</groupId>
+			<artifactId>drools-compiler</artifactId>
+			<version>${droolsVersion}</version>
+			<optional>true</optional>
+		</dependency>
+
+
 
 		<dependency>
 			<groupId>log4j</groupId>

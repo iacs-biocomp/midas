@@ -4,10 +4,13 @@
  */
 package es.aragon.midas.logging;
 
+import javax.enterprise.inject.Alternative;
+
 /**
  *
  * @author j2ee.salud
  */
+@Alternative
 public class LOPDLoggerFile implements ILOPDLogger {
 
     String user = "";

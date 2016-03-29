@@ -3,7 +3,10 @@
  */
 package es.aragon.midas.action;
 
+import javax.inject.Inject;
+
 import com.opensymphony.xwork2.ActionSupport;
+
 import es.aragon.midas.config.Constants;
 import es.aragon.midas.config.EnvProperties;
 import es.aragon.midas.config.Menu;
@@ -55,7 +58,7 @@ public abstract class MidasActionSupport extends ActionSupport
      */
     protected Logger log = new Logger();
 
-    
+    @Inject
     protected ILOPDLogger audit;
     
     

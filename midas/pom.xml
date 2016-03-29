@@ -3,12 +3,11 @@
 	<modelVersion>4.0.0</modelVersion>
 	<groupId>es.aragon</groupId>
 	<artifactId>midas</artifactId>
-	<version>4.3.2</version>
+	<version>4.3.3</version>
 
 
 	<properties>
 		<strutsVersion>2.3.4.1</strutsVersion>
-		<springVersion>4.2.4.RELEASE</springVersion>
 		<droolsVersion>6.3.0.Final</droolsVersion>
 	</properties>
 
@@ -29,11 +28,19 @@
 			<version>6.0</version>
 			<scope>provided</scope>
 		</dependency>
+	  <dependency>
+            <groupId>javax.enterprise</groupId>
+            <artifactId>cdi-api</artifactId>
+            <version>1.0</version>
+            <scope>provided</scope>
+        </dependency>
 		<dependency>
 			<groupId>com.oracle</groupId>
 			<artifactId>ojdbc</artifactId>
 			<version>6</version>
 		</dependency>
+	
+
 
 		<!-- Librerias para conexiones de base de datos -->
 		<dependency>
@@ -53,11 +60,6 @@
 		<!-- Librerias de Struts -->
 		<dependency>
 			<groupId>org.apache.struts</groupId>
-			<artifactId>struts2-spring-plugin</artifactId>
-			<version>${strutsVersion}</version>
-		</dependency>
-		<dependency>
-			<groupId>org.apache.struts</groupId>
 			<artifactId>struts2-core</artifactId>
 			<version>${strutsVersion}</version>
 		</dependency>
@@ -67,38 +69,16 @@
 			<version>${strutsVersion}</version>
 		</dependency>
 		<dependency>
+			<groupId>org.apache.struts</groupId>
+			<artifactId>struts2-cdi-plugin</artifactId>
+			<version>${strutsVersion}</version>
+		</dependency>
+		<dependency>
 			<groupId>com.jgeppert.struts2.bootstrap</groupId>
 			<artifactId>struts2-bootstrap-plugin</artifactId>
 			<version>1.5.2</version>
 		</dependency>
-		<!-- Librerias para poder acceder a EJBs desde actions de Struts -->
-		<dependency>
-			<groupId>cn.agrael</groupId>
-			<artifactId>ejb-struts-jboss-plugin</artifactId>
-			<version>2.3.4.1</version>
-		</dependency>
 
-		<!-- Librerias de Spring -->
-		<dependency>
-			<groupId>org.springframework</groupId>
-			<artifactId>spring-core</artifactId>
-			<version>${springVersion}</version>
-		</dependency>
-		<dependency>
-			<groupId>org.springframework</groupId>
-			<artifactId>spring-web</artifactId>
-			<version>${springVersion}</version>
-		</dependency>
-		<dependency>
-			<groupId>org.springframework</groupId>
-			<artifactId>spring-context</artifactId>
-			<version>${springVersion}</version>
-		</dependency>
-		<dependency>
-			<groupId>org.springframework</groupId>
-			<artifactId>spring-beans</artifactId>
-			<version>${springVersion}</version>
-		</dependency>
 
 		<!-- Librerias de commons -->
 		<dependency>

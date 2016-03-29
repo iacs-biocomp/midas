@@ -6,8 +6,12 @@ package es.aragon.midas.security;
 import es.aragon.midas.action.MidasActionSupport;
 import es.aragon.midas.exception.MidasJPAException;
 import es.aragon.midas.logging.IAccessLogger;
+
 import java.util.Map;
+
+import javax.inject.Inject;
 import javax.servlet.http.HttpServletRequest;
+
 import org.apache.struts2.interceptor.ServletRequestAware;
 import org.apache.struts2.interceptor.SessionAware;
 
@@ -19,6 +23,7 @@ public class LogoutAction extends MidasActionSupport implements
 		ServletRequestAware, SessionAware {
 
 	private static final long serialVersionUID = 1L;
+	@Inject
 	private IAccessLogger aLog;
 	private HttpServletRequest request;
 

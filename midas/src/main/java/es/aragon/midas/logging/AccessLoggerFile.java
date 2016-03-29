@@ -4,12 +4,15 @@
  */
 package es.aragon.midas.logging;
 
+import javax.enterprise.inject.Alternative;
+
 import org.apache.log4j.MDC;
 
 /**
  *
  * @author j2ee.salud
  */
+@Alternative
 public class AccessLoggerFile extends AccessLoggerBase {
     
     private org.apache.log4j.Logger logAccceso;

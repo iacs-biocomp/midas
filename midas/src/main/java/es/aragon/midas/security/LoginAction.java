@@ -20,6 +20,7 @@ import es.aragon.midas.util.StringUtils;
 import java.util.Calendar;
 import java.util.Map;
 
+import javax.inject.Inject;
 import javax.naming.InitialContext;
 import javax.naming.NamingException;
 import javax.servlet.http.HttpServletRequest;
@@ -39,8 +40,11 @@ public class LoginAction extends ActionSupport implements SessionAware,
 	private String username;
 	private String password;
 	private String ticket;
+	@Inject
 	private LoginValidator loginValidator;
+	@Inject
 	private IAccessLogger accessLogService;
+	@Inject
 	private ILOPDLogger lopd;
 	private HttpServletRequest request;
 	private Logger log = new Logger();

@@ -1,5 +1,6 @@
 package es.aragon.midas.security.auth;
 
+import javax.enterprise.inject.Alternative;
 import javax.naming.InitialContext;
 
 import es.aragon.midas.config.MidUser;
@@ -14,6 +15,7 @@ import es.aragon.midas.util.StringUtils;
  * @author carlos
  * 
  */
+@Alternative
 public class NullValidator implements LoginValidator {
 
 	private Throwable nullValidatorException;

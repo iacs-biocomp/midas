@@ -1,5 +1,7 @@
 package es.aragon.midas.security.auth;
 
+import javax.enterprise.inject.Alternative;
+
 import es.aragon.midas.ws.guia.AuthGuiaResponse;
 import es.aragon.midas.ws.guia.GuiaConnection;
 
@@ -11,6 +13,7 @@ import es.aragon.midas.ws.guia.GuiaConnection;
  * @author carlos
  *
  */
+@Alternative
 public class GuiaValidator extends LoginValidatorBase {
 
 	private Throwable guiaException;

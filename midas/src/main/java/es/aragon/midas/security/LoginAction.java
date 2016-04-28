@@ -16,6 +16,8 @@ import es.aragon.midas.logging.Logger;
 import es.aragon.midas.security.auth.LoginValidator;
 import es.aragon.midas.util.LdapUtils;
 import es.aragon.midas.util.StringUtils;
+import es.aragon.midas.ws.guia.AuthGuiaDetails;
+import es.aragon.midas.ws.guia.GuiaConnection;
 
 import java.util.Calendar;
 import java.util.Map;
@@ -40,6 +42,11 @@ public class LoginAction extends ActionSupport implements SessionAware,
 	private String username;
 	private String password;
 	private String ticket;
+
+	// GUIA TOKEN
+	private String appSrc;
+	private String token;
+
 	@Inject
 	private LoginValidator loginValidator;
 	@Inject
@@ -57,7 +64,7 @@ public class LoginAction extends ActionSupport implements SessionAware,
 	public String execute() throws MidasJPAException {
 		boolean validateLocal = AppProperties.getParameter(
 				Constants.CFG_VALIDATE_LOCAL).equals("true");
-		MidUser user;
+		MidUser user = null;
 		UsersDAO dao;
 
 		try {
@@ -75,7 +82,34 @@ public class LoginAction extends ActionSupport implements SessionAware,
 				log.error("accessLog Nulo. No se puede asignar IP ni grabar acceso");
 			}
 
-			if (!StringUtils.nb(ticket)) {
+	        //**********************************************************
+	        //             Login mediante token de GUIA
+	        //**********************************************************
+			if (!StringUtils.nb(token)) {
+				GuiaConnection guiaConnection = new GuiaConnection();
+
+				// Consulta los parámetros para hacer la consulta a GUIA
+				String appDst = AppProperties.getParameter("midas.guia.appDst");
+				String urlGuia = AppProperties
+						.getParameter("midas.guia.authURL");
+
+				// Realiza la consulta a GUIA
+				 String respuestaGuia = guiaConnection.validateToken(token, appSrc,
+						appDst, urlGuia);
+
+				AuthGuiaDetails userGuia = new AuthGuiaDetails(respuestaGuia);
+
+				// Comprueba que no haya habido errores al consultar el GUIA
+				if (!StringUtils.nb(userGuia.getErrorDesc())) {
+					log.error("Error en la validacion de token GUIA: " + userGuia.getErrorDesc());
+					accessLogService.error();
+					return INPUT;
+				} else{
+					// Busca al usuario en midas MID_USERS
+					user = dao.find(userGuia.getLogin().toUpperCase());
+				}
+
+			} else if (!StringUtils.nb(ticket)) {
 				user = loginValidator.authenticate(ticket);
 			} else {
 				if (StringUtils.nb(username)) {
@@ -95,16 +129,6 @@ public class LoginAction extends ActionSupport implements SessionAware,
 				// Comprobamos si el usuario existe ya en BD
 				user = dao.find(username);
 
-				// Comprueba que el usuario esté activo en la aplicación
-				if (user != null
-						&& !String.valueOf(user.getActive()).equalsIgnoreCase(
-								"Y")) {
-					addActionError("El usuario está desactivado");
-					log.error("El usuario está desactivado");
-					accessLogService.noAutorizado();
-					return INPUT;
-				}
-
 				if (user == null && validateLocal) {
 					accessLogService.noAutorizado();
 					addActionError("El usuario no está autorizado");
@@ -120,6 +144,16 @@ public class LoginAction extends ActionSupport implements SessionAware,
 						user = loginValidator.authenticate(username, password);
 					}
 				}
+			}
+			
+			// Comprueba que el usuario esté activo en la aplicación
+			if (user != null
+					&& !String.valueOf(user.getActive()).equalsIgnoreCase(
+							"Y")) {
+				addActionError("El usuario está desactivado");
+				log.error("El usuario está desactivado");
+				accessLogService.noAutorizado();
+				return INPUT;
 			}
 
 			// Comprueba si hay algun error al autenticar en el LDAP
@@ -260,4 +294,23 @@ public class LoginAction extends ActionSupport implements SessionAware,
 	public void setTicket(String ticket) {
 		this.ticket = ticket;
 	}
+
+	public String getToken() {
+		return token;
+	}
+
+	public void setToken(String token) {
+		this.token = token;
+	}
+
+	public String getAppSrc() {
+		return appSrc;
+	}
+
+	public void setAppSrc(String appSrc) {
+		this.appSrc = appSrc;
+	}
+	
+	
+
 }

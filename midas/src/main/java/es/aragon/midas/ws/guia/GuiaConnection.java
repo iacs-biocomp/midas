@@ -3,11 +3,19 @@ package es.aragon.midas.ws.guia;
 import es.aragon.midas.config.AppProperties;
 import es.aragon.midas.config.Constants;
 import es.aragon.midas.config.EnvProperties;
+import es.aragon.midas.config.MidGuia;
 import es.aragon.midas.logging.Logger;
 
 import java.io.IOException;
 import java.io.StringReader;
+import java.math.BigInteger;
+import java.security.MessageDigest;
+import java.security.NoSuchAlgorithmException;
+import java.text.SimpleDateFormat;
+import java.util.Date;
 import java.util.logging.Level;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 import javax.xml.bind.JAXBContext;
 import javax.xml.bind.Unmarshaller;
@@ -68,11 +76,14 @@ public class GuiaConnection {
 	 * @return Obtiene un XML con el resultado de la validación de GUIA. Si es
 	 *         correcta tendrá los datos del usuario.
 	 */
-	public String validateToken(String token, String appSrc, String appDst,
-			String url) {
-		HttpClient client = new HttpClient();
+	public String validateToken(String token, String appSrc) {
+		// Consulta los parámetros para hacer la consulta a GUIA
+		String appDst = AppProperties.getParameter("midas.guia.appName");
+		String url = AppProperties.getParameter(Constants.URL_GUIA_AUTH);
 
-		String returnValue = null;
+		Protocol easyhttps = new Protocol("https",
+				new HttpsSSLProtocolSocketFactory(), 443);
+		Protocol.registerProtocol("https", easyhttps);
 		PostMethod method = new PostMethod(url);
 		method.getParams().setParameter(HttpMethodParams.RETRY_HANDLER,
 				new DefaultHttpMethodRetryHandler(3, false));
@@ -82,39 +93,92 @@ public class GuiaConnection {
 				new NameValuePair("token", token) };
 		method.setRequestBody(data);
 
+		return evaluateResponse(method, url);
+
+	}
+
+	/**
+	 * Genera una URL construida para acceder a una aplicación destino con token de GUIA
+	 * 
+	 * @param midGuia
+	 *            Objeto con los datos de la tabla MID_GUIA para generar el
+	 *            token de GUIA
+	 * @param nif
+	 *            NIF del usuario para generar el token GUIA. Será el usuario
+	 *            con el que se accedera a la aplicación destino.
+	 * @return URL con la que se puede acceder a la aplicación destino.
+	 *         Contendrá el token generado por GUIA.
+	 */
+	public String generateTokenUrl(MidGuia midGuia, String nif) {
+		return generateTokenUrl(midGuia, nif, "");
+	}
+
+	/**
+	 * Genera una URL construida para acceder a una aplicación destino con token de GUIA
+	 * 
+	 * @param midGuia
+	 *            Objeto con los datos de la tabla MID_GUIA para generar el
+	 *            token de GUIA
+	 * @param nif
+	 *            NIF del usuario para generar el token GUIA. Será el usuario
+	 *            con el que se accedera a la aplicación destino.
+	 * @param customParameters
+	 *            parámetros variables para añadir a la URL generada
+	 * @return URL con la que se puede acceder a la aplicación destino.
+	 *         Contendrá el token generado por GUIA.
+	 */
+	public String generateTokenUrl(MidGuia midGuia, String nif,
+			String customParameters) {
+		SimpleDateFormat sf = new SimpleDateFormat("yyyyMMddHHmmss");
+
+		// Obtiene parámetros para generar el token de GUIA
+		String appSrc = AppProperties.getParameter("midas.guia.appName");
+		String url = AppProperties.getParameter(Constants.URL_GUIA_AUTH);
+		String secret = midGuia.getSecret();
+		String appDst = midGuia.getAppDst();
+		String sec = sf.format(new Date());
+		String trustString = "";
 		try {
-			Protocol easyhttps = new Protocol("https",
-					new HttpsSSLProtocolSocketFactory(), 443);
-			Protocol.registerProtocol("https", easyhttps);
-			int statusCode = client.executeMethod(method);
-			returnValue = method.getResponseBodyAsString();
-
-			if (statusCode != HttpStatus.SC_OK) {
-				returnValue = "KO2";
-				log.warn("Error Status " + statusCode + " conectando a " + url);
-			} else {
-				log.debug("Envio a GUIA correcto");
-			}
-
-		} catch (HttpException e) {
-			returnValue = "KO3";
-			log.error("Fatal protocol violation: " + e.getMessage()
-					+ " conectando a " + url);
-		} catch (IOException e) {
-			returnValue = "KO1";
-			log.error("Fatal transport error: " + e.getMessage()
-					+ " conectando a " + url);
-		} catch (IllegalArgumentException e) {
-			returnValue = "KO3";
-			log.error("URL mal construida: " + url);
-		} catch (Throwable e) {
-			returnValue = "KO1";
-			log.error("Error: " + e.getMessage() + " conectando a " + url);
-		} finally {
-			// Release the connection.
-			method.releaseConnection();
+			trustString = getMD5Hash(appSrc + " " + appDst + " " + nif + " "
+					+ secret + " " + sec);
+		} catch (NoSuchAlgorithmException e) {
+			log.error("Error al construir el Hash MD5 para GUIA", e);
 		}
-		return returnValue;
+
+		// Genera el token en GUIA
+		Protocol easyhttps = new Protocol("https",
+				new HttpsSSLProtocolSocketFactory(), 443);
+		Protocol.registerProtocol("https", easyhttps);
+		PostMethod method = new PostMethod(url);
+		method.getParams().setParameter(HttpMethodParams.RETRY_HANDLER,
+				new DefaultHttpMethodRetryHandler(3, false));
+		NameValuePair[] data = { new NameValuePair("s", "getToken"),
+				new NameValuePair("appSrc", appSrc),
+				new NameValuePair("appDst", appDst),
+				new NameValuePair("nif", nif), new NameValuePair("sec", sec),
+				new NameValuePair("trustString", trustString) };
+		method.setRequestBody(data);
+
+		String guiaResponse = evaluateResponse(method, url);
+
+		// Extrae el token de la respuesta de GUIA
+		String token = "";
+		Pattern pattern = Pattern.compile("<token>(.*?)</token>");
+		Matcher matcher = pattern.matcher(guiaResponse);
+		while (matcher.find()) {
+			token = matcher.group(1);
+		}
+
+		// Genera la url de acceso a la aplicación destino
+		String tokenUrl = midGuia.getUrlDst();
+
+		tokenUrl = tokenUrl.replace("${TOKEN}", token);
+		tokenUrl = tokenUrl.replace("${APPSRC}", appSrc);
+		tokenUrl = tokenUrl.replace("${APPDST}", appDst);
+		tokenUrl = tokenUrl.replace("${NIF}", nif);
+		tokenUrl = tokenUrl.replace("${CUSTOM}", customParameters);
+
+		return tokenUrl;
 	}
 
 	/**
@@ -159,15 +223,13 @@ public class GuiaConnection {
 
 		} catch (HttpException e) {
 			returnValue = "KO3";
-			log.error("Fatal protocol violation: " + e.getMessage()
-					+ " conectando a " + url);
+			log.error("Fatal protocol violation conectando a " + url, e);
 		} catch (IOException e) {
 			returnValue = "KO1";
-			log.error("Fatal transport error: " + e.getMessage()
-					+ " conectando a " + url);
+			log.error("Fatal transport error conectando a " + url, e);
 		} catch (IllegalArgumentException e) {
 			returnValue = "KO3";
-			log.error("URL mal construida: " + url);
+			log.error("URL mal construida " + url, e);
 		} finally {
 			// Release the connection.
 			method.releaseConnection();
@@ -233,6 +295,12 @@ public class GuiaConnection {
 			log.error("Respuesta de GUIA: " + src);
 		}
 		return resp;
+	}
+
+	private String getMD5Hash(String str) throws NoSuchAlgorithmException {
+		MessageDigest m = MessageDigest.getInstance("MD5");
+		m.update(str.getBytes(), 0, str.length());
+		return new BigInteger(1, m.digest()).toString(16);
 	}
 
 }

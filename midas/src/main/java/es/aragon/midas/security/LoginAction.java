@@ -3,6 +3,17 @@
  */
 package es.aragon.midas.security;
 
+import java.util.Calendar;
+import java.util.Map;
+
+import javax.inject.Inject;
+import javax.naming.InitialContext;
+import javax.naming.NamingException;
+import javax.servlet.http.HttpServletRequest;
+
+import org.apache.struts2.interceptor.ServletRequestAware;
+import org.apache.struts2.interceptor.SessionAware;
+
 import com.opensymphony.xwork2.ActionSupport;
 
 import es.aragon.midas.config.AppProperties;
@@ -18,17 +29,6 @@ import es.aragon.midas.util.LdapUtils;
 import es.aragon.midas.util.StringUtils;
 import es.aragon.midas.ws.guia.AuthGuiaDetails;
 import es.aragon.midas.ws.guia.GuiaConnection;
-
-import java.util.Calendar;
-import java.util.Map;
-
-import javax.inject.Inject;
-import javax.naming.InitialContext;
-import javax.naming.NamingException;
-import javax.servlet.http.HttpServletRequest;
-
-import org.apache.struts2.interceptor.ServletRequestAware;
-import org.apache.struts2.interceptor.SessionAware;
 
 /**
  * @author carlos
@@ -75,36 +75,32 @@ public class LoginAction extends ActionSupport implements SessionAware,
 			return ERROR;
 		}
 
-		try {
+		try {			
 			if (accessLogService != null) {
 				accessLogService.setIp(request.getRemoteAddr());
 			} else {
 				log.error("accessLog Nulo. No se puede asignar IP ni grabar acceso");
 			}
 
-	        //**********************************************************
-	        //             Login mediante token de GUIA
-	        //**********************************************************
+			// **********************************************************
+			// Login mediante token de GUIA
+			// **********************************************************
 			if (!StringUtils.nb(token)) {
 				GuiaConnection guiaConnection = new GuiaConnection();
 
-				// Consulta los parámetros para hacer la consulta a GUIA
-				String appDst = AppProperties.getParameter("midas.guia.appDst");
-				String urlGuia = AppProperties
-						.getParameter("midas.guia.authURL");
-
 				// Realiza la consulta a GUIA
-				 String respuestaGuia = guiaConnection.validateToken(token, appSrc,
-						appDst, urlGuia);
+				String respuestaGuia = guiaConnection.validateToken(token,
+						appSrc);
 
 				AuthGuiaDetails userGuia = new AuthGuiaDetails(respuestaGuia);
 
 				// Comprueba que no haya habido errores al consultar el GUIA
 				if (!StringUtils.nb(userGuia.getErrorDesc())) {
-					log.error("Error en la validacion de token GUIA: " + userGuia.getErrorDesc());
+					log.error("Error en la validacion de token GUIA: "
+							+ userGuia.getErrorDesc());
 					accessLogService.error();
 					return INPUT;
-				} else{
+				} else {
 					// Busca al usuario en midas MID_USERS
 					user = dao.find(userGuia.getLogin().toUpperCase());
 				}
@@ -145,11 +141,10 @@ public class LoginAction extends ActionSupport implements SessionAware,
 					}
 				}
 			}
-			
+
 			// Comprueba que el usuario esté activo en la aplicación
 			if (user != null
-					&& !String.valueOf(user.getActive()).equalsIgnoreCase(
-							"Y")) {
+					&& !String.valueOf(user.getActive()).equalsIgnoreCase("Y")) {
 				addActionError("El usuario está desactivado");
 				log.error("El usuario está desactivado");
 				accessLogService.noAutorizado();
@@ -310,7 +305,5 @@ public class LoginAction extends ActionSupport implements SessionAware,
 	public void setAppSrc(String appSrc) {
 		this.appSrc = appSrc;
 	}
-	
-	
 
 }

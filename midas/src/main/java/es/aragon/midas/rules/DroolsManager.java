@@ -46,7 +46,7 @@ public class DroolsManager {
         KnowledgeBuilder kbuilder = KnowledgeBuilderFactory.newKnowledgeBuilder();
 		kbuilder.add(
 				ResourceFactory.newFileResource(AppProperties
-						.getParameter("rules.path") + 
+						.getParameter("midas.rules.path") + 
                     ficheroReglas), ResourceType.DRL);
 
         //Comprueba que sea un fichero drl valido 

@@ -116,6 +116,13 @@
 			<version>2.0.6</version>
 		</dependency>
 
+		<!-- Libreria gestion JSON -->
+		<dependency>
+			<groupId>org.json</groupId>
+			<artifactId>json</artifactId>
+			<version>20160212</version>
+		</dependency>
+
 
 
 		<!-- Librerias de activiti opcionales -->

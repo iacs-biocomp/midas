@@ -13,6 +13,7 @@ import javax.servlet.http.HttpServletRequest;
 
 import org.apache.struts2.interceptor.ServletRequestAware;
 import org.apache.struts2.interceptor.SessionAware;
+import org.json.JSONObject;
 
 import com.opensymphony.xwork2.ActionSupport;
 
@@ -46,6 +47,7 @@ public class LoginAction extends ActionSupport implements SessionAware,
 	// GUIA TOKEN
 	private String appSrc;
 	private String token;
+	private String action;
 
 	@Inject
 	private LoginValidator loginValidator;
@@ -75,7 +77,7 @@ public class LoginAction extends ActionSupport implements SessionAware,
 			return ERROR;
 		}
 
-		try {			
+		try {
 			if (accessLogService != null) {
 				accessLogService.setIp(request.getRemoteAddr());
 			} else {
@@ -182,6 +184,17 @@ public class LoginAction extends ActionSupport implements SessionAware,
 				lopd.setUser(user.getUserName());
 				accessLogService.access();
 				log.debug("Creando sesión de usuario " + username);
+
+				try {
+					if (!StringUtils.nb(action)) {
+						this.action = getActionUrl();
+						return "guiaAction";
+					}
+				} catch (Exception e) {
+					log.error("Error al redirigir a la acción de struts: "
+							+ action, e);
+				}
+
 				return SUCCESS;
 			} else {
 				addActionError("El usuario o la contraseña no son correctos");
@@ -199,6 +212,43 @@ public class LoginAction extends ActionSupport implements SessionAware,
 			}
 			return INPUT;
 		}
+	}
+
+	/**
+	 * Parsea el JSON del parámetro action para generar la URL de struts que
+	 * dirige. <br>
+	 * EJEMPLO: <br>
+	 * <b>Entrada:</b> {"action":"CargarFormularioModificar",
+	 * "params":{"id":300, "version":3}} <br>
+	 * <b>Salida:</b> CargarFormularioModificar?id=300&version=3
+	 * 
+	 * @return URL de struts a la que hacer la redirección
+	 */
+	private String getActionUrl() {
+		JSONObject jsonAction = new JSONObject(action);
+		// Obtiene la lista de parametros y su objeto JSON
+		JSONObject params = jsonAction.getJSONObject("params");
+		String[] paramsNames = JSONObject.getNames(params);
+
+		StringBuilder actionBuild = new StringBuilder();
+		actionBuild.append(jsonAction.getString("action"));
+
+		// Recorre los parámetros para constuir su String
+		if (paramsNames != null) {
+			actionBuild.append("?");
+			for (int i = 0; i < paramsNames.length; i++) {
+				String paramName = paramsNames[i];
+				actionBuild.append(paramName);
+				actionBuild.append("=");
+				actionBuild.append(params.get(paramName));
+				// Si es el último parametro no añade &
+				if (i < paramsNames.length - 1) {
+					actionBuild.append("&");
+				}
+			}
+		}
+
+		return actionBuild.toString();
 	}
 
 	/**
@@ -304,6 +354,14 @@ public class LoginAction extends ActionSupport implements SessionAware,
 
 	public void setAppSrc(String appSrc) {
 		this.appSrc = appSrc;
+	}
+
+	public String getAction() {
+		return action;
+	}
+
+	public void setAction(String action) {
+		this.action = action;
 	}
 
 }

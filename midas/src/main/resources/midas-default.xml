@@ -84,6 +84,7 @@
         
         <action name="login" class="es.aragon.midas.security.LoginAction">
             <result type="redirectAction">index</result>
+            <result name="guiaAction" type="redirectAction">${action}</result>
             <result name="input">login</result>
         </action>
 

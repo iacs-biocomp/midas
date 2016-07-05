@@ -27,6 +27,8 @@
 
 <struts>
     <constant name="struts.action.excludePattern" value="/rest/.*" />
+    <!-- Limite de subida de ficheros al servidor de 50MB~ -->
+	<constant name="struts.multipart.maxSize" value="500000000" />
 
     <package name="midas-default" extends="struts-default" abstract="true">
        <result-types>
@@ -75,7 +77,7 @@
             <result name="logout" >logout</result>
             <result name="forbidden">forbidden</result>
             <result name="blank" >blank</result>
-			<result type="dispatcher" name="error">/error.jsp</result>            
+			<result type="dispatcher" name="error">/error.jsp</result>
         </global-results>
 
         <global-exception-mappings>
@@ -115,6 +117,16 @@
         <action name="*Users" class="es.aragon.midas.action.UsersAction" method="{1}">
 			<result name="users">users</result>
 			<result name="newUserName" type="dispatcher">/midas/newUserName.jsp</result>
+        </action>
+        
+        <action name="*Files" class="es.aragon.midas.action.FilesAction" method="{1}">
+        	<result name="files">files</result>
+        	<result name="download" type="stream">
+				<param name="contentType">application/octet-stream</param>
+                <param name="inputName">inputStream</param>
+                <param name="contentDisposition">attachment;filename="${fileName}"</param>
+                <param name="bufferSize">4096</param>        		
+        	</result>
         </action>
 
     </package>

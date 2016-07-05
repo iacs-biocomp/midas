@@ -69,10 +69,6 @@ public class GuiaConnection {
 	 *            Token generado por guia desde la aplicación de origen.
 	 * @param appSrc
 	 *            Nombre de la aplicación de origen.
-	 * @param appDst
-	 *            Nombre de la aplicación destino.
-	 * @param url
-	 *            URL de GUIA para realizar la validación del token.
 	 * @return Obtiene un XML con el resultado de la validación de GUIA. Si es
 	 *         correcta tendrá los datos del usuario.
 	 */

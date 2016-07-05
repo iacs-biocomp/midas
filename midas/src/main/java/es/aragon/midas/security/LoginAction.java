@@ -35,8 +35,7 @@ import es.aragon.midas.ws.guia.GuiaConnection;
  * @author carlos
  * 
  */
-public class LoginAction extends ActionSupport implements SessionAware,
-		ServletRequestAware {
+public class LoginAction extends ActionSupport implements SessionAware, ServletRequestAware {
 
 	private static final long serialVersionUID = 1L;
 	private Map<String, Object> session;
@@ -64,14 +63,12 @@ public class LoginAction extends ActionSupport implements SessionAware,
 	 */
 	@Override
 	public String execute() throws MidasJPAException {
-		boolean validateLocal = AppProperties.getParameter(
-				Constants.CFG_VALIDATE_LOCAL).equals("true");
+		boolean validateLocal = AppProperties.getParameter(Constants.CFG_VALIDATE_LOCAL).equals("true");
 		MidUser user = null;
 		UsersDAO dao;
 
 		try {
-			dao = (UsersDAO) new InitialContext()
-					.lookup("java:module/UsersDAO");
+			dao = (UsersDAO) new InitialContext().lookup("java:module/UsersDAO");
 		} catch (NamingException e) {
 			log.error("Error accediendo a EJB UsersDAO");
 			return ERROR;
@@ -91,15 +88,13 @@ public class LoginAction extends ActionSupport implements SessionAware,
 				GuiaConnection guiaConnection = new GuiaConnection();
 
 				// Realiza la consulta a GUIA
-				String respuestaGuia = guiaConnection.validateToken(token,
-						appSrc);
+				String respuestaGuia = guiaConnection.validateToken(token, appSrc);
 
 				AuthGuiaDetails userGuia = new AuthGuiaDetails(respuestaGuia);
 
-				// Comprueba que no haya habido errores al consultar el GUIA
+				// Comprueba que no haya habido errores al consultar en GUIA
 				if (!StringUtils.nb(userGuia.getErrorDesc())) {
-					log.error("Error en la validacion de token GUIA: "
-							+ userGuia.getErrorDesc());
+					log.error("Error en la validacion de token GUIA: " + userGuia.getErrorDesc());
 					accessLogService.error();
 					return INPUT;
 				} else {
@@ -130,14 +125,10 @@ public class LoginAction extends ActionSupport implements SessionAware,
 				if (user == null && validateLocal) {
 					accessLogService.noAutorizado();
 					addActionError("El usuario no está autorizado");
-					log.warn("Usuario " + username
-							+ "No registrado en Base de datos");
+					log.warn("Usuario " + username + "No registrado en Base de datos");
 				} else {
-					if (AppProperties
-							.getParameter(Constants.CFG_AUTH_IGNOREPASS) == null
-							|| AppProperties.getParameter(
-									Constants.CFG_AUTH_IGNOREPASS).equals(
-									Constants.FALSE)) {
+					if (AppProperties.getParameter(Constants.CFG_AUTH_IGNOREPASS) == null
+							|| AppProperties.getParameter(Constants.CFG_AUTH_IGNOREPASS).equals(Constants.FALSE)) {
 						log.debug("Autenticando acceso de usuario " + username);
 						user = loginValidator.authenticate(username, password);
 					}
@@ -145,8 +136,7 @@ public class LoginAction extends ActionSupport implements SessionAware,
 			}
 
 			// Comprueba que el usuario esté activo en la aplicación
-			if (user != null
-					&& !String.valueOf(user.getActive()).equalsIgnoreCase("Y")) {
+			if (user != null && !String.valueOf(user.getActive()).equalsIgnoreCase("Y")) {
 				addActionError("El usuario está desactivado");
 				log.error("El usuario está desactivado");
 				accessLogService.noAutorizado();
@@ -156,11 +146,9 @@ public class LoginAction extends ActionSupport implements SessionAware,
 			// Comprueba si hay algun error al autenticar en el LDAP
 			if (loginValidator.getException() != null) {
 				// Obtiene el mensaje de error del LDAP
-				String msgError = LdapUtils.getDescError(loginValidator
-						.getException());
+				String msgError = LdapUtils.getDescError(loginValidator.getException());
 				addActionError(msgError);
-				log.error("Ha ocurrido un error al autenticar contra el AD. Desc: "
-						+ msgError);
+				log.error("Ha ocurrido un error al autenticar contra el AD. Desc: " + msgError);
 				accessLogService.error();
 				return INPUT;
 			}
@@ -185,21 +173,20 @@ public class LoginAction extends ActionSupport implements SessionAware,
 				accessLogService.access();
 				log.debug("Creando sesión de usuario " + username);
 
+				// Si se ha especificado una acción de struts intenta cargarla
 				try {
 					if (!StringUtils.nb(action)) {
 						this.action = getActionUrl();
 						return "guiaAction";
 					}
 				} catch (Exception e) {
-					log.error("Error al redirigir a la acción de struts: "
-							+ action, e);
+					log.error("Error al redirigir a la acción de struts: " + action, e);
 				}
 
 				return SUCCESS;
 			} else {
 				addActionError("El usuario o la contraseña no son correctos");
-				log.warn("El usuario o la contraseña no son correctos: "
-						+ username);
+				log.warn("El usuario o la contraseña no son correctos: " + username);
 				accessLogService.fail();
 				return INPUT;
 			}

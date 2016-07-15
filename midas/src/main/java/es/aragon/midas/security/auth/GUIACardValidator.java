@@ -1,5 +1,8 @@
 package es.aragon.midas.security.auth;
 
+import java.util.List;
+import java.util.ListIterator;
+
 import es.aragon.midas.config.MidUser;
 import es.aragon.midas.dao.UsersDAO;
 import es.aragon.midas.util.StringUtils;
@@ -66,6 +69,7 @@ public class GUIACardValidator extends LoginValidatorBase {
     	try {
             GuiaConnection con = new GuiaConnection();
             AuthGuiaResponse resp = null;
+    		List<String> LdapRoles;
             String response = con.auth(username.toLowerCase(), password);
             if (response != null) {
                 resp = con.xmlMapping(response);
@@ -80,7 +84,15 @@ public class GUIACardValidator extends LoginValidatorBase {
                 savedUser.setLastname1(details.getSurname1());
                 savedUser.setLastname2(details.getSurname2());
                 savedUser.setIdd(details.getNif());
-                //TODO MidRoles from LDAP
+                // MidRoles from LDAP
+                LdapRoles = details.getGroupsLDAPList();
+				ListIterator<String> it = LdapRoles.listIterator();
+				while(it.hasNext()){
+					String m = it.next();
+					log.debug("ROL COGIDO DE LDAP: " + m);
+					savedUser.grantLdapRole(m);
+				}
+                
                 //TODO setactive savedUser.setActive(details.);
                 retval = true;
             } else {

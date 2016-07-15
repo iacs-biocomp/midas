@@ -48,7 +48,7 @@ public class MidContext implements Serializable {
     @JoinTable(name = "MID_ROLE_CONTEXT", joinColumns = {
         @JoinColumn(name = "CX_ID", referencedColumnName = "CX_ID")}, inverseJoinColumns = {
         @JoinColumn(name = "ROLE_ID", referencedColumnName = "ROLE_ID")})
-    @ManyToMany(cascade=CascadeType.ALL)
+    @ManyToMany
     @LazyCollection(LazyCollectionOption.FALSE)
     private List<MidRole> midRoleList;
     

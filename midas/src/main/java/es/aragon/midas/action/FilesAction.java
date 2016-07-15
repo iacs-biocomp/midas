@@ -44,7 +44,7 @@ public class FilesAction extends MidasActionSupport {
 	
 	
 	{
-		setGrantRequired("DEVELOPER");
+		setGrantRequired("ADMIN");
 	}
 	
 	/**

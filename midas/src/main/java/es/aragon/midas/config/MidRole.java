@@ -6,6 +6,7 @@ package es.aragon.midas.config;
 
 import java.io.Serializable;
 import java.util.List;
+
 import javax.persistence.*;
 import javax.xml.bind.annotation.XmlRootElement;
 import javax.xml.bind.annotation.XmlTransient;
@@ -45,11 +46,17 @@ public class MidRole implements Serializable {
     @LazyCollection(LazyCollectionOption.FALSE)
     private List<MidUser> midUserList;
     
-    @ManyToMany(mappedBy = "midRoleList", cascade=CascadeType.ALL)
+    @JoinTable(name = "MID_ROLEGRANTS", joinColumns = {
+        @JoinColumn(name = "RG_ROLE", referencedColumnName = "ROLE_ID")}, inverseJoinColumns = {
+        @JoinColumn(name = "RG_GRANT", referencedColumnName = "GR_ID")})
+    @ManyToMany
     @LazyCollection(LazyCollectionOption.FALSE)
     private List<MidGrant> midGrantList;
     
-    @ManyToMany(mappedBy = "midRoleList", cascade=CascadeType.ALL)
+    @JoinTable(name = "MID_ROLE_CONTEXT", joinColumns = {
+            @JoinColumn(name = "ROLE_ID", referencedColumnName = "ROLE_ID")}, inverseJoinColumns = {
+            @JoinColumn(name = "CX_ID", referencedColumnName = "CX_ID")})
+    @ManyToMany
     @LazyCollection(LazyCollectionOption.FALSE)
     private List<MidContext> midContextList;
 

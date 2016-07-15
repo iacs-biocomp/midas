@@ -31,7 +31,7 @@ public class GrantsDAO {
 	public Set<String> grantsByLdapRole (String role) {
 		Set<String> grants = new HashSet<String>(0);
 
-                // selecciona los roles cuyos usuarios asociados (userroles) 
+        // selecciona los roles cuyos usuarios asociados (userroles) 
 		// tienen por nombre el indicado en el parametro
 		try {
 			Query query = midasEntityManager.createNamedQuery("findGrantsByLdap")

@@ -4,6 +4,8 @@
 package es.aragon.midas.security;
 
 import java.util.Calendar;
+import java.util.List;
+import java.util.ListIterator;
 import java.util.Map;
 
 import javax.inject.Inject;
@@ -22,11 +24,11 @@ import es.aragon.midas.config.Constants;
 import es.aragon.midas.config.MidUser;
 import es.aragon.midas.dao.UsersDAO;
 import es.aragon.midas.exception.MidasJPAException;
+import es.aragon.midas.ldap.LdapUtils;
 import es.aragon.midas.logging.IAccessLogger;
 import es.aragon.midas.logging.ILOPDLogger;
 import es.aragon.midas.logging.Logger;
 import es.aragon.midas.security.auth.LoginValidator;
-import es.aragon.midas.util.LdapUtils;
 import es.aragon.midas.util.StringUtils;
 import es.aragon.midas.ws.guia.AuthGuiaDetails;
 import es.aragon.midas.ws.guia.GuiaConnection;
@@ -65,8 +67,9 @@ public class LoginAction extends ActionSupport implements SessionAware, ServletR
 	public String execute() throws MidasJPAException {
 		boolean validateLocal = AppProperties.getParameter(Constants.CFG_VALIDATE_LOCAL).equals("true");
 		MidUser user = null;
+		List<String> LdapRoles;
 		UsersDAO dao;
-
+		
 		try {
 			dao = (UsersDAO) new InitialContext().lookup("java:module/UsersDAO");
 		} catch (NamingException e) {
@@ -85,6 +88,7 @@ public class LoginAction extends ActionSupport implements SessionAware, ServletR
 			// Login mediante token de GUIA
 			// **********************************************************
 			if (!StringUtils.nb(token)) {
+				log.debug("Validación por token de GUIA");
 				GuiaConnection guiaConnection = new GuiaConnection();
 
 				// Realiza la consulta a GUIA
@@ -100,10 +104,25 @@ public class LoginAction extends ActionSupport implements SessionAware, ServletR
 				} else {
 					// Busca al usuario en midas MID_USERS
 					user = dao.find(userGuia.getLogin().toUpperCase());
+					
+					// Busca los Roles que tiene el usuario en el LDAP
+					//		y le pasa los grants al usuario de la aplicación para le sesión
+					LdapRoles = userGuia.getGroupsLDAPList();
+					ListIterator<String> it = LdapRoles.listIterator();
+					while(it.hasNext()){
+						String m = it.next();
+						log.debug("ROL COGIDO DE LDAP: " + m);
+						user.grantLdapRole(m);
+					}
 				}
-
+			// **********************************************************
+			// Login mediante Tarjeta
+			// **********************************************************	
 			} else if (!StringUtils.nb(ticket)) {
 				user = loginValidator.authenticate(ticket);
+			// **********************************************************
+			// Login mediante Nombre y Contraseña
+			// **********************************************************
 			} else {
 				if (StringUtils.nb(username)) {
 					addActionError("El nombre no puede estar en blanco");

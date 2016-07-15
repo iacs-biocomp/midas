@@ -1,4 +1,4 @@
-package es.aragon.midas.util;
+package es.aragon.midas.ldap;
 
 import java.util.Hashtable;
 
@@ -12,51 +12,37 @@ import javax.naming.ldap.LdapContext;
 
 import es.aragon.midas.config.AppProperties;
 import es.aragon.midas.logging.Logger;
+import es.aragon.midas.util.Base64;
+import es.aragon.midas.util.FileEncoder;
 
 public class LdapUtils {
-
 	private static Logger log;
-
 	static {
 		log = new Logger();
 	}
-
+	
+	/*public static void main (String args[]) throws NamingException{
+		getUserLdap("admin-dep@salud.dga.es", "ryc1852!", new FiltroLdap("jimunnoz@salud.aragon.es", null));
+		
+	}*/
+	
 	/**
-	 * Comprueba si un nombre de usuario existe en el LDAP
 	 * 
-	 * @param userName
-	 *            Nombre de usuario que comprueba en el AD
-	 * @return True si el nombre existe, false si no existe
+	 * @param username
+	 * @param password
+	 * @param filtros
+	 * @return
 	 * @throws NamingException
 	 */
-	public static String getUserLogin(String mail) throws NamingException {
+	public static UserLdap getUserLdap(String username, String password, FiltroLdap filtros) throws NamingException{
 		LdapContext ctx = null;
-
-		// Obtiene de las properties de la aplicación los valores para acceder
-		// al LDAP
 		String ldapUrl = AppProperties.getParameter("midas.ldap.server");
 		String baseDN = AppProperties.getParameter("midas.ldap.baseDN");
-		String validUserName = AppProperties
-				.getParameter("midas.ldap.validUser");
-		String validPassword;
-		try {
-			// Desencripta la contraseña en AES recuperada de base de datos que
-			// la almacena en Base64
-			validPassword = FileEncoder.decryptString(new String(Base64
-					.decode(AppProperties
-							.getParameter("midas.ldap.validPassword"))));
-		} catch (Exception e) {
-			validPassword = "";
-			e.printStackTrace();
-			log.error(
-					"Error al obtener el password válido de la tabla de properties",
-					e);
-		}
-
+		UserLdap userLdap = null;
+		
 		// Crea la conexión con LDAP
 		try {
-			ctx = LdapUtils.getLdapContext(ldapUrl, validUserName,
-					validPassword);
+			ctx = LdapUtils.getLdapContext(ldapUrl, username, password);
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
@@ -66,24 +52,52 @@ public class LdapUtils {
 		searchControls.setCountLimit(1);
 
 		// Busca si el usuario existe en el LDAP
-		String filtro = "(mail=" + mail + ")";
-		NamingEnumeration<SearchResult> resultados = ctx.search(baseDN, filtro,
-				searchControls);
-		// Si hay resultados obtiene el nombre de usuario
-		if (resultados.hasMoreElements()) {
-			SearchResult result = resultados.next();
-			String userName = ((String) result.getAttributes()
-					.get("sAMAccountName").get()).toUpperCase();
-			return userName;
+		String filts = filtros.getFilters();
+		NamingEnumeration<SearchResult> resultados = ctx.search(baseDN, filts, searchControls);
+		if (resultados.hasMoreElements()) {	
+			userLdap = new UserLdap(resultados.next());
 		}
-		return null;
+		
+		return userLdap;
+	}
+	
+	/**
+	 * Comprueba si un nombre de usuario existe en el LDAP
+	 * 
+	 * @param userName
+	 *            Nombre de usuario que comprueba en el AD
+	 * @return True si el nombre existe, false si no existe
+	 * @throws NamingException
+	 */
+	public static UserLdap getUserLogin(String mail) throws NamingException {
+		String validUserName = AppProperties.getParameter("midas.ldap.validUser");
+		String validPassword;
+		
+		try {
+			// Desencripta la contraseña en AES recuperada de base de datos que
+			// la almacena en Base64
+			validPassword = FileEncoder.decryptString(new String(Base64
+					.decode(AppProperties.getParameter("midas.ldap.validPassword"))));
+		} catch (Exception e) {
+			validPassword = "";
+			e.printStackTrace();
+			log.error("Error al obtener el password válido de la tabla de properties", e);
+		}
+
+		FiltroLdap filtros = new FiltroLdap(mail, null);
+		UserLdap userLdap= getUserLdap(validUserName, validPassword, filtros);
+		
+		if(userLdap != null){
+			return userLdap;
+		}else{
+			return null;
+		}
 	}
 
 	private static LdapContext getLdapContext(String ldapUrl,
 			String userPrincipal, String userPwd) throws Exception {
 		Hashtable<String, Object> env = new Hashtable<String, Object>();
-		env.put(Context.INITIAL_CONTEXT_FACTORY,
-				"com.sun.jndi.ldap.LdapCtxFactory");
+		env.put(Context.INITIAL_CONTEXT_FACTORY, "com.sun.jndi.ldap.LdapCtxFactory");
 		env.put(Context.PROVIDER_URL, ldapUrl);
 		env.put(Context.SECURITY_AUTHENTICATION, "simple");
 		env.put(Context.SECURITY_PRINCIPAL, userPrincipal);
@@ -96,9 +110,8 @@ public class LdapUtils {
 	/**
 	 * Obtiene el mensaje de error que devuelve a partir de una excepcion de
 	 * LDAP
-	 * 
 	 * @param e
-	 *            Excepción obtenida al autenticar contra el LDAP
+	 * 		Excepción obtenida al autenticar contra el LDAP
 	 * @return Descripción del error que devuelve el LDAP
 	 */
 	public static String getDescError(Throwable e) {

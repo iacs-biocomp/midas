@@ -12,7 +12,8 @@ import es.aragon.midas.config.MidUser;
 import es.aragon.midas.dao.ContextsDAO;
 import es.aragon.midas.dao.RolesDAO;
 import es.aragon.midas.dao.UsersDAO;
-import es.aragon.midas.util.LdapUtils;
+import es.aragon.midas.ldap.LdapUtils;
+import es.aragon.midas.ldap.UserLdap;
 
 /**
  * Acciones para la gestión de usuarios de una aplicación
@@ -42,6 +43,7 @@ public class UsersAction extends MidasActionSupport {
 	private MidContext userContext = new MidContext();
 
 	private MidUser userNew = new MidUser();
+	private String readOnly = "false";
 
 	/*****************************************
 	 * Métodos de action
@@ -73,7 +75,17 @@ public class UsersAction extends MidasActionSupport {
 
 		log.debug("Buscando el username para el email: " + userNew.getEmail());
 		try {
-			userNew.setUserName(LdapUtils.getUserLogin(userNew.getEmail()));
+			UserLdap userByLdap = LdapUtils.getUserLogin(userNew.getEmail());
+			if(userByLdap != null){
+				userNew.setUserName(userByLdap.getLogin());
+				userNew.setIdd(userByLdap.getNif());
+				userNew.setName(userByLdap.getName());
+				userNew.setLastname1(userByLdap.getSurnames());
+				readOnly = "true";
+			}else{
+				readOnly = "false";
+			}
+
 		} catch (Exception e) {
 			log.error("Error al obtener el nombre de usuario del LDAP", e);
 		}
@@ -345,5 +357,8 @@ public class UsersAction extends MidasActionSupport {
 	public void setUserNew(MidUser userNew) {
 		this.userNew = userNew;
 	}
-
+	
+	public String getReadOnly(){
+		return readOnly;
+	}
 }

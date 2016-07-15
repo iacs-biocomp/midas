@@ -17,7 +17,7 @@ import es.aragon.midas.util.StringUtils;
 public abstract class LoginValidatorBase implements LoginValidator {
 
     Logger log = new Logger();
-    MidUser savedUser;  
+    MidUser savedUser;
     
     public MidUser authenticate(String username, String password) {
         UsersDAO dao; 

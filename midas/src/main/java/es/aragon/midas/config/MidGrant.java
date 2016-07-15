@@ -43,7 +43,7 @@ public class MidGrant implements Serializable {
     @JoinTable(name = "MID_ROLEGRANTS", joinColumns = {
         @JoinColumn(name = "RG_GRANT", referencedColumnName = "GR_ID")}, inverseJoinColumns = {
         @JoinColumn(name = "RG_ROLE", referencedColumnName = "ROLE_ID")})
-    @ManyToMany(cascade=CascadeType.ALL)
+    @ManyToMany
     @LazyCollection(LazyCollectionOption.FALSE)
     private List<MidRole> midRoleList;
     

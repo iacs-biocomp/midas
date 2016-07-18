@@ -9,9 +9,25 @@ import javax.naming.NamingException;
 import javax.naming.directory.Attribute;
 import javax.naming.directory.SearchResult;
 
+/**
+ * Objeto Usuario con los valores obtenidos del LDAP
+ * @author Jorge Landa
+ */
 public class UserLdap {
-	private final Pattern p = Pattern.compile("^CN=([a-zA-Z-]+).*");
+	/**
+	 * Patrón de busqueda de grupos del LDAP para los usuarios.
+	 * 		El patron obtiene el String de cada uno de los grupos de la siguiente forma:
+	 * 	Empieza por "CN= " + Crea un grupo para todo el contenido que tenga
+	 * 		Letras, números y "-" hasta encontrar un separador, en este caso ","
+	 * 	Despues tiene en cuenta cualquier tipo de contenido encontrado. El cual simplemente
+	 * 		Descartaremos
+	 *  
+	 *  Obtenemos este primer grupo ya que es donde se muestra el valor cada uno de los grupos
+	 *  LDAP a los que pertenece el usuario.
+	 */
+	private final Pattern p = Pattern.compile("^CN=([1-9a-zA-Z-]+).*");
 
+	// Variables del usuario obtenido del LDAP
 	private String login;
 	private String mail;
 	private String nif;
@@ -19,7 +35,12 @@ public class UserLdap {
 	private String surnames;
     private List<String> groupsLDAP;
     
-    
+    /**
+     * Constructor de UserLdap
+     * 		Según el resultado de la busqueda se establecen los parametros.
+     * @param result
+     * @throws NamingException
+     */
 	public UserLdap(SearchResult result) throws NamingException{
 		login = ((String) result.getAttributes().get("sAMAccountName").get()).toUpperCase();
 		nif = ((String) result.getAttributes().get("name").get()).toUpperCase();
@@ -39,6 +60,14 @@ public class UserLdap {
 			surnames = ((String) result.getAttributes().get("sn").get()).toUpperCase();
 		}
 		
+		/**
+		 * Recorre todos los atributos memberOf encontrados en el LDAP
+		 * 		y establece los valores de los grupos según el filtro definido al principio.
+		 * 	Se obtiene así los grupos LDAP a los que pertenece el usuario y se guardan en un List.
+		 * 
+		 * 	Estos grupos serán los que nos permitan obtener los grants que tendrá el usuario
+		 * 		según sus roles de LDAP.
+		 */
 		groupsLDAP = new ArrayList<String>();
 		Attribute memberOf = result.getAttributes().get("memberOf");
 		if(memberOf != null){
@@ -51,7 +80,8 @@ public class UserLdap {
 		}
     }
 
-
+	// <---- Getters and Setters
+	
 	public String getLogin() {
 		return login;
 	}
@@ -92,11 +122,9 @@ public class UserLdap {
 		this.surnames = surnames;
 	}
 
-
 	public List<String> getGroupsLDAP() {
 		return groupsLDAP;
 	}
-
 
 	public void setGroupsLDAP(List<String> groupsLDAP) {
 		this.groupsLDAP = groupsLDAP;

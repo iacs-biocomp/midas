@@ -36,7 +36,7 @@ public class FilesAction extends MidasActionSupport {
 	//Variables de subida de un fichero
 	private File uploadFile;
 	private String filename;
-	private String contentType;
+	private String contentType;			// ??
 	
 	//Variables de listas de contenido del directorio y segmentación en el path
 	private List<FileMetadata> three = new ArrayList<FileMetadata>();
@@ -56,6 +56,11 @@ public class FilesAction extends MidasActionSupport {
 		setRedirect();
 		String result = setThree();
 		
+		/*
+		 * Si al hacer click en una ruta, el resultado es un fichero, se lanza
+		 * 		el proceso para descargarlo
+		 * 	Sino, se entra en el directorio y se carga su contenido para ser mostrado
+		 */
 		if(result.equals("File")){
 			return "download";
 		}else{
@@ -71,7 +76,7 @@ public class FilesAction extends MidasActionSupport {
 	public String upload() throws IOException{
 		setRedirect();
 		
-		/** Si el path termina en / lo devuelve integro, sino le añade / */
+		/** Si el path termina en / lo devuelve integro, sino le añade "/" */
 		if(!path.endsWith("/")) {
 			path += "/";
         }
@@ -117,6 +122,8 @@ public class FilesAction extends MidasActionSupport {
             //Recargamos el árbol de contenido del directorio en el que nos encontramos
             three.clear();
     		String result = setThree();
+    		
+    		//Comprobante basico de ficheros
     		if(result.equals("File")){
     			return "download";
     		}else{
@@ -125,8 +132,11 @@ public class FilesAction extends MidasActionSupport {
         }
         /** Control de Error de fichero nulo. Se excluye la acción*/
         else{
+            //Recargamos el árbol de contenido del directorio en el que nos encontramos
         	three.clear();
     		String result = setThree();
+    		
+    		//Comprobante basico de ficheros
     		if(result.equals("File")){
     			return "download";
     		}else{
@@ -180,7 +190,11 @@ public class FilesAction extends MidasActionSupport {
 				}
 			}
 			
-			//Proceso de ordenación de ficheros del directorio
+			/*
+			 * Proceso de ordenación de ficheros del directorio
+			 * 		El directorio es ordenado para que muestre primero los Directorios
+			 * 	Y despues los ficheros
+			 */
 			Collections.sort(three);
 			
 			return "Directory";
@@ -195,6 +209,7 @@ public class FilesAction extends MidasActionSupport {
 				throw e;
 			}
 			return "File";
+		/** Si el fichero es un directorio devuelve el resultado */
 		}else{
 			return "Directory";
 		}
@@ -218,7 +233,7 @@ public class FilesAction extends MidasActionSupport {
 		if(path.length() == 1){
 			redirect.add("/");
 		}else{
-			//Divive el path dividido por los "/"
+			//Divide el path dividido por los "/"
 			String [] splits = path.split("/");
 			for (String split : splits){
 				if(split.equals("")){

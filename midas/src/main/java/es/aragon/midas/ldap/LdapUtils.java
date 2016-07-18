@@ -15,6 +15,10 @@ import es.aragon.midas.logging.Logger;
 import es.aragon.midas.util.Base64;
 import es.aragon.midas.util.FileEncoder;
 
+/**
+ * Metodos de busqueda de usuarios en el LDAP
+ * @author Jorge Landa
+ */
 public class LdapUtils {
 	private static Logger log;
 	static {
@@ -27,7 +31,7 @@ public class LdapUtils {
 	}*/
 	
 	/**
-	 * 
+	 * Devuelve el usuario LDAP según los filtros establecidos para la busqueda.
 	 * @param username
 	 * @param password
 	 * @param filtros
@@ -54,7 +58,9 @@ public class LdapUtils {
 		// Busca si el usuario existe en el LDAP
 		String filts = filtros.getFilters();
 		NamingEnumeration<SearchResult> resultados = ctx.search(baseDN, filts, searchControls);
-		if (resultados.hasMoreElements()) {	
+		if (resultados.hasMoreElements()) {
+			//Si el usuario existe en el LDAP se manda el resultado de la busqueda para obtener
+			//El UserLDAP correspondiente.
 			userLdap = new UserLdap(resultados.next());
 		}
 		
@@ -94,6 +100,9 @@ public class LdapUtils {
 		}
 	}
 
+	/*
+	 * Establece los parametros de Contexto necesarios para la busqueda en el LDAP
+	 */
 	private static LdapContext getLdapContext(String ldapUrl,
 			String userPrincipal, String userPwd) throws Exception {
 		Hashtable<String, Object> env = new Hashtable<String, Object>();

@@ -1,7 +1,6 @@
 package es.aragon.midas.vo;
 
 import java.math.BigDecimal;
-import java.text.DecimalFormat;
 
 
 /**

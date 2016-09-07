@@ -98,7 +98,7 @@ public class UsersAction extends MidasActionSupport {
 	/**
 	 * Guarda en BD un nuevo usuario
 	 * 
-	 * @return Muestra el errror de creación o la ventana de permisos de
+	 * @return Muestra el error de creación o la ventana de permisos de
 	 *         usuarios
 	 */
 	public String nuevo() {
@@ -212,7 +212,6 @@ public class UsersAction extends MidasActionSupport {
 
 	/**
 	 * Añade un contexto a un usuario
-	 * 
 	 * @return
 	 */
 	public String nuevoUC() {

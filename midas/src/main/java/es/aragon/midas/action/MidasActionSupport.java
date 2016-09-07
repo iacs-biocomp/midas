@@ -9,6 +9,7 @@ import com.opensymphony.xwork2.ActionSupport;
 
 import es.aragon.midas.config.Constants;
 import es.aragon.midas.config.EnvProperties;
+import es.aragon.midas.config.AppProperties;
 import es.aragon.midas.config.Menu;
 import es.aragon.midas.config.MidMenu;
 import es.aragon.midas.config.MidUser;
@@ -54,6 +55,10 @@ public abstract class MidasActionSupport extends ActionSupport
      */
     public MidMenu mainMenu = Menu.getMainMenu();
     /**
+     * 
+     */
+    public String version = AppProperties.getParameter("midas.appVersion");
+    /**
      *
      */
     protected Logger log = new Logger();
@@ -98,6 +103,10 @@ public abstract class MidasActionSupport extends ActionSupport
 
     public MidMenu getMainMenu() {
         return mainMenu;
+    }
+    
+    public String getVersion(){
+    	return version;
     }
 
     public MidMenu getUserMenu() {

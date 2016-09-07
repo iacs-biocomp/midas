@@ -42,7 +42,6 @@ public class FilesAction extends MidasActionSupport {
 	private List<FileMetadata> three = new ArrayList<FileMetadata>();
 	private List<String> redirect = new ArrayList<String>();
 	
-	
 	{
 		setGrantRequired("ADMIN");
 	}

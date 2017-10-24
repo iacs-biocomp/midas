@@ -3,7 +3,7 @@
 	<modelVersion>4.0.0</modelVersion>
 	<groupId>es.aragon</groupId>
 	<artifactId>midas</artifactId>
-	<version>4.3.7</version>
+	<version>4.3.8</version>
 
 
 	<properties>
@@ -16,7 +16,7 @@
 		<repository>
 			<id>sersalud1</id>
 			<name>sersalud1-releases</name>
-			<url>http://sersalud1:8082/artifactory/libs-release-local</url>
+			<url>http://1.40.1.197:8081/artifactory/libs-release-local</url>
 		</repository>
 	</repositories>
 

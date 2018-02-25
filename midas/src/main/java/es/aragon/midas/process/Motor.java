@@ -26,7 +26,7 @@ import org.activiti.engine.task.Task;
 import es.aragon.midas.process.Tarea.EstadoTarea;
 
 /**
- * Clase que implementa el motor donde se ejecutarán procesos correspondientes a flujos BPMN 2.0
+ * Clase que implementa el motor donde se ejecutaran procesos correspondientes a flujos BPMN 2.0
  * @author  Susana Deza
  * @version  1.0
  */
@@ -55,7 +55,7 @@ public class Motor {
 	 */
 	public final String ATTACHMENT_TASK_ID="TaskId";
 	/**
-	 * Descripción del adjunto
+	 * Descripcion del adjunto
 	 */	
 	public final String ATTACHMENT_DESCRIPTION="Description";
 	/**
@@ -73,7 +73,7 @@ public class Motor {
 	 */	
 	public final String NODE_TYPE = "type";
 	/**
-	 * Descripción del nodo
+	 * Descripcion del nodo
 	 */		
 	public final String NODE_DESC = "documentation";
 	
@@ -169,10 +169,10 @@ public class Motor {
     /**
     * Inicia el proceso correspondiente a un flujo BPMN
     * @param nbProceso Nombre del proceso asignado al flujo en el diagrama BPMN 
-    * @param usuario Identificación del usuario que se autentica para iniciar el proceso
+    * @param usuario Identificacion del usuario que se autentica para iniciar el proceso
     * @param variables Variables pasadas al flujo; puede ser null
     * @return Proceso iniciado
-    * @throws ActivitiObjectNotFoundException - Cuando no existe el despliegue de la definición de proceso 
+    * @throws ActivitiObjectNotFoundException - Cuando no existe el despliegue de la definicion de proceso 
     */
 	public Proceso iniciaProceso(String nbProceso, 
 										 String usuario,
@@ -187,9 +187,9 @@ public class Motor {
 	
     /**
     * Devuelve si un usuario pertenece al sistema
-    * @param usuario Identificación del usuario 
-    * @param pswd Contraseña del usuario
-    * @return Si el usuario/contraseña existe en el sistema: true; si no, false
+    * @param usuario Identificacion del usuario 
+    * @param pswd ContraseÃ±a del usuario
+    * @return Si el usuario/contraseÃ±a existe en el sistema: true; si no, false
     */
 	public boolean esUsuarioSistema(String usuario, String pswd){
 	  return(identityService.checkPassword(usuario, pswd));	
@@ -197,8 +197,8 @@ public class Motor {
 	
     /**
     * Devuelve si un usuario pertenece al grupo
-    * @param usuario Identificación del usuario que se quiere comprobar
-    * @param grupo Grupo en el que se buscará el usuario
+    * @param usuario Identificacion del usuario que se quiere comprobar
+    * @param grupo Grupo en el que se buscara el usuario
     * @return Si el usuario existe en el grupo: true; si no, false
     */
 	public Boolean esUsuarioGrupo(String usuario, String grupo){
@@ -216,7 +216,7 @@ public class Motor {
 
     /**
     * Devuelve los identificadores de los grupos de un usuario
-    * @param usuario Identificación del usuario 
+    * @param usuario Identificacion del usuario 
     * @return Lista con los identificadores de los grupos a los que pertenece el usuario 
     */
 	public List<String> getGruposUsuario(String usuario){		
@@ -232,10 +232,10 @@ public class Motor {
 
 	/**
 	 * Dada una lista de tareas y un estado, devuelve el total de las tareas por cada uno de los grupos del usuario 
-	 * @param usr Usuario del que se obtendrán los grupos
-	 * @param listaTareas Lista de tareas que se comprobarán
+	 * @param usr Usuario del que se obtendran los grupos
+	 * @param listaTareas Lista de tareas que se comprobaran
 	 * @param estado Estado de las tareas a comprobar
-	 * @return Colección de pares Grupo-Recuento, donde Grupo es el identificador de cada uno de los grupos a los que pertenece el usuario
+	 * @return Coleccion de pares Grupo-Recuento, donde Grupo es el identificador de cada uno de los grupos a los que pertenece el usuario
 	 */
 	public Map<String, Long> getCountTareasGruposUsuarioEstado(String usr, List<Tarea> listaTareas, EstadoTarea estado){
 		Map<String, Long> recuentoTareasGrupos = new HashMap <String, Long>();
@@ -261,9 +261,10 @@ public class Motor {
 	
     /**
     * Devuelve lista de tareas asociadas a un grupo: activas, asignadas o no a usuarios, sin completar
-    * @param grupo Identificación de grupo de usuarios
-    * @param asignadas Indica si se solicitan las tareas activas asignadas a usuarios del grupo (true), las no asignadas (false) o todas ellas (null)
-    * @return Lista con las tareas de activiti que pertenezcan a usuarios del grupo y estén activas
+    * @param grupo Identificacion de grupo de usuarios
+    * @param asignadas Indica si se solicitan las tareas activas asignadas a 
+    * 		usuarios del grupo (true), las no asignadas (false) o todas ellas (null)
+    * @return Lista con las tareas de activiti que pertenezcan a usuarios del grupo y estan activas
     * @see  <a href="http://activiti.org/javadocs/org/activiti/engine/task/Task.html">org.activiti.engine.task.Task</a>
     */
 	public List<Task> getTasksGrupo(String grupo, Boolean asignadas){
@@ -294,8 +295,8 @@ public class Motor {
 	
     /**
     * Devuelve lista de tareas activas asignadas a un usuario
-    * @param usuario Identificación del usuario
-    * @return Lista con las tareas activas de activiti que estén asignadas al usuario
+    * @param usuario Identificacion del usuario
+    * @return Lista con las tareas activas de activiti que estan asignadas al usuario
     * @see  <a href="http://activiti.org/javadocs/org/activiti/engine/task/Task.html">org.activiti.engine.task.Task</a>
     */
 	public List<Task> getTasksUsuario(String usuario){			
@@ -321,8 +322,8 @@ public class Motor {
 	
     /**
     * Despliega un recurso en el repositorio de Activiti
-    * @param nbDespliegue Nombre que se dará al despliegue
-    * @param recurso Recurso que se desplegará
+    * @param nbDespliegue Nombre que se dara al despliegue
+    * @param recurso Recurso que se desplegara
     * @throws Exception
     */	
 	public void desplegar(String nbDespliegue, String recurso) throws Exception {
@@ -334,9 +335,9 @@ public class Motor {
 	
     /**
     * Despliega dos recursos en el repositorio de Activiti
-    * @param nbDespliegue Nombre que se dará al despliegue
-    * @param recurso1 Primer recurso que se desplegará
-    * @param recurso2 Segundo recurso que se desplegará
+    * @param nbDespliegue Nombre que se dara al despliegue
+    * @param recurso1 Primer recurso que se desplegara
+    * @param recurso2 Segundo recurso que se desplegara
     * @throws Exception
     */	
 	public void desplegar(String nbDespliegue, String recurso1, String recurso2) throws Exception {
@@ -348,11 +349,12 @@ public class Motor {
 	}
 	
     /**
-    * Elimina los despliegues correspondientes a una definición de proceso y sus objetos asociados (instancias de proceso, variables, etc)
+    * Elimina los despliegues correspondientes a una definicion 
+    * de proceso y sus objetos asociados (instancias de proceso, variables, etc)
     * @param nbProceso Proceso al que corresponden los despliegues a eliminar
     * @throws Exception
     */
-	// Eliminar despliegue correspondiente a una definición de proceso
+	// Eliminar despliegue correspondiente a una definicion de proceso
 	public void eliminarDespliegue(String nbProceso) throws Exception {		
 		List<ProcessDefinition> procesos = repositoryService.createProcessDefinitionQuery().list();
 	    for (ProcessDefinition proceso : procesos) {	    	
@@ -365,11 +367,11 @@ public class Motor {
 	}	
 	
     /**
-    * Devuelve la lista de id's de proceso que están corriendo de una definición de proceso
+    * Devuelve la lista de id's de proceso que estan corriendo de una definicion de proceso
     * @param ProcessDefinitionId Identificador del proceso a consultar
     * @return Lista de los identificadores de proceso
     */
-	// Devuelve la lista de id's de proceso que están corriendo de una definición de proceso
+	// Devuelve la lista de id's de proceso que estan corriendo de una definicion de proceso
 	public List<String> getIdProcesosDefPro(String ProcessDefinitionId){		
 		List<String> lista = new ArrayList<String>();		
 		
@@ -402,8 +404,8 @@ public class Motor {
 	}
 	
     /**
-    * Devuelve las tareas que tiene asignadas un usuario y que por lo tanto están en su bandeja de entrada; 
-    * también devuelve las posibles tareas que podrían asignársele por pertenecer al grupo al que pertenece la tarea activa
+    * Devuelve las tareas que tiene asignadas un usuario y que por lo tanto estan en su bandeja de entrada; 
+    * tambien devuelve las posibles tareas que podrin asignarsele por pertenecer al grupo al que pertenece la tarea activa
     * @param usuario Identificador del usuario
     * @return Lista de tareas asignadas o que pueden serlo por pertenecer el usuario al grupo
     */
@@ -421,14 +423,14 @@ public class Motor {
 			Tarea tarea = new Tarea (proceso, task);
 			//tarea.refrescaEstado();  
 			
-			// Añadir la tarea a la lista
+			// AÃ±adir la tarea a la lista
 			tareas.add(tarea);
 		}
 
 		//Obtener los grupos del sistema
 		List <Group> grupos = this.getIdentityService().createGroupQuery().list();
 				
-		//Añadir las tareas del grupo si el usuario pertenece a alguno 
+		//AÃ±adir las tareas del grupo si el usuario pertenece a alguno 
 		for (Group grupo : grupos) {	
 			if (this.esUsuarioGrupo(usuario, grupo.getId())){
 				// Tareas del grupo del usuario
@@ -443,7 +445,7 @@ public class Motor {
 					Tarea tarea = new Tarea (proceso, task);
 					//tarea.refrescaEstado();  
 					
-					// Añadir la tarea a la lista
+					// AÃ±adir la tarea a la lista
 					tareas.add(tarea);
 				}
 			}
@@ -477,7 +479,7 @@ public class Motor {
 		// Recuperar los grupos del usuario
 		List<String> gruposUsr = this.getGruposUsuario(usuario);
 		
-		// Si el usuario no tiene el grupo asignado, lanzar una excepción
+		// Si el usuario no tiene el grupo asignado, lanzar una excepcion
 		if (gruposUsr.contains(grupo)){
 			for (Tarea tareaEnCola : tareasEnCola) {
 				if (tareaEnCola.getGruposTarea().contains(grupo)){

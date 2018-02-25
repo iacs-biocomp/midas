@@ -2,8 +2,8 @@ package es.aragon.midas.mongo.filter;
 
 /**
  * Clase con la estructura de los criterios por los que se deben ordenar los
- * resultados de una consulta mongo. Contiene field, que será el campo del JSON
- * por el cual se ordenará; y contiene type que indicará si ordenar de forma
+ * resultados de una consulta mongo. Contiene field, que sera el campo del JSON
+ * por el cual se ordenara; y contiene type que indicara si ordenar de forma
  * ascendiente o descendiente.
  * 
  * @author ARTURO

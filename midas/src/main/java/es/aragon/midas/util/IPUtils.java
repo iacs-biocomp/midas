@@ -12,7 +12,7 @@ public class IPUtils  {
     static Logger log = new Logger();
     
     /**
-     * Devuelve la IP de origen de una conexión HTTP a partir del request
+     * Devuelve la IP de origen de una conexion HTTP a partir del request
      * @param request
      * @return IP de la conexion
      */
@@ -34,7 +34,7 @@ public class IPUtils  {
         }
         
         log.debug("Extrayendo IP:" +
-            "\n * IP física:       " + request.getRemoteAddr() +
+            "\n * IP fasica:       " + request.getRemoteAddr() +
             "\n * X-FORWARDED-FOR: " + xForwarded +
             "\n * FORWARDED:       " + forwarded +
             "\n * VIA:             " + via +

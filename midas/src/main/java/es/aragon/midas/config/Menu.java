@@ -22,26 +22,26 @@ public class Menu {
 	}
 
 	/**
-	 * Carga los datos de la estructura del menú desde la base de datos
+	 * Carga los datos de la estructura del menu desde la base de datos
 	 */
 	private static synchronized void getDBMenu() {
 		Logger log = new Logger();
-		log.debug("Cargando el menú en de la aplicación desde base de datos");
+		log.debug("Cargando el menu en de la aplicacion desde base de datos");
 		try {
 			MenuDAO dao = (MenuDAO) new InitialContext()
 					.lookup("java:module/MenuDAO");
 			mainmenu = dao.getMenuTree(dao.find());
-			log.info("Menú cargado correctamente");
+			log.info("Menu cargado correctamente");
 		} catch (Exception e) {
 			e.printStackTrace();
 			System.out.println("Error leyendo menu de BD. " + e.getMessage());
-			log.error("Error al cargar los datos del menú desde base de datos",
+			log.error("Error al cargar los datos del menu desde base de datos",
 					e);
 		}
 	}
 
 	/**
-	 * Recarga el menú de la aplicación
+	 * Recarga el menu de la aplicacion
 	 */
 	public static void reload() {
 		getDBMenu();

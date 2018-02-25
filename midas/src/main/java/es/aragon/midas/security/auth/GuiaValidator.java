@@ -7,7 +7,7 @@ import es.aragon.midas.ws.guia.GuiaConnection;
 
 
 /**
- * LoginValidator a trav�s de los servicios GUIA.
+ * LoginValidator a traves de los servicios GUIA.
  * 
  *
  * @author carlos

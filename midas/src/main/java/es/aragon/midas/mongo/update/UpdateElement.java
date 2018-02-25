@@ -1,7 +1,7 @@
 package es.aragon.midas.mongo.update;
 
 /**
- * Clase encargada de almacenar una modificación para mongo. Almacena el campo
+ * Clase encargada de almacenar una modificacion para mongo. Almacena el campo
  * que hay que modificar y el nuevo valor que va a tomar.
  * 
  * @author ARTURO

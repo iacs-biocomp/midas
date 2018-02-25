@@ -29,7 +29,7 @@ public abstract class AccessLoggerBase implements IAccessLogger{
     }
 
     /**
-     * Registra una autenticaci�n fallida
+     * Registra una autenticacion fallida
      */
     public void fail() throws Exception {
         register("PASSWD");

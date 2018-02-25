@@ -19,13 +19,13 @@ import org.hibernate.annotations.LazyCollectionOption;
  * @author carlos
  */
 @Entity
-@Table(name = "MID_ROLES")
+@Table(name = "mid_roles")
 @XmlRootElement
 @NamedQueries({
-    @NamedQuery(name = "MidRole.findAll", query = "SELECT m FROM MidRole m ORDER BY roleId "),
+    @NamedQuery(name = "MidRole.findAll", query = "SELECT m FROM MidRole m ORDER BY m.roleId "),
     @NamedQuery(name = "MidRole.findAllUngiven", 
     	query = "SELECT m FROM MidRole m WHERE m NOT IN " +
-    			"	(SELECT r FROM MidRole r join r.midUserList u WHERE u.userName = :userName) ORDER BY roleId"),
+    			"	(SELECT r FROM MidRole r join r.midUserList u WHERE u.userName = :userName) ORDER BY m.roleId"),
     @NamedQuery(name = "MidRole.findByRoleId", query = "SELECT m FROM MidRole m WHERE m.roleId = :roleId"),
     @NamedQuery(name = "MidRole.findByRoleDesc", query = "SELECT m FROM MidRole m WHERE m.roleDesc = :roleDesc"),
     @NamedQuery(name = "MidRole.findByRoleLdap", query = "SELECT m FROM MidRole m WHERE m.roleLdap = :roleLdap")})
@@ -33,29 +33,29 @@ public class MidRole implements Serializable {
     private static final long serialVersionUID = 1L;
     @Id
     @Basic(optional = false)
-    @Column(name = "ROLE_ID")
+    @Column(name = "role_id")
     private String roleId;
-    @Column(name = "ROLE_DESC")
+    @Column(name = "role_desc")
     private String roleDesc;
-    @Column(name = "ROLE_LDAP")
+    @Column(name = "role_ldap")
     private String roleLdap;
-    @JoinTable(name = "MID_USERROLES", joinColumns = {
-        @JoinColumn(name = "UR_ROLE", referencedColumnName = "ROLE_ID")}, inverseJoinColumns = {
-        @JoinColumn(name = "UR_NAME", referencedColumnName = "USER_NAME")})
+    @JoinTable(name = "mid_userroles", joinColumns = {
+        @JoinColumn(name = "ur_role", referencedColumnName = "role_id")}, inverseJoinColumns = {
+        @JoinColumn(name = "ur_name", referencedColumnName = "user_name")})
     @ManyToMany(cascade=CascadeType.ALL)
     @LazyCollection(LazyCollectionOption.FALSE)
     private List<MidUser> midUserList;
     
-    @JoinTable(name = "MID_ROLEGRANTS", joinColumns = {
-        @JoinColumn(name = "RG_ROLE", referencedColumnName = "ROLE_ID")}, inverseJoinColumns = {
-        @JoinColumn(name = "RG_GRANT", referencedColumnName = "GR_ID")})
+    @JoinTable(name = "mid_rolegrants", joinColumns = {
+        @JoinColumn(name = "rg_role", referencedColumnName = "role_id")}, inverseJoinColumns = {
+        @JoinColumn(name = "rg_grant", referencedColumnName = "gr_id")})
     @ManyToMany
     @LazyCollection(LazyCollectionOption.FALSE)
     private List<MidGrant> midGrantList;
     
-    @JoinTable(name = "MID_ROLE_CONTEXT", joinColumns = {
-            @JoinColumn(name = "ROLE_ID", referencedColumnName = "ROLE_ID")}, inverseJoinColumns = {
-            @JoinColumn(name = "CX_ID", referencedColumnName = "CX_ID")})
+    @JoinTable(name = "mid_role_context", joinColumns = {
+            @JoinColumn(name = "role_id", referencedColumnName = "role_id")}, inverseJoinColumns = {
+            @JoinColumn(name = "cx_id", referencedColumnName = "cx_id")})
     @ManyToMany
     @LazyCollection(LazyCollectionOption.FALSE)
     private List<MidContext> midContextList;

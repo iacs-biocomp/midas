@@ -59,7 +59,7 @@ public class AuthenticationInterceptor implements Interceptor {
                 log.debug("Accediendo a login");
                 return actionInvocation.invoke();
             } else {
-                // Si está marcada autenticacion por certificado, insertamos la URL en el request
+                // Si esta marcada autenticacion por certificado, insertamos la URL en el request
                 if (AppProperties.getParameter(Constants.CFG_AUTH_CERT).equals("true")) {
                      String URLAuthGUIACard = AppProperties.getParameter(Constants.URL_GUIA_CARD);
                      HttpServletRequest request = (HttpServletRequest) actionInvocation.getInvocationContext().get(StrutsStatics.HTTP_REQUEST);
@@ -69,7 +69,11 @@ public class AuthenticationInterceptor implements Interceptor {
                 return Action.LOGIN;
             }
         } else {
-            // el usuario está logado
+        	if (action instanceof LoginAction) {
+        		return Constants.INDEX;
+        	}
+        	
+        	// el usuario esta logado
             if (action instanceof UserAware) {
                 ((UserAware) action).setUser(user);
             }

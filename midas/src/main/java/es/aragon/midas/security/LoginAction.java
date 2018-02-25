@@ -3,6 +3,7 @@
  */
 package es.aragon.midas.security;
 
+import java.util.Arrays;
 import java.util.Calendar;
 import java.util.List;
 import java.util.ListIterator;
@@ -30,8 +31,10 @@ import es.aragon.midas.logging.ILOPDLogger;
 import es.aragon.midas.logging.Logger;
 import es.aragon.midas.security.auth.LoginValidator;
 import es.aragon.midas.util.StringUtils;
+import es.aragon.midas.util.Utils;
 import es.aragon.midas.ws.guia.AuthGuiaDetails;
 import es.aragon.midas.ws.guia.GuiaConnection;
+import es.aragon.midas.ws.guia.InfoUserResponse;
 
 /**
  * @author carlos
@@ -48,7 +51,9 @@ public class LoginAction extends ActionSupport implements SessionAware, ServletR
 	// GUIA TOKEN
 	private String appSrc;
 	private String token;
-	private String action;
+	private String action;	// action para autenticaciÃ³n con token GUIA
+	private String urlAction; // action para redirecciÃ³n desde URL
+
 
 	@Inject
 	private LoginValidator loginValidator;
@@ -66,6 +71,7 @@ public class LoginAction extends ActionSupport implements SessionAware, ServletR
 	@Override
 	public String execute() throws MidasJPAException {
 		boolean validateLocal = AppProperties.getParameter(Constants.CFG_VALIDATE_LOCAL).equals("true");
+		
 		MidUser user = null;
 		List<String> LdapRoles;
 		UsersDAO dao;
@@ -84,18 +90,20 @@ public class LoginAction extends ActionSupport implements SessionAware, ServletR
 				log.error("accessLog Nulo. No se puede asignar IP ni grabar acceso");
 			}
 
+			
+			
 			// **********************************************************
 			// Login mediante token de GUIA
 			// **********************************************************
 			if (!StringUtils.nb(token)) {
-				log.debug("Validación por token de GUIA");
+				log.debug("Validacion por token de GUIA");
 				GuiaConnection guiaConnection = new GuiaConnection();
-
+	
 				// Realiza la consulta a GUIA
 				String respuestaGuia = guiaConnection.validateToken(token, appSrc);
-
+	
 				AuthGuiaDetails userGuia = new AuthGuiaDetails(respuestaGuia);
-
+	
 				// Comprueba que no haya habido errores al consultar en GUIA
 				if (!StringUtils.nb(userGuia.getErrorDesc())) {
 					log.error("Error en la validacion de token GUIA: " + userGuia.getErrorDesc());
@@ -106,7 +114,7 @@ public class LoginAction extends ActionSupport implements SessionAware, ServletR
 					user = dao.find(userGuia.getLogin().toUpperCase());
 					
 					// Busca los Roles que tiene el usuario en el LDAP
-					//		y le pasa los grants al usuario de la aplicación para le sesión
+					//		y le pasa los grants al usuario de la aplicacion para le sesion
 					LdapRoles = userGuia.getGroupsLDAPList();
 					ListIterator<String> it = LdapRoles.listIterator();
 					while(it.hasNext()){
@@ -115,97 +123,130 @@ public class LoginAction extends ActionSupport implements SessionAware, ServletR
 						user.grantLdapRole(m);
 					}
 				}
+				
+				
+				
 			// **********************************************************
 			// Login mediante Tarjeta
 			// **********************************************************	
 			} else if (!StringUtils.nb(ticket)) {
 				user = loginValidator.authenticate(ticket);
+			
+					
+				
 			// **********************************************************
-			// Login mediante Nombre y Contraseña
+			// Login mediante Nombre y ContraseÃ±a
 			// **********************************************************
 			} else {
+				// Verificamos que username y password no son blanco/nulo
 				if (StringUtils.nb(username)) {
 					addActionError("El nombre no puede estar en blanco");
 					log.error("El nombre no puede estar en blanco");
 				}
 				if (StringUtils.nb(password)) {
-					addActionError("La contraseña no puede estar en blanco");
-					log.error("La contraseña no puede estar en blanco");
+					addActionError("La contraseÃ±a no puede estar en blanco");
+					log.error("La contraseÃ±a no puede estar en blanco");
 				}
-
+	
 				if (StringUtils.nb(username) || StringUtils.nb(password)) {
 					accessLogService.blank();
 					return INPUT;
 				}
-
-				// Comprobamos si el usuario existe ya en BD
-				user = dao.find(username);
-
-				if (user == null && validateLocal) {
-					accessLogService.noAutorizado();
-					addActionError("El usuario no está autorizado");
-					log.warn("Usuario " + username + "No registrado en Base de datos");
-				} else {
-					if (AppProperties.getParameter(Constants.CFG_AUTH_IGNOREPASS) == null
-							|| AppProperties.getParameter(Constants.CFG_AUTH_IGNOREPASS).equals(Constants.FALSE)) {
-						log.debug("Autenticando acceso de usuario " + username);
-						user = loginValidator.authenticate(username, password);
+	
+				
+				
+				
+				// Comprobamos si el usuario existe ya en BD (caso de ser necesario)
+				if (validateLocal) {
+					user = dao.find(username);
+					if (user == null) {
+						addActionError("El usuario no esta autorizado");
+						log.warn("Usuario " + username + "No registrado en Base de datos");
 					}
 				}
+	
+				// Si existe el usuario, o no es necesario que exista, intentamos login
+				if (user != null || !validateLocal) {
+					log.debug("Autenticando acceso de usuario " + username);
+					user = loginValidator.authenticate(username, password);
+	
+					// Comprueba si hay algun error al autenticar en el LDAP
+					if (loginValidator.getException() != null) {
+						// Obtiene el mensaje de error del LDAP
+						String msgError = LdapUtils.getDescError(loginValidator.getException());
+						addActionError(msgError);
+						log.error("Ha ocurrido un error al autenticar contra el AD. Desc: " + msgError);
+						accessLogService.error();
+						return INPUT;
+					}
+				
+				}
+					
+				// Ha habido error de autenticaciÃ³n
+				if (user == null) {
+					addActionError("El usuario o la contraseÃ±a no son correctos");
+					log.warn("Error en usuario o contraseÃ±a: " + username);
+					accessLogService.fail();
+					return INPUT;
+				}
+	
 			}
-
-			// Comprueba que el usuario esté activo en la aplicación
+	
+	
+			
+			
+			// Ya tenemos usuario, y se ha logado correctamente
+			// Comprueba que el usuario esta activo en la aplicacion
 			if (user != null && !String.valueOf(user.getActive()).equalsIgnoreCase("Y")) {
-				addActionError("El usuario está desactivado");
-				log.error("El usuario está desactivado");
+				addActionError("El usuario esta desactivado");
+				log.error("El usuario esta desactivado");
 				accessLogService.noAutorizado();
 				return INPUT;
 			}
-
-			// Comprueba si hay algun error al autenticar en el LDAP
-			if (loginValidator.getException() != null) {
-				// Obtiene el mensaje de error del LDAP
-				String msgError = LdapUtils.getDescError(loginValidator.getException());
-				addActionError(msgError);
-				log.error("Ha ocurrido un error al autenticar contra el AD. Desc: " + msgError);
-				accessLogService.error();
-				return INPUT;
-			}
-
+	
+	
+	
 			// TODO autenticacion con estados: red, incorrecto, no autorizado...
 			if (user != null) {
+				
+				user.assignGrants();
+
 				user.setLastLogin(Calendar.getInstance().getTime());
-
+				if (user.getIdd() == null || user.getIdd().isEmpty()) {
+					user.setIdd(user.getInfoUser().getNif());
+					user.setName(user.getInfoUser().getName());
+					user.setLastname1(user.getInfoUser().getSurname1());
+					user.setLastname2(user.getInfoUser().getSurname2());
+				}
 				dao.update(user);
-				// Todos los usuarios tienen grant PUBLIC
-				user.grant("PUBLIC");
-				// Captura los grants configurados en BD
-				user.obtainGrants();
-
-				// Captura los contexts configurados en BD
-				user.obtainContexts();
-
+				
 				// user.grantLdapRole("APP-MID-ADMIN");
 				session.put(Constants.USER, user);
+				request.setAttribute(Constants.USER, user);
 				accessLogService.setUser(user.getUserName());
 				lopd.setUser(user.getUserName());
 				accessLogService.access();
-				log.debug("Creando sesión de usuario " + username);
-
-				// Si se ha especificado una acción de struts intenta cargarla
+				log.debug("Creando sesion de usuario " + username);
+	
+				// Si se ha especificado una accion de struts intenta cargarla
 				try {
 					if (!StringUtils.nb(action)) {
 						this.action = getActionUrl();
-						return "guiaAction";
+						log.debug("Redirigiendo a action " + action);
+						return Constants.GUIA_ACTION;
+					} else if (!StringUtils.nb(urlAction)) {
+						log.debug("Redirigiendo a action " + urlAction);
+						return Constants.URL_ACTION;
 					}
+	
 				} catch (Exception e) {
-					log.error("Error al redirigir a la acción de struts: " + action, e);
+					log.error("Error al redirigir a la accion de struts: " + action, e);
 				}
-
+	
 				return SUCCESS;
 			} else {
-				addActionError("El usuario o la contraseña no son correctos");
-				log.warn("El usuario o la contraseña no son correctos: " + username);
+				addActionError("El usuario o la contraseÃ±a no son correctos");
+				log.warn("El usuario o la contraseÃ±a no son correctos: " + username);
 				accessLogService.fail();
 				return INPUT;
 			}
@@ -221,14 +262,14 @@ public class LoginAction extends ActionSupport implements SessionAware, ServletR
 	}
 
 	/**
-	 * Parsea el JSON del parámetro action para generar la URL de struts que
+	 * Parsea el JSON del parametro action para generar la URL de struts que
 	 * dirige. <br>
 	 * EJEMPLO: <br>
 	 * <b>Entrada:</b> {"action":"CargarFormularioModificar",
 	 * "params":{"id":300, "version":3}} <br>
 	 * <b>Salida:</b> CargarFormularioModificar?id=300&version=3
 	 * 
-	 * @return URL de struts a la que hacer la redirección
+	 * @return URL de struts a la que hacer la redireccion
 	 */
 	private String getActionUrl() {
 		JSONObject jsonAction = new JSONObject(action);
@@ -239,7 +280,7 @@ public class LoginAction extends ActionSupport implements SessionAware, ServletR
 		StringBuilder actionBuild = new StringBuilder();
 		actionBuild.append(jsonAction.getString("action"));
 
-		// Recorre los parámetros para constuir su String
+		// Recorre los parametros para constuir su String
 		if (paramsNames != null) {
 			actionBuild.append("?");
 			for (int i = 0; i < paramsNames.length; i++) {
@@ -247,7 +288,7 @@ public class LoginAction extends ActionSupport implements SessionAware, ServletR
 				actionBuild.append(paramName);
 				actionBuild.append("=");
 				actionBuild.append(params.get(paramName));
-				// Si es el último parametro no añade &
+				// Si es el ultimo parametro no aÃ±ade &
 				if (i < paramsNames.length - 1) {
 					actionBuild.append("&");
 				}
@@ -282,7 +323,7 @@ public class LoginAction extends ActionSupport implements SessionAware, ServletR
 	}
 
 	/**
-	 * Asigna la sesiï¿½n en la que se estï¿½ ejecutando el autenticador
+	 * Asigna la sesion en la que se esta ejecutando el autenticador
 	 */
 	public void setSession(Map<String, Object> session) {
 		this.session = session;
@@ -368,6 +409,16 @@ public class LoginAction extends ActionSupport implements SessionAware, ServletR
 
 	public void setAction(String action) {
 		this.action = action;
+	}
+
+	public String getUrlAction() {
+		return urlAction;
+	}
+
+	public void setUrlAction(String urlAction) {
+		int l = urlAction.length();
+		if (urlAction.endsWith("?")) l--;
+		this.urlAction = urlAction.substring(1, l);
 	}
 
 }

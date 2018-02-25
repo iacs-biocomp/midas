@@ -37,7 +37,7 @@ public class EnvProperties {
 	}
 
 	/**
-	 * Constructor vac�o
+	 * Constructor vacio
 	 */
 	private EnvProperties() {
 	}
@@ -72,7 +72,7 @@ public class EnvProperties {
 						.getBundle(ficheroProperties, locale, Thread.currentThread().getContextClassLoader());
 			}
 		} catch (MissingResourceException me) {
-			String msg = "Ha sido imposible recuperar el fichero de propiedades de la conexi�n.";
+			String msg = "Ha sido imposible recuperar el fichero de propiedades de la conexion.";
 
 			throw new MidasException(msg, me);
 		}
@@ -96,7 +96,7 @@ public class EnvProperties {
 	}
 
 	/**
-	 * Este m�todo devuelve el valor de configuraci�n asociado a la key
+	 * Este metodo devuelve el valor de configuracion asociado a la key
 	 * introducida.
 	 * 
 	 * @param keyValorConfiguracion
@@ -107,7 +107,7 @@ public class EnvProperties {
 	}
 
 	/**
-	 * A�ade un par�metro a la lista de parametros del sistema
+	 * Añade un parametro a la lista de parametros del sistema
 	 * 
 	 * @param codigo
 	 * @param valor
@@ -118,7 +118,7 @@ public class EnvProperties {
 	}
 
 	/**
-	 * Actualiza un par�metro de la lista de parametros del sistema
+	 * Actualiza un parametro de la lista de parametros del sistema
 	 * 
 	 * @param codigo
 	 * @param valor

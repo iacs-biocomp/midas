@@ -29,11 +29,11 @@
     <constant name="struts.action.excludePattern" value="/rest/.*" />
     <!-- Limite de subida de ficheros al servidor de 50MB~ -->
 	<constant name="struts.multipart.maxSize" value="500000000" />
-
+ 
     <package name="midas-default" extends="struts-default" abstract="true">
        <result-types>
        	 <result-type name="tiles" class="org.apache.struts2.views.tiles.TilesResult" default="true"></result-type>
-	     <result-type name="jasper" class="es.aragon.midas.jasperreports.JasperReportsResult"></result-type>
+	     <!-- <result-type name="jasper" class="es.aragon.midas.jasperreports.JasperReportsResult"></result-type>  -->
        </result-types>
 
        <interceptors>
@@ -41,10 +41,10 @@
 
             <!-- Midas stack -->
             <interceptor-stack name="midasStack">
+                <interceptor-ref name="servletConfig"/>
                 <interceptor-ref name="loginInterceptor"/>
                 <interceptor-ref name="exception"/>
                 <interceptor-ref name="alias"/>
-                <interceptor-ref name="servletConfig"/>
                 <interceptor-ref name="i18n"/>
                 <interceptor-ref name="prepare"/>
                 <interceptor-ref name="chain"/>
@@ -77,6 +77,7 @@
             <result name="logout" >logout</result>
             <result name="forbidden">forbidden</result>
             <result name="blank" >blank</result>
+            <result type="redirectAction" name="index" >index</result>
 			<result type="dispatcher" name="error">/error.jsp</result>
         </global-results>
 
@@ -86,12 +87,14 @@
         
         <action name="login" class="es.aragon.midas.security.LoginAction">
             <result type="redirectAction">index</result>
+            <result name="urlAction" type="redirectAction">${urlAction}</result>
             <result name="guiaAction" type="redirectAction">${action}</result>
             <result name="input">login</result>
         </action>
 
         <action name="logout" class="es.aragon.midas.security.LogoutAction">
-            <result>logout</result>
+            <result name="logout">logout</result>
+            <result type="redirectAction" name="success">index</result>
         </action>
 
         <action name="logChanger" class="es.aragon.midas.action.LoggerLevelChangerAction">
@@ -128,6 +131,15 @@
                 <param name="bufferSize">4096</param>        		
         	</result>
         </action>
+        
+        <action name="static" class="es.aragon.midas.action.StaticContentAction">
+        </action>        
+
+        <action name="*Alias" class="es.aragon.midas.security.AliasAction" method="{1}">
+            <result name="input">aliasForm</result>
+            <result type="redirectAction" name="success">index</result>
+        </action>
+
 
     </package>
 

@@ -15,7 +15,7 @@ import javax.xml.bind.annotation.XmlRootElement;
  * @author carlos
  */
 @Entity
-@Table(name = "MID_LOGIN")
+@Table(name = "mid_login")
 @XmlRootElement
 @NamedQueries({
     @NamedQuery(name = "MidLogin.findAll", query = "SELECT m FROM MidLogin m"),
@@ -26,20 +26,20 @@ import javax.xml.bind.annotation.XmlRootElement;
     @NamedQuery(name = "MidLogin.findByLgId", query = "SELECT m FROM MidLogin m WHERE m.lgId = :lgId")})
 public class MidLogin implements Serializable {
     private static final long serialVersionUID = 1L;
-    @Column(name = "LG_DATE")
+    @Column(name = "lg_date")
     @Temporal(TemporalType.TIMESTAMP)
     private Date lgDate;
-    @Column(name = "LG_USER")
+    @Column(name = "lg_user")
     private String lgUser;
-    @Column(name = "LG_IP")
+    @Column(name = "lg_ip")
     private String lgIp;
-    @Column(name = "LG_COD")
+    @Column(name = "lg_cod")
     private String lgCod;
     // @Max(value=?)  @Min(value=?)//if you know range of your decimal fields consider using these annotations to enforce field validation
     @Id
     @GeneratedValue(strategy=GenerationType.SEQUENCE, generator="LogSeq")
-    @SequenceGenerator(name="LogSeq",sequenceName="MID_LOG_SEQ", allocationSize=1)
-    @Column(name = "LG_ID")
+    @SequenceGenerator(name="LogSeq",sequenceName="mid_log_seq", allocationSize=1)
+    @Column(name = "lg_id")
     private BigDecimal lgId;
 
     public MidLogin() {

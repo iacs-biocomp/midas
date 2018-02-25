@@ -18,7 +18,7 @@ import org.hibernate.annotations.LazyCollectionOption;
  * @author carlos
  */
 @Entity
-@Table(name = "MID_GRANTS")
+@Table(name = "mid_grants")
 @XmlRootElement
 @NamedQueries({
     @NamedQuery(name = "findGrantsByUser", query="SELECT g "
@@ -35,14 +35,14 @@ public class MidGrant implements Serializable {
     private static final long serialVersionUID = 1L;
     @Id
     @Basic(optional = false)
-    @Column(name = "GR_ID")
+    @Column(name = "gr_id")
     private String grId;
-    @Column(name = "GR_DESC")
+    @Column(name = "gr_desc")
     private String grDesc;
     
-    @JoinTable(name = "MID_ROLEGRANTS", joinColumns = {
-        @JoinColumn(name = "RG_GRANT", referencedColumnName = "GR_ID")}, inverseJoinColumns = {
-        @JoinColumn(name = "RG_ROLE", referencedColumnName = "ROLE_ID")})
+    @JoinTable(name = "mid_rolegrants", joinColumns = {
+        @JoinColumn(name = "rg_grant", referencedColumnName = "gr_id")}, inverseJoinColumns = {
+        @JoinColumn(name = "rg_role", referencedColumnName = "role_id")})
     @ManyToMany(cascade=CascadeType.ALL)
     @LazyCollection(LazyCollectionOption.FALSE)
     private List<MidRole> midRoleList;

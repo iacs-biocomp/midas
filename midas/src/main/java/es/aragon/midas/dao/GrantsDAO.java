@@ -40,11 +40,13 @@ public class GrantsDAO {
 			List<MidGrant> gr = query.getResultList();
 			for(MidGrant g : gr  ) {
 				grants.add(g.getGrId().toUpperCase().trim());
+				log.debug("Añadiendo permiso " + g.getGrId());
+				
 			}
 		} catch (Exception e){
                     log.error("Error obteniendo grants de rol LDAP " + role, e);
-                }
-        	return grants;
+        }
+        return grants;
 	}
 
 	

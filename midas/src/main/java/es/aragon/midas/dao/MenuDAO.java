@@ -27,18 +27,19 @@ public class MenuDAO {
 	
 	
 	/**
-	 * Convierte una lista de MidMenus en un arbol de menús anidados
+	 * Convierte una lista de MidMenus en un arbol de menus anidados
 	 * @param list
 	 * @return
 	 */
 	public MidMenu getMenuTree(List<MidMenu> list) {
 		short zero = 0;
-                Short padre = new Short(zero);
+        Short padre = new Short(zero);
 		MidMenu menu = new MidMenu(padre, 
                                             new MidGrant("PUBLIC"),
                                             padre,
                                             "",
                                             "#",
+                                            "", 
                                             "");
 		
 		for (MidMenu mn : list) {
@@ -46,13 +47,14 @@ public class MenuDAO {
 			short pd = mn.getMnPadre().shortValue();
 			MidMenu buscado = findMenu(menu, pd);
 			// inserta el menu mn en el padre encontrado
+			mn.setParent(buscado);
 			buscado.addChild(mn);
 		}
 		return menu;
 	}
 	
 	/**
-	 * Devuelve el menu en forma de arbol de menús y submenús anidados
+	 * Devuelve el menu en forma de arbol de menus y submenus anidados
 	 * @return
 	 */
 	public MidMenu getMenuTree() {

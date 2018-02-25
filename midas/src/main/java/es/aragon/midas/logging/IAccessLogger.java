@@ -19,7 +19,7 @@ public interface IAccessLogger {
     
     
     /**
-     * Registra una autenticaci�n fallida
+     * Registra una autenticacion fallida
      */
     public void fail() throws Exception;
 

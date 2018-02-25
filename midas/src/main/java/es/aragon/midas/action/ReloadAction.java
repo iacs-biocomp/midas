@@ -20,6 +20,7 @@ public class ReloadAction extends MidasActionSupport {
 	@Override
 	public String execute() {
             es.aragon.midas.config.AppProperties.reload();
+            es.aragon.midas.config.Menu.reload();
             return SUCCESS;
 	}
 	

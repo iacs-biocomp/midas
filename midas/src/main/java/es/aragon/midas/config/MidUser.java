@@ -6,6 +6,7 @@ package es.aragon.midas.config;
 
 import java.io.Serializable;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Date;
 import java.util.HashSet;
 import java.util.List;
@@ -29,14 +30,19 @@ import org.hibernate.annotations.LazyCollection;
 import org.hibernate.annotations.LazyCollectionOption;
 
 import es.aragon.midas.dao.GrantsLoader;
+import es.aragon.midas.logging.Logger;
+import es.aragon.midas.util.Utils;
+import es.aragon.midas.ws.guia.GuiaConnection;
+import es.aragon.midas.ws.guia.InfoUserDetails;
+import es.aragon.midas.ws.guia.InfoUserResponse;
 
 /**
- * Encapsula los datos de acceso y seguridad de un usuario de la aplicación
+ * Encapsula los datos de acceso y seguridad de un usuario de la aplicacion
  * 
  * @author carlos
  */
 @Entity
-@Table(name = "MID_USERS")
+@Table(name = "mid_users")
 @XmlRootElement
 @NamedQueries({
 		@NamedQuery(name = "MidUser.findAll", query = "SELECT m FROM MidUser m ORDER BY m.userName"),
@@ -46,30 +52,34 @@ import es.aragon.midas.dao.GrantsLoader;
 public class MidUser implements Serializable {
 
 	private static final long serialVersionUID = 1L;
+	
+	@Transient
+    private Logger log = new Logger();
+	
 	/**
-	 * Código de acceso del usuario a la aplicación (login)
+	 * Codigo de acceso del usuario a la aplicacion (login)
 	 */
 	@Id
 	@Basic(optional = false)
-	@Column(name = "USER_NAME")
+	@Column(name = "user_name")
 	private String userName;
 
 	/**
 	 * Nombre real del usuario
 	 */
-	@Column(name = "NAME")
+	@Column(name = "name")
 	private String name;
 
 	/**
 	 * Primer apellido del usuario
 	 */
-	@Column(name = "LASTNAME1")
+	@Column(name = "lastname1")
 	private String lastname1;
 
 	/**
 	 * Segundo apellido del usuario
 	 */
-	@Column(name = "LASTNAME2")
+	@Column(name = "lastname2")
 	private String lastname2;
 
 	/**
@@ -79,35 +89,35 @@ public class MidUser implements Serializable {
 	private String email;
 
 	/**
-	 * Identificador único del usuario (DNI)
+	 * Identificador unico del usuario (DNI)
 	 */
-	@Column(name = "IDD")
+	@Column(name = "idd")
 	private String idd;
 
 	/**
-	 * Contraseña encriptada, en caso de autenticación contra Base de Datos
+	 * ContraseÃ±a encriptada, en caso de autenticacion contra Base de Datos
 	 */
-	@Column(name = "PWD")
+	@Column(name = "pwd")
 	private String pwd;
 
 	/**
-	 * Fecha / hora del último login en la aplicación
+	 * Fecha / hora del ultimo login en la aplicacion
 	 */
-	@Column(name = "LAST_LOGIN")
-	@Temporal(TemporalType.DATE)
+	@Column(name = "last_Login")
+	@Temporal(TemporalType.TIMESTAMP)
 	private Date lastLogin;
 
 	/**
 	 * Usuario activo / inactivo Un usuario inactivo no puede acceder a la
-	 * aplicación. Para bloquear el acceso de un usuario a la aplicación, no se
+	 * aplicacion. Para bloquear el acceso de un usuario a la aplicacion, no se
 	 * elimina el mismo de la tabla de usuarios sino que se marca como ACTIVO =
 	 * 0
 	 */
-	@Column(name = "ACTIVE")
+	@Column(name = "active")
 	private Character active;
 
 	/**
-	 * Lista de Roles a los que está asociado el usuario
+	 * Lista de Roles a los que esta asociado el usuario
 	 */
 	@XmlTransient
 	@ManyToMany(mappedBy = "midUserList")
@@ -115,19 +125,30 @@ public class MidUser implements Serializable {
 	private List<MidRole> midRoleList;
 
 	/**
-	 * Lista de contextos a los que está asociado el usuario
+	 * Lista de contextos a los que esta asociado el usuario
 	 */
 	@XmlTransient
 	@ManyToMany(mappedBy = "midUserList")
 	@LazyCollection(LazyCollectionOption.FALSE)
 	private List<MidContext> midContextList;
 
+	
 	/**
 	 * Lista de permisos del usuario
 	 */
 	@Transient
 	private Set<String> grants = new HashSet<String>(0);
 
+
+	@Transient
+	private InfoUserDetails infoUser;
+	
+	@Transient
+	boolean isAliased;
+	
+	@Transient
+	MidUser actualUser;
+	
 	/**
 	 * Constructor por defecto
 	 */
@@ -346,7 +367,8 @@ public class MidUser implements Serializable {
 	 */
 	public void grantLdapRole(String ldapRole) {
 		GrantsLoader ld = new GrantsLoader();
-		grants.addAll(ld.grantLdapRole(ldapRole));
+		Set<String> toAdd = ld.grantLdapRole(ldapRole);
+		grants.addAll(toAdd);
 	}
 
 	/**
@@ -392,6 +414,29 @@ public class MidUser implements Serializable {
 	}
 	
 	
+	/**
+	 * AÃ±ade un contexto a la lista, si no existe ya dicho contexto
+	 * @param ctx
+	 */
+	public void addMidContext(MidContext ctx) {
+		if (!midContextList.contains(ctx)) {
+			midContextList.add(ctx);
+		}
+	}
+	
+	/**
+	 * AÃ±ade un contexto a la lista, si no existe ya dicho contexto
+	 * @param ctx
+	 */
+	public void addMidContext(String key, String value) {
+		MidContext ctx = new MidContext(key, value);
+		if (!midContextList.contains(ctx)) {
+			midContextList.add(ctx);
+		}
+	}
+	
+	
+	
 
 	public String getEmail() {
 		return email;
@@ -402,10 +447,10 @@ public class MidUser implements Serializable {
 	}
 
 	/**
-	 * Determina si el usuario está asociado a un contexto determinado
+	 * Determina si el usuario esta asociado a un contexto determinado
 	 * 
 	 * @param context
-	 *            Código del contexto buscado
+	 *            Codigo del contexto buscado
 	 * @return
 	 */
 	public boolean isInContext(String context) {
@@ -421,10 +466,10 @@ public class MidUser implements Serializable {
 	}
 
 	/**
-	 * Determina si el usuario está asociado a un contexto determinado
+	 * Determina si el usuario esta asociado a un contexto determinado
 	 * 
 	 * @param context
-	 *            Código del contexto buscado
+	 *            Codigo del contexto buscado
 	 * @param key
 	 *            Tipo de contexto
 	 * @return
@@ -449,7 +494,9 @@ public class MidUser implements Serializable {
 	public Set<String> getContextSet() {
 		Set<String> s = new HashSet<String>();
 		for (MidContext m : midContextList) {
-			s.add(m.getCxId().toString());
+			if (m.getCxValue() != null) {
+				s.add(m.getCxValue());
+			}
 		}
 		return s;
 	}
@@ -465,12 +512,36 @@ public class MidUser implements Serializable {
 		Set<String> s = new HashSet<String>();
 		for (MidContext m : midContextList) {
 			if (m.getCxKey().equals(key)) {
-				s.add(m.getCxId().toString());
+				if (m.getCxValue() != null) {
+					s.add(m.getCxValue());
+				}
 			}
 		}
 		return s;
 	}
 
+	
+	/**
+	 * 
+	 * @param key
+	 * @return
+	 */
+	public String getContextValues(String key) {
+		StringBuffer s = new StringBuffer();
+		boolean coma = false;
+		for (MidContext m : midContextList) {
+			if (m.getCxKey().equals(key)) {
+				if (coma) s.append(","); else coma = true;
+				s.append(m.getCxValue());
+			}
+		}
+		return s.toString();
+	}
+	
+	
+	/**
+	 * 
+	 */
 	@Override
 	public int hashCode() {
 		int hash = 0;
@@ -478,6 +549,9 @@ public class MidUser implements Serializable {
 		return hash;
 	}
 
+	/**
+	 * 
+	 */
 	@Override
 	public boolean equals(Object object) {
 		// TODO: Warning - this method won't work in the case the id fields are
@@ -494,11 +568,20 @@ public class MidUser implements Serializable {
 		return true;
 	}
 
+	
+	/**
+	 * 
+	 */
 	@Override
 	public String toString() {
 		return "es.aragon.midas.config.MidUser[ userName=" + userName + " ]";
 	}
 
+	
+	/**
+	 * 
+	 * @return
+	 */
 	public String getNombreCompleto() {
 		StringBuilder builder = new StringBuilder();
 		if (lastname1 != null) {
@@ -531,5 +614,98 @@ public class MidUser implements Serializable {
 		}
 		return keyList;
 	}
+
+	
+	
+	/**
+	 * Asigna todos los permisos en funcion de los roles, grupos LDAP y categorÃ­a profesional,
+	 * obtenidos desde GUIA
+	 */
+	public void assignGrants() {
+		
+		this.grant("PUBLIC");
+		
+			// Captura los grants configurados en BD
+		this.obtainGrants();
+	
+			// Captura los contexts configurados en BD
+		this.obtainContexts();
+			
+		// Si la opciÃ³n GET_INFOUSER estÃ¡ activa, leemos toda la informaciÃ³n del usuario desde GUIA
+		if (AppProperties.getParameter(Constants.CFG_GUIA_GET_INFOUSER).equals("true")) {
+	    	GuiaConnection con = new GuiaConnection();
+			String username = this.getUserName();
+	    	InfoUserResponse response = con.infoUser(username);
+			log.debug("Leidos datos del usuario " + username + " desde GUIA.");
+			if (response.getResult().startsWith("OK")) {
+				this.setInfoUser(response.getInfoUser());
+				List<String> groupsLDAP = Arrays.asList(this.getInfoUser().getGroupsLDAP().split("\\s*,\\s*"));
+	
+				// Si no hay roles propios de la aplicaciÃ³n, tomamos roles desde GUIA (LDAP y categorÃ­a profesional)
+				if (this.getMidRoleList() != null && this.getMidRoleList().isEmpty()) {
+
+					for (String lg : groupsLDAP) {
+						this.grantLdapRole(lg);
+					}
+					
+					this.grantLdapRole(this.getInfoUser().getCatrId());
+				}
+				
+				List<String> cssUcs = Arrays.asList(this.getInfoUser().getCssUcs().split("\\s*,\\s*"));
+				for (String uc : cssUcs) {
+					log.debug("AÃ±adiendo CSSUC: " + uc); 
+					this.addMidContext("CSSUC", uc);
+				}
+				
+				log.debug("Cargados grupos LDAP y UCS del alias");
+				
+			} else {
+				log.error("Error al obtener info desde GUIA para el usuario " + username);
+			}
+		}
+	
+		log.debug("Permisos del usuario: " + Utils.setToString(this.getGrants()));
+		log.debug("Contextos del usuario: " + Utils.setToString(this.getContextSet()));
+		
+	}
+	
+	
+	
+	
+
+	/**
+	 * 
+	 * @return
+	 */
+	public InfoUserDetails getInfoUser() {
+		return infoUser;
+	}
+
+
+	/**
+	 * 
+	 * @param infoUser
+	 */
+	public void setInfoUser(InfoUserDetails infoUser) {
+		this.infoUser = infoUser;
+	}
+
+	public boolean isAliased() {
+		return isAliased;
+	}
+
+	public void setAliased(boolean isAliased) {
+		this.isAliased = isAliased;
+	}
+
+	public MidUser getActualUser() {
+		return actualUser;
+	}
+
+	public void setActualUser(MidUser actualUser) {
+		this.actualUser = actualUser;
+	}
+
+
 
 }

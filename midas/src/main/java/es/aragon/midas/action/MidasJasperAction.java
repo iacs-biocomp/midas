@@ -51,7 +51,7 @@ public class MidasJasperAction extends MidasActionSupport {
 	private String format = "PDF";
 	
 	/**
-	 * Conexion a B.D. para la generaci�n del informe
+	 * Conexion a B.D. para la generacion del informe
 	 */
 	private Connection connection;
 	

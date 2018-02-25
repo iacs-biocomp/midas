@@ -14,10 +14,10 @@ import org.jdom2.input.SAXBuilder;
  * Clase para almacenar la respuesta de GUIA al llamar a validateToken y a authGUIA
  */
 public class AuthGuiaDetails {
-    /** Contiene la descripción del error cuando el resultado es 'KO' */
+    /** Contiene la descripcion del error cuando el resultado es 'KO' */
     private String errorDesc;
 
-    // CAMPOS COMUNES EN AUTENTICACIÓN
+    // CAMPOS COMUNES EN AUTENTICACION
     private String statusUser;
     private String statusLDAPSalud;
     private String login;
@@ -30,11 +30,11 @@ public class AuthGuiaDetails {
     private String groupsLDAP;
     private String cssUcs;
 
-    // CAMPOS ESPECÍFICOS EN AUTENTICACIÓN POR USUARIO + PASSWORD
+    // CAMPOS ESPECIFICOS EN AUTENTICACION POR USUARIO + PASSWORD
     private String authType;
     private String cias;
 
-    // CAMPOS ESPECÍFICOS EN AUTENTICACIÓN POR TOKEN
+    // CAMPOS ESPECIFICOS EN AUTENTICACION POR TOKEN
     private String email;
     private String phone;
     private String secId;
@@ -71,7 +71,7 @@ public class AuthGuiaDetails {
             }
 
 
-            // CAMPOS COMUNES EN AUTENTICACIÓN
+            // CAMPOS COMUNES EN AUTENTICACIoN
             // Resultado obtenido autenticando por usuario + password
             setStatusUser(operadorDOM.getChildText("statusGUIA"));
             // Resultado obtenido autenticando por token
@@ -89,11 +89,11 @@ public class AuthGuiaDetails {
             setGroupsLDAP(operadorDOM.getChildText("groupsLDAP"));
             setCssUcs(operadorDOM.getChildText("cssUcs"));
 
-            // CAMPOS ESPECÍFICOS EN AUTENTICACIÓN POR USUARIO + PASSWORD
+            // CAMPOS ESPECiFICOS EN AUTENTICACIoN POR USUARIO + PASSWORD
             setAuthType(operadorDOM.getChildText("authType"));
             setCias(operadorDOM.getChildText("cias"));
 
-            // CAMPOS ESPECÍFICOS EN AUTENTICACIÓN POR TOKEN
+            // CAMPOS ESPECiFICOS EN AUTENTICACIoN POR TOKEN
             setEmail(operadorDOM.getChildText("email"));
             setPhone(operadorDOM.getChildText("phone"));
             setSecId(operadorDOM.getChildText("secId"));
@@ -106,7 +106,7 @@ public class AuthGuiaDetails {
             setCatrName(operadorDOM.getChildText("catrName"));
 
         } else {
-            // DESCRIPCIÓN DEL ERROR
+            // DESCRIPCION DEL ERROR
             setErrorDesc(dataRoot.getChildText("msg"));
         }
 
@@ -375,8 +375,8 @@ public class AuthGuiaDetails {
     }
 
     /**
-     * Comprueba que el usuario está activo en el AD.
-     * @return true si el usuario está activo en el AD, false si no.
+     * Comprueba que el usuario esta activo en el AD.
+     * @return true si el usuario esta activo en el AD, false si no.
      */
     public boolean isValidUser() {
         return getStatusUser() != null && getStatusUser().equals("A");

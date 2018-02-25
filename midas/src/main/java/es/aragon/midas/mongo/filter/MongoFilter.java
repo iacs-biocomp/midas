@@ -28,7 +28,7 @@ public class MongoFilter {
 	}
 
 	/**
-	 * Añade una condición al filtro
+	 * AÃ±ade una condicion al filtro
 	 * 
 	 * @param condition
 	 *            Restricciones para aplicar en el filtro
@@ -38,12 +38,12 @@ public class MongoFilter {
 	}
 
 	/**
-	 * Añade una regla para ordenar el resultado obtenido de una consulta mongo
+	 * AÃ±ade una regla para ordenar el resultado obtenido de una consulta mongo
 	 * 
 	 * @param field
 	 *            Campo por el cual ordena
 	 * @param sortType
-	 *            Tipo de ordenación. Campos estaticos en MongoSort
+	 *            Tipo de ordenacion. Campos estaticos en MongoSort
 	 */
 	public void addSort(String field, int sortType) {
 		sort.add(new MongoSort(field, sortType));
@@ -52,11 +52,11 @@ public class MongoFilter {
 	/**
 	 * Genera el Document que contiene la estructura del filtro
 	 * 
-	 * @return JSON con las condiciones que aplicará el filtro
+	 * @return JSON con las condiciones que aplicara el filtro
 	 */
 	public Document generateFilter() throws MidasException {
 		Document filter = new Document();
-		// Por cada condición obtiene el map con los datos que añadirá al
+		// Por cada condicion obtiene el map con los datos que aÃ±adira al
 		// Document final
 		for (MongoCondition condition : conditions) {
 			Map<String, Object> mapCondition = condition.generateCondition();

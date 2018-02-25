@@ -16,7 +16,7 @@ import es.aragon.midas.ldap.LdapUtils;
 import es.aragon.midas.ldap.UserLdap;
 
 /**
- * Acciones para la gestión de usuarios de una aplicación
+ * Acciones para la gestion de usuarios de una aplicacion
  * 
  * @author Carlos
  * 
@@ -46,11 +46,11 @@ public class UsersAction extends MidasActionSupport {
 	private String readOnly = "false";
 
 	/*****************************************
-	 * Métodos de action
+	 * Metodos de action
 	 *****************************************/
 
 	/**
-	 * Acción por defecto. Lleva a la página principal de gestión de usuarios
+	 * Accion por defecto. Lleva a la pagina principal de gestion de usuarios
 	 */
 	@Override
 	public String execute() {
@@ -58,7 +58,7 @@ public class UsersAction extends MidasActionSupport {
 	}
 
 	/**
-	 * Redirige a la página de listado de usuarios
+	 * Redirige a la pagina de listado de usuarios
 	 * 
 	 * @return
 	 */
@@ -90,7 +90,7 @@ public class UsersAction extends MidasActionSupport {
 			log.error("Error al obtener el nombre de usuario del LDAP", e);
 		}
 
-		log.debug("Resultado de la búsqueda: " + userNew.getUserName());
+		log.debug("Resultado de la busqueda: " + userNew.getUserName());
 
 		return "newUserName";
 	}
@@ -98,20 +98,20 @@ public class UsersAction extends MidasActionSupport {
 	/**
 	 * Guarda en BD un nuevo usuario
 	 * 
-	 * @return Muestra el error de creación o la ventana de permisos de
+	 * @return Muestra el error de creacion o la ventana de permisos de
 	 *         usuarios
 	 */
 	public String nuevo() {
 
 		// Comprueba que se haya encontrado el userName
 		if (GenericValidator.isBlankOrNull(userNew.getUserName())) {
-			addActionError("UserName no puede estár en blanco");
+			addActionError("UserName no puede estar en blanco");
 			return "users";
 		}
 
 		// Comprueba que el usuario no se encuentre ya registrado
 		if (usersDAO.find(userNew.getUserName()) != null) {
-			addActionError("El usuario ya está registrado");
+			addActionError("El usuario ya esta registrado");
 			return "users";
 		}
 
@@ -211,7 +211,7 @@ public class UsersAction extends MidasActionSupport {
 	}
 
 	/**
-	 * Añade un contexto a un usuario
+	 * AÃ±ade un contexto a un usuario
 	 * @return
 	 */
 	public String nuevoUC() {
@@ -250,7 +250,7 @@ public class UsersAction extends MidasActionSupport {
 	 */
 
 	/**
-	 * Devuelve el usuario desde variable de sesión
+	 * Devuelve el usuario desde variable de sesion
 	 * 
 	 * @return
 	 */
@@ -259,7 +259,7 @@ public class UsersAction extends MidasActionSupport {
 	}
 
 	/**
-	 * Asocia un usuario a una variable de sesión
+	 * Asocia un usuario a una variable de sesion
 	 * 
 	 * @param user
 	 */
@@ -286,7 +286,7 @@ public class UsersAction extends MidasActionSupport {
 	}
 
 	/**
-	 * Devuelve la lista de roles no asignados aún, desde BD
+	 * Devuelve la lista de roles no asignados aun, desde BD
 	 * 
 	 * @return
 	 */

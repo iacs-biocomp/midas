@@ -18,7 +18,7 @@ import org.hibernate.annotations.LazyCollectionOption;
  * @author carlos
  */
 @Entity
-@Table(name = "MID_ROLES")
+@Table(name = "mid_roles")
 @XmlRootElement
 @NamedQueries({
     @NamedQuery(name = "MidRole.findAll", query = "SELECT m FROM MidRole m ORDER BY roleId "),
@@ -32,15 +32,15 @@ public class MidRole implements Serializable {
     private static final long serialVersionUID = 1L;
     @Id
     @Basic(optional = false)
-    @Column(name = "ROLE_ID")
+    @Column(name = "role_id")
     private String roleId;
-    @Column(name = "ROLE_DESC")
+    @Column(name = "role_desc")
     private String roleDesc;
-    @Column(name = "ROLE_LDAP")
+    @Column(name = "role_ldap")
     private String roleLdap;
-    @JoinTable(name = "MID_USERROLES", joinColumns = {
-        @JoinColumn(name = "UR_ROLE", referencedColumnName = "ROLE_ID")}, inverseJoinColumns = {
-        @JoinColumn(name = "UR_NAME", referencedColumnName = "USER_NAME")})
+    @JoinTable(name = "mid_userroles", joinColumns = {
+        @JoinColumn(name = "ur_role", referencedColumnName = "role_id")}, inverseJoinColumns = {
+        @JoinColumn(name = "ur_name", referencedColumnName = "user_name")})
     @ManyToMany(cascade=CascadeType.ALL)
     @LazyCollection(LazyCollectionOption.FALSE)
     private List<MidUser> midUserList;

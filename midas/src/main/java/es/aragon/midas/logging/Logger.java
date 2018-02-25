@@ -8,7 +8,7 @@ import org.apache.log4j.MDC;
  * salida de usuario e ip. Modo de uso: Se crea un nuevo log con alguno de los
  * constructores definidos, y se utiliza igual que los logs propios de log4j
  * (warn, debug, info...) La aplicacion que lo use ha de haber ejecutado el
- * SetupServlet para su inicialización
+ * SetupServlet para su inicializacion
  */
 public class Logger {
 

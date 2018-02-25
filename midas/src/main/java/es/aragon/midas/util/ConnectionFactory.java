@@ -11,12 +11,12 @@ import java.sql.Statement;
 import java.util.HashMap;
 import javax.naming.InitialContext;
 import javax.sql.DataSource;
-import oracle.jdbc.pool.OracleConnectionPoolDataSource;
+//import oracle.jdbc.pool.OracleConnectionPoolDataSource;
 
 // TODO Revisar esta clase. Logs y stacktraces
 
 /**
- * Clase con funciones ï¿½tiles para la gestiï¿½n de conexiones a base de datos
+ * Clase con funciones utiles para la gestion de conexiones a base de datos
  *
  * @author carlos
  *
@@ -24,7 +24,7 @@ import oracle.jdbc.pool.OracleConnectionPoolDataSource;
 public class ConnectionFactory {
 
     /**
-     * Caché de datasources
+     * Cache de datasources
      */
     private static HashMap<String, DataSource> dataSources = new HashMap<String, DataSource>();
     private static Logger log = new Logger();
@@ -60,15 +60,12 @@ public class ConnectionFactory {
                         throw new MidasException("Error al recuperar el objeto \"" + dataSourceName + "\": No implementa la interfaz DataSource.");
                     }
                 } else {	// o no existe
-                    ds = getDataSourceFromParams(dataSourceName);
+                  //  ds = getDataSourceFromParams(dataSourceName);
+                	throw new MidasException("No Existe el datasource \"" + dataSourceName + "\"");
                 }
                 initialContext.close();
             } catch (Exception e) {
-                try {
-                    ds = getDataSourceFromParams(dataSourceName);
-                } catch (SQLException sqle) {
-                    log.error("Error en ConnectionFactory.getDatasource: " + e, sqle);
-                }
+                log.error("Error en ConnectionFactory.getDatasource: " + e, e);
             }
             if (ds != null) {
                 dataSources.put(dataSourceName, ds);
@@ -78,12 +75,12 @@ public class ConnectionFactory {
     }
 
     /**
-     * Genera un datasource a partir de parámetros en midasEnvironment.properties
+     * Genera un datasource a partir de parametros en midasEnvironment.properties
      * @param name
      * @return
      * @throws SQLException 
      */
-    public static DataSource getDataSourceFromParams(String name) throws SQLException {
+/*    public static DataSource getDataSourceFromParams(String name) throws SQLException {
         // TODO cambiar OraclePool por DBCP Pool
         System.out.println("Creando datasource desde fichero");
         OracleConnectionPoolDataSource ods;
@@ -97,14 +94,14 @@ public class ConnectionFactory {
             ods.setPortNumber(iport);
         } catch (NumberFormatException nfe) {
             log.error("No se ha podido leer el puerto del datasource", nfe);
-            log.error("Compruebe la configuración de midasEnvironment.properties");
-            log.error("Compruebe la configuración de los Datasources en el Server");
+            log.error("Compruebe la configuracion de midasEnvironment.properties");
+            log.error("Compruebe la configuracion de los Datasources en el Server");
         }
         ods.setUser(EnvProperties.getProperty(name + "User"));
         ods.setPassword(EnvProperties.getProperty(name + "Password"));
         return ods;
     }
-
+*/
     
     /**
      * Obtiene el datasource definido en la variable jndiDataSourceName (defecto)
@@ -126,7 +123,7 @@ public class ConnectionFactory {
 
     
     /**
-     * Obtiene una conexión del datasource nombrado
+     * Obtiene una conexion del datasource nombrado
      * @param dataSourceName Fuente de datos.
      * @param logger Log.
      * @return Objeto de tipo Connection.
@@ -221,11 +218,11 @@ public class ConnectionFactory {
 
 
     /**
-     * Comprueba la disponibilidad de la conexiï¿½n con la base de datos.
+     * Comprueba la disponibilidad de la conexion con la base de datos.
      *
      * @param dsName DataSource name
      * @param log Log
-     * @return Devuelve true si la base de datos estï¿½ disponible o false en
+     * @return Devuelve true si la base de datos esta disponible o false en
      * caso contrario.
      */
     public static boolean testConexion(String dsName) {
@@ -234,7 +231,7 @@ public class ConnectionFactory {
         try {
             conn = getConnection(dsName);
             if (conn != null && !conn.isClosed()) {
-                log.info("La conexiï¿½n con la base de datos funciona correctamente");
+                log.info("La conexion con la base de datos funciona correctamente");
                 ret = true;
             } else {
                 log.error("La base de datos no parece estar disponible");
@@ -272,7 +269,7 @@ public class ConnectionFactory {
     
     
     /*
-    Métodos de la antigua version de Midas. Borrar cuando se esté seguro de que no son necesarios
+    Metodos de la antigua version de Midas. Borrar cuando se esta seguro de que no son necesarios
     * 
     * private static EntityManagerFactory configureEntityManagerFactory(String pu) {
         Map<String, Object> properties = new HashMap<String, Object>();

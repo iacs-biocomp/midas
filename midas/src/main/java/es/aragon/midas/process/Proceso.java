@@ -27,7 +27,7 @@ public class Proceso {
 	
     /**
     * Constructor para el proceso (instancia de proceso)
-    * @param motor Define el motor de Activiti donde correrá el proceso
+    * @param motor Define el motor de Activiti donde correra el proceso
     * @param instancia Instancia del proceso BPMN que se representara con el objeto proceso
     * @see <a href="http://activiti.org/javadocs/org/activiti/engine/runtime/ProcessInstance.html">org.activiti.engine.runtime.ProcessInstance</a>
     */
@@ -62,10 +62,10 @@ public class Proceso {
 	}
 	
     /**
-    * Devuelve la información solicitada de un nodo de la instancia de proceso
+    * Devuelve la informacion solicitada de un nodo de la instancia de proceso
     * @param nodo Identificador del nodo
-    * @param info Información a obtener del nodo: NODE_NAME (nombre), CODE_TYPE (tipo), NODE_DESC (descripción)
-    * @return Información solicitada por info
+    * @param info Informacion a obtener del nodo: NODE_NAME (nombre), CODE_TYPE (tipo), NODE_DESC (descripcion)
+    * @return Informacion solicitada por info
     */
 	public String getInfoNodo(String nodo, String info) {		
 		PvmActivity targetActivity = null;
@@ -85,7 +85,7 @@ public class Proceso {
     /**
     * Devuelve la lista de tareas de usuario correspondientes a una lista de nodos de la instancia de proceso
     * @param listaNodos Lista de identificadores de los nodos 
-    * @return Lista de tareas de activiti (org.activiti.engine.task) correspondientes a los nodos pasados por parámetro
+    * @return Lista de tareas de activiti (org.activiti.engine.task) correspondientes a los nodos pasados por parametro
     */
 	// Devolver la lista de tareas de usuario correspondients a una lista de nodos de un proceso
 	public List<Task> getUserTaskNodos(List<String> listaNodos){		
@@ -105,7 +105,7 @@ public class Proceso {
     /**
     * Devuelve la tarea de usuario correspondiente a un nodo de la instancia de proceso
     * @param nodo Identificador del nodo
-    * @return Tarea de activiti (org.activiti.engine.task) correspondiente al nodo pasado por parámetro
+    * @return Tarea de activiti (org.activiti.engine.task) correspondiente al nodo pasado por parametro
     */
 	public Task getUserTaskNodo(String nodo){				
 		Task tarea = null;
@@ -119,7 +119,7 @@ public class Proceso {
     /**
     * Devuelve el estado de la tarea correspondiente a un nodo de la instancia de proceso
     * @param nodo Identificador del nodo
-    * @return Estado de la tarea (Tarea.EstadoTarea) correspondiente al nodo pasado por parámetro
+    * @return Estado de la tarea (Tarea.EstadoTarea) correspondiente al nodo pasado por parametro
     */
 	public Tarea.EstadoTarea getUserTaskEstadoNodo(String nodo){				
 		Task tarea = null;
@@ -139,16 +139,16 @@ public class Proceso {
 	
 	
 	/**
-	 * Envía señal a la instancia de proceso
-	 * @param variables Variables a pasar al proceso necesarias para su ejecución
+	 * Envia seÃ±al a la instancia de proceso
+	 * @param variables Variables a pasar al proceso necesarias para su ejecucion
 	 */
 	public void signal(Map<String, Object> variables){
 		this.motor.getRuntimeService().signal(this.processInstance.getId(), variables);		
 	}
 	
 	/**
-	 * Devuelve el total de instancias de proceso terminadas respecto de una definición de proceso
-	 * @param ProcessDefinitionId Identificador de la definición de proceso
+	 * Devuelve el total de instancias de proceso terminadas respecto de una definicion de proceso
+	 * @param ProcessDefinitionId Identificador de la definicipn de proceso
 	 * @return Total de instancias de proceso terminadas
 	 */	
 	public long getCountInstanciasDefProcesoTerminado(String ProcessDefinitionId){
@@ -156,8 +156,8 @@ public class Proceso {
 	}
 
 	/**
-	 * Devuelve el total de instancias de proceso sin terminar respecto de una definición de proceso
-	 * @param ProcessDefinitionId Identificador de la definición de proceso
+	 * Devuelve el total de instancias de proceso sin terminar respecto de una definicion de proceso
+	 * @param ProcessDefinitionId Identificador de la definicion de proceso
 	 * @return Total de instancias de proceso sin terminar
 	 */		
 	public long getCountInstanciasDefProcesoSinTerminar(String ProcessDefinitionId){ 				  	   	    					
@@ -245,7 +245,7 @@ public class Proceso {
 
 	/**
 	 * Devuelve el final de la instancia de proceso
-	 * @return Fecha y hora de finalización del proceso 
+	 * @return Fecha y hora de finalizacion del proceso 
 	 */		
 	public Date getFinProceso(){		
 		HistoricProcessInstance historicProcessInstance = this.motor.getHistoryService()
@@ -256,8 +256,8 @@ public class Proceso {
 	}
 
 	/**
-	 * Devuelve la duración de la instancia de proceso
-	 * @return Duración en milisegundos del proceso
+	 * Devuelve la duracion de la instancia de proceso
+	 * @return Duracion en milisegundos del proceso
 	 */		
 	public Long getDuracionProceso(){		
 		HistoricProcessInstance historicProcessInstance = this.motor.getHistoryService()
@@ -271,7 +271,7 @@ public class Proceso {
 	 * Adjunta documento a la instancia de proceso 
 	 * @param nombreDoc Nombre del documento
 	 * @param tipoDoc Tipo del documento
-	 * @param descripcionDoc Descripción del adjunto
+	 * @param descripcionDoc Descripcion del adjunto
 	 * @param contenidoDoc Contenido del documento
 	 * @return Identificador del adjunto 
 	 */		
@@ -308,14 +308,14 @@ public class Proceso {
 	}	
 	
 	/**
-	 * Recupera información de un documento adjunto a la instancia de proceso
+	 * Recupera informacion de un documento adjunto a la instancia de proceso
 	 * @param idAdjunto Identificador del adjunto a eliminar
-	 * @param info Información a obtener del adjunto: ATTACHMENT_TYPE (tipo), 
-	 * 												  ATTACHMENT_PROCESS_INSTANCE_ID (identificador del proceso al que se adjuntó), 
-	 * 												  ATTACHMENT_TASK_ID (identificador de la tarea a la que se adjuntó), 
-	 * 												  ATTACHMENT_DESCRIPTION (descripción del adjunto),
+	 * @param info Informacion a obtener del adjunto: ATTACHMENT_TYPE (tipo), 
+	 * 												  ATTACHMENT_PROCESS_INSTANCE_ID (identificador del proceso al que se adjunto), 
+	 * 												  ATTACHMENT_TASK_ID (identificador de la tarea a la que se adjunto), 
+	 * 												  ATTACHMENT_DESCRIPTION (descripcion del adjunto),
 	 * 												  ATTACHMENT_NAME (nombre del adjunto)  
-	 * @return Información solicitada por info
+	 * @return Informacion solicitada por info
 	 */			
 	public String getInfoAdjunto (String idAdjunto, String info){		
 		String retorno=null;

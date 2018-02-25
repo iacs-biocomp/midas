@@ -43,7 +43,7 @@ public class MpiRasgoPK implements Serializable {
 	
 	
 	/**
-	 * Obtiene el c�digo de dominio
+	 * Obtiene el codigo de dominio
 	 * @return
 	 */
 	public String getCoddom() {
@@ -51,7 +51,7 @@ public class MpiRasgoPK implements Serializable {
 	}
 	
 	/**
-	 * Establece el c�digo de dominio
+	 * Establece el codigo de dominio
 	 * @param coddom
 	 */
 	public void setCoddom(String coddom) {
@@ -60,7 +60,7 @@ public class MpiRasgoPK implements Serializable {
 	
 	
 	/**
-	 * Obtiene el c�digo de rasgo
+	 * Obtiene el codigo de rasgo
 	 * @return
 	 */
 	public long getCodras() {
@@ -69,7 +69,7 @@ public class MpiRasgoPK implements Serializable {
 	
 	
 	/**
-	 * Establece el c�digo de rasgo
+	 * Establece el codigo de rasgo
 	 * @param codras
 	 */
 	public void setCodras(long codras) {

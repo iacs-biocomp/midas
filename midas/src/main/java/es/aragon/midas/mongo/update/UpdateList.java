@@ -6,9 +6,9 @@ import java.util.List;
 import org.bson.Document;
 
 /**
- * Clase encargada de gestionar las modificaciones para MongoDB. En ésta clase
+ * Clase encargada de gestionar las modificaciones para MongoDB. En esta clase
  * se almacenan las modificaciones para realizar y se encarga de generar el
- * documento que envía con las modificaciones.
+ * documento que envia con las modificaciones.
  * 
  * @author ARTURO
  * @since 4.3.0
@@ -23,7 +23,7 @@ public class UpdateList {
 	}
 
 	/**
-	 * Añade una modificación a la lista de modificaciones
+	 * AÃ±ade una modificacion a la lista de modificaciones
 	 * 
 	 * @param field
 	 *            Campo a modificar.
@@ -39,7 +39,7 @@ public class UpdateList {
 	 * modificar.
 	 * 
 	 * @return Documento indicando que debe modificar con los valores que se han
-	 *         ido añadiendo en addUpdate
+	 *         ido aÃ±adiendo en addUpdate
 	 */
 	public Document generateUpdates() {
 		Document documentUpdates = new Document();

@@ -27,7 +27,7 @@ import org.hibernate.annotations.LazyCollectionOption;
  * @author Carlos
  */
 @Entity
-@Table(name = "MID_CONTEXTS")
+@Table(name = "mid_contexts")
 @NamedQueries({
     @NamedQuery(name = "MidContext.findAll", query = "SELECT m FROM MidContext m ORDER BY cxValue, cxId"),
     @NamedQuery(name = "MidContext.findByCxId", query = "SELECT m FROM MidContext m WHERE m.cxId = :cxId"),
@@ -38,23 +38,23 @@ public class MidContext implements Serializable {
     // @Max(value=?)  @Min(value=?)//if you know range of your decimal fields consider using these annotations to enforce field validation
     @Id
     @Basic(optional = false)
-    @Column(name = "CX_ID")
+    @Column(name = "cx_id")
     private Integer cxId;
-    @Column(name = "CX_KEY")
+    @Column(name = "cx_key")
     private String cxKey;
-    @Column(name = "CX_VALUE")
+    @Column(name = "cx_value")
     private String cxValue;
     
-    @JoinTable(name = "MID_ROLE_CONTEXT", joinColumns = {
-        @JoinColumn(name = "CX_ID", referencedColumnName = "CX_ID")}, inverseJoinColumns = {
-        @JoinColumn(name = "ROLE_ID", referencedColumnName = "ROLE_ID")})
+    @JoinTable(name = "mid_role_context", joinColumns = {
+        @JoinColumn(name = "cx_id", referencedColumnName = "cx_id")}, inverseJoinColumns = {
+        @JoinColumn(name = "role_id", referencedColumnName = "role_id")})
     @ManyToMany(cascade=CascadeType.ALL)
     @LazyCollection(LazyCollectionOption.FALSE)
     private List<MidRole> midRoleList;
     
-    @JoinTable(name = "MID_USER_CONTEXT", joinColumns = {
-        @JoinColumn(name = "CX_ID", referencedColumnName = "CX_ID")}, inverseJoinColumns = {
-        @JoinColumn(name = "USER_NAME", referencedColumnName = "USER_NAME")})
+    @JoinTable(name = "mid_user_context", joinColumns = {
+        @JoinColumn(name = "cx_id", referencedColumnName = "cx_id")}, inverseJoinColumns = {
+        @JoinColumn(name = "user_name", referencedColumnName = "user_name")})
     @ManyToMany(cascade=CascadeType.ALL)
     @LazyCollection(LazyCollectionOption.FALSE)
     private List<MidUser> midUserList;

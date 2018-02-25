@@ -28,7 +28,7 @@ public class DroolsManager {
 	private StatefulKnowledgeSession ksession;
 	private DroolsEventListener escuchadorEventos;
 
-	/** Map estático para almacenar las reglas que utiliza la aplicación */
+	/** Map estatico para almacenar las reglas que utiliza la aplicacion */
 	private static Map<String, KnowledgeBase> rulesFiles;
 
 	private Logger objLog;
@@ -40,20 +40,20 @@ public class DroolsManager {
 	}
 
 	/**
-	 * Recarga los ficheros de reglas estáticos
+	 * Recarga los ficheros de reglas estaticos
 	 */
 	public static void loadRules() {
 		Logger objLog = new Logger();
-		objLog.info("Cargando las reglas de Drools en el Map estático");
+		objLog.info("Cargando las reglas de Drools en el Map estatico");
 		if (rulesFiles == null) {
 			objLog.debug("Inicia el map de reglas");
 			rulesFiles = new HashMap<String, KnowledgeBase>();
 		}
 
 		String path = AppProperties.getParameter("midas.rules.path");
-		// Si no hay ruta especificada no continúa
+		// Si no hay ruta especificada no continua
 		if (StringUtils.nb(path)) {
-			objLog.info("NO HAY RUTA DROOLS DEFINIDA - No carga ningún fichero de reglas");
+			objLog.info("NO HAY RUTA DROOLS DEFINIDA - No carga ningun fichero de reglas");
 			return;
 		}
 		File directorio = new File(path);
@@ -76,7 +76,7 @@ public class DroolsManager {
 				KnowledgeBase kbase = KnowledgeBaseFactory.newKnowledgeBase();
 				kbase.addKnowledgePackages(kbuilder.getKnowledgePackages());
 
-				// Añade las reglas al map
+				// AÃ±ade las reglas al map
 				rulesFiles.put(rulesFile.getName(), kbase);
 
 				objLog.debug("READY - Objeto de Drools del fichero " + rulesFile.getName());
@@ -84,7 +84,7 @@ public class DroolsManager {
 
 		}
 
-		objLog.info("Reglas de Drools cargadas en el Map estático");
+		objLog.info("Reglas de Drools cargadas en el Map estatico");
 	}
 
 	/**
@@ -103,7 +103,7 @@ public class DroolsManager {
 		this.nombreFichero = ficheroReglas;
 		objLog.debug("Generando el Objeto de Drools del fichero " + nombreFichero);
 
-		// Crea una sesion con las reglas estáticas
+		// Crea una sesion con las reglas estaticas
 		KnowledgeBase kbase = rulesFiles.get(ficheroReglas);
 		ksession = kbase.newStatefulKnowledgeSession();
 

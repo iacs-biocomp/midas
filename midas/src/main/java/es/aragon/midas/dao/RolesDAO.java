@@ -68,7 +68,7 @@ public class RolesDAO {
 	
 	
 	public List<MidRole> findRoleGrants () {
-		String jpql = "SELECT DISTINCT r FROM MidRole r JOIN FETCH r.midGrantList";
+		String jpql = "SELECT DISTINCT r FROM MidRole r JOIN FETCH r.midGrantList ORDER BY r.roleId";
 		Query query = midasEntityManager.createQuery(jpql);
 		@SuppressWarnings("unchecked")
 		List<MidRole> roles = query.getResultList();		
@@ -76,7 +76,7 @@ public class RolesDAO {
 	}
 	
 	public List<MidRole> findRoleContexts () {
-		String jpql = "SELECT DISTINCT r FROM MidRole r JOIN FETCH r.midContextList";
+		String jpql = "SELECT DISTINCT r FROM MidRole r JOIN FETCH r.midContextList ORDER BY r.roleId";
 		Query query = midasEntityManager.createQuery(jpql);
 		@SuppressWarnings("unchecked")
 		List<MidRole> roles = query.getResultList();		

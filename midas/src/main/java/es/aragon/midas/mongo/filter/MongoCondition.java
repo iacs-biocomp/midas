@@ -11,13 +11,13 @@ import es.aragon.midas.exception.MidasException;
 import es.aragon.midas.logging.Logger;
 
 /**
- * Clase que contiene una condición para aplicar en los filtros de mongo. Hay
+ * Clase que contiene una condicion para aplicar en los filtros de mongo. Hay
  * dos tipos de condiciones:</br> 
- * <b>- Condición simple:</b> Aplica una condición a un campo de los JSON. Habrá que indicar a que campo se le quiere
- * aplicar la condición, la operación de comprobación que se quiera aplicar y el
- * valor con el que se comparará.</br> 
- * <b>- Condición OR:</b> Aplica varias condiciones de las cuales se deberá cumplir por lo menos una. 
- * </p> Las condiciones se generarán a partir de los constructores de ésta clase.
+ * <b>- Condicion simple:</b> Aplica una condicion a un campo de los JSON. Habra que indicar a que campo se le quiere
+ * aplicar la condicion, la operacion de comprobacion que se quiera aplicar y el
+ * valor con el que se compararo.</br> 
+ * <b>- Condicion OR:</b> Aplica varias condiciones de las cuales se debera cumplir por lo menos una. 
+ * </p> Las condiciones se generaran a partir de los constructores de esta clase.
  * 
  * @author ARTURO
  * @since 4.3.0
@@ -27,12 +27,12 @@ public class MongoCondition {
 
 	private Logger log;
 
-	// Campos para evaluar si es una condición simple o es un OR
+	// Campos para evaluar si es una condicion simple o es un OR
 	private final int AND_CONDITION = 0;
 	private final int OR_CONDITION = 1;
 	private int condicion;
 
-	// Operaciones que se pueden aplicar en una condición simple
+	// Operaciones que se pueden aplicar en una condicion simple
 	/**
 	 * Campo <b>=</b> valor
 	 */
@@ -64,13 +64,13 @@ public class MongoCondition {
 	public static final int NOT_EQUALS = 5;
 
 	/**
-	 * <b>NOTA: </b>El valor tendrá que ser una instancia de ArrayList</br>
+	 * <b>NOTA: </b>El valor tendra que ser una instancia de ArrayList</br>
 	 * Campo <b>in</b> (valor[0], valor[1]...)
 	 */
 	public static final int IN = 6;
 
 	/**
-	 * <b>NOTA: </b>El valor tendrá que ser una instancia de ArrayList</br>
+	 * <b>NOTA: </b>El valor tendra que ser una instancia de ArrayList</br>
 	 * Campo <b>not in</b> (valor[0], valor[1]...)
 	 */
 	public static final int NOT_IN = 7;
@@ -89,7 +89,7 @@ public class MongoCondition {
 
 	/**
 	 * Comprueba que el valor del campo tenga un formato en concreto.</br>
-	 * <b>NOTA: </b>El valor tendrá que ser un ArrayList de String</br>
+	 * <b>NOTA: </b>El valor tendra que ser un ArrayList de String</br>
 	 * String[0]: Formato del REGEX</br> String[1]:
 	 * Opciones de REGEX</br> 
 	 * <a
@@ -98,21 +98,21 @@ public class MongoCondition {
 	 */
 	public static final int REGEX = 10;
 
-	// Campos con los que se genera una condición simple
+	// Campos con los que se genera una condicion simple
 	private String campo;
 	private int operacion;
 	private Object valor;
 
-	// Lista para generar una condición compleja con OR
+	// Lista para generar una condicion compleja con OR
 	private List<MongoCondition> orConditions;
 
 	/**
-	 * Genera una condición simple
+	 * Genera una condicion simple
 	 * 
 	 * @param campo
-	 *            Dirección del campo del JSON
+	 *            Direccion del campo del JSON
 	 * @param operacion
-	 *            Operador que se aplica a la condición
+	 *            Operador que se aplica a la condicion
 	 * @param valor
 	 *            Contenido que compara con el campo del JSON
 	 */
@@ -129,7 +129,7 @@ public class MongoCondition {
 	 * condiciones
 	 * 
 	 * @param condiciones
-	 *            Condiciones que contendrá el OR
+	 *            Condiciones que contendra el OR
 	 */
 	public MongoCondition(List<MongoCondition> condiciones) {
 		log = new Logger();
@@ -138,7 +138,7 @@ public class MongoCondition {
 	}
 
 	/**
-	 * Genera un map con la estructura JSON que contiene la condición
+	 * Genera un map con la estructura JSON que contiene la condicion
 	 * 
 	 * @return Map que contiene la estructura JSON con los datos de filtrado
 	 */
@@ -225,8 +225,8 @@ public class MongoCondition {
 
 			} else if (condicion == OR_CONDITION) {
 				List<Document> orListDocs = new ArrayList<Document>();
-				// Por cada condición del OR obtiene el map con los datos que
-				// añadirá al map final
+				// Por cada condicion del OR obtiene el map con los datos que
+				// aÃ±adira al map final
 				for (MongoCondition orCondition : orConditions) {
 					Document orDoc = new Document();
 					Map<String, Object> mapCondition = orCondition

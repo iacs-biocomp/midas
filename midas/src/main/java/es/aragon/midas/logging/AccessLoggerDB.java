@@ -40,7 +40,7 @@ public class AccessLoggerDB extends AccessLoggerBase {
     }
     
     /**
-     * Efect�a el registro en la tabla MID_LOGIN
+     * Efectua el registro en la tabla MID_LOGIN
      * @param cod 
      */
     protected void register(String cod) throws MidasJPAException {

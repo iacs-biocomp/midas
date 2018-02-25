@@ -5,8 +5,8 @@ import es.aragon.midas.config.MidUser;
 public interface LoginValidator {
 
 	/**
-	 * Método de autenticación para sistemas de validación por
-	 * usuario/contraseña
+	 * Metodo de autenticacion para sistemas de validacion por
+	 * usuario/contraseÃ±a
 	 * 
 	 * @param username
 	 * @param password
@@ -15,7 +15,7 @@ public interface LoginValidator {
 	public MidUser authenticate(String username, String password);
 
 	/**
-	 * Método de autenticación para sistemas de ticketing, SSO, autenticacion
+	 * Metodo de autenticacion para sistemas de ticketing, SSO, autenticacion
 	 * delegada...
 	 * 
 	 * @param ticket
@@ -24,7 +24,7 @@ public interface LoginValidator {
 	public MidUser authenticate(String ticket);
 
 	/**
-	 * Obtiene la excepción obtenida al autenticar
+	 * Obtiene la excepcion obtenida al autenticar
 	 * 
 	 * @return Objeto con el codigo del error al autenticar
 	 */

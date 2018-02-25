@@ -18,31 +18,39 @@ import org.hibernate.annotations.LazyCollectionOption;
  * @author carlos
  */
 @Entity
-@Table(name = "MID_GRANTS")
+@Table(name = "mid_grants")
 @XmlRootElement
 @NamedQueries({
     @NamedQuery(name = "findGrantsByUser", query="SELECT g "
 					 + "FROM MidGrant g JOIN g.midRoleList r " 
 					 + "JOIN r.midUserList u "
 					 + "WHERE u.userName = :username"),
-    @NamedQuery(name = "findGrantsByLdap", query="SELECT g "
-					 + "FROM MidGrant g JOIN g.midRoleList r " 
-					 + "WHERE r.roleLdap = :roleLdap"),    
+//    @NamedQuery(name = "findGrantsByLdap", query="SELECT g "
+//					 + "FROM MidGrant g JOIN g.midRoleList r " 
+//					 + "WHERE :roleLdap like r.roleLdap "),    
     @NamedQuery(name = "MidGrant.findAll", query = "SELECT m FROM MidGrant m"),
     @NamedQuery(name = "MidGrant.findByGrId", query = "SELECT m FROM MidGrant m WHERE m.grId = :grId"),
     @NamedQuery(name = "MidGrant.findByGrDesc", query = "SELECT m FROM MidGrant m WHERE m.grDesc = :grDesc")})
-public class MidGrant implements Serializable {
+
+@NamedNativeQueries({
+	@NamedNativeQuery(name = "findGrantsByLdap", query = "select gr_id, gr_desc from " +
+													 "mid_grants join mid_rolegrants on gr_id = rg_grant " + 
+													 "join mid_roles on rg_role = role_id " + 
+													 "where :roleLdap like role_ldap", resultClass = MidGrant.class)
+})
+
+	public class MidGrant implements Serializable {
     private static final long serialVersionUID = 1L;
     @Id
     @Basic(optional = false)
-    @Column(name = "GR_ID")
+    @Column(name = "gr_id")
     private String grId;
-    @Column(name = "GR_DESC")
+    @Column(name = "gr_desc")
     private String grDesc;
     
-    @JoinTable(name = "MID_ROLEGRANTS", joinColumns = {
-        @JoinColumn(name = "RG_GRANT", referencedColumnName = "GR_ID")}, inverseJoinColumns = {
-        @JoinColumn(name = "RG_ROLE", referencedColumnName = "ROLE_ID")})
+    @JoinTable(name = "mid_rolegrants", joinColumns = {
+        @JoinColumn(name = "rg_grant", referencedColumnName = "gr_id")}, inverseJoinColumns = {
+        @JoinColumn(name = "rg_role", referencedColumnName = "role_id")})
     @ManyToMany
     @LazyCollection(LazyCollectionOption.FALSE)
     private List<MidRole> midRoleList;

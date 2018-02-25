@@ -16,7 +16,7 @@ public class FileMetadata implements Comparable<FileMetadata>{
 	private BigDecimal bits = new BigDecimal("1024");
 	
 	/**
-	 * Llamada de declaración
+	 * Llamada de declaracion
 	 */
 	public FileMetadata() {
 		
@@ -73,7 +73,7 @@ public class FileMetadata implements Comparable<FileMetadata>{
 	}
 	
 	/**
-	 * Devuelve el tamaño del fichero
+	 * Devuelve el tamaÃ±o del fichero
 	 * @return
 	 */
 	public BigDecimal getSize(){		
@@ -81,7 +81,7 @@ public class FileMetadata implements Comparable<FileMetadata>{
 	}
 	
 	/**
-	 * Establece el tamaño del fichero
+	 * Establece el tamaÃ±o del fichero
 	 * @param size
 	 */
 	public void setSize(long size){
@@ -90,7 +90,7 @@ public class FileMetadata implements Comparable<FileMetadata>{
 	}
 
 	/**
-	 * Ordenación: este metodo nos ayuda a ordenar
+	 * Ordenacion: este metodo nos ayuda a ordenar
 	 * 		la estructura de directorios, primero carpetas luego ficheros.
 	 */
 	public int compareTo(FileMetadata o) {

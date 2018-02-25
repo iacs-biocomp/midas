@@ -15,7 +15,7 @@ import javax.xml.bind.annotation.XmlRootElement;
  * @author carlos
  */
 @Entity
-@Table(name = "MID_MENU")
+@Table(name = "mid_menu")
 @XmlRootElement
 @NamedQueries({
     @NamedQuery(name = "MidMenu.findAll", query = "SELECT m FROM MidMenu m"),
@@ -26,19 +26,19 @@ public class MidMenu implements Serializable {
     private static final long serialVersionUID = 1L;
     @Id
     @Basic(optional = false)
-    @Column(name = "MN_ID")
+    @Column(name = "mn_id")
     private Short mnId;
-    @Column(name = "MN_PADRE")
+    @Column(name = "mn_padre")
     private Short mnPadre;
-    @Column(name = "MN_TEXTO")
+    @Column(name = "mn_texto")
     private String mnTexto;
-    @Column(name = "MN_LINK")
+    @Column(name = "mn_link")
     private String mnLink;
-    @Column(name = "MN_TARGET")
+    @Column(name = "mn_target")
     private String mnTarget;
-    @Column(name = "MN_STYLE")
+    @Column(name = "mn_style")
     private String mnStyle;
-    @JoinColumn(name = "MN_GRANTREQ", referencedColumnName = "GR_ID")
+    @JoinColumn(name = "mn_grantreq", referencedColumnName = "gr_id")
     @ManyToOne
     private MidGrant mnGrantreq;
 

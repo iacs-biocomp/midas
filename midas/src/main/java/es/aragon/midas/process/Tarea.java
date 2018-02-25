@@ -26,10 +26,10 @@ public class Tarea {
 	public enum EstadoTarea { 
 		/** Estado inicial de la tarea cuando se acaba de crear. */ 		CREADA,	       
 		/** Tarea creada pero no asignada a usuario. */ 					SIN_ASIGNAR,   
-		/** Tarea asignada a un usuario para su ejecución en el flujo. */	ASIGNADA,      
-		/** Tarea con la ejecución suspendida. */ 							SUSPENDIDA,    
-		/** Tarea completada, fuera de la ejecución del flujo. */ 			COMPLETADA,    
-		/** Tarea eliminada de la ejecución. */ 							ELIMINADA      
+		/** Tarea asignada a un usuario para su ejecucion en el flujo. */	ASIGNADA,      
+		/** Tarea con la ejecucion suspendida. */ 							SUSPENDIDA,    
+		/** Tarea completada, fuera de la ejecucion del flujo. */ 			COMPLETADA,    
+		/** Tarea eliminada de la ejecucion. */ 							ELIMINADA      
 	}
 	
 	private Proceso proceso;
@@ -48,7 +48,7 @@ public class Tarea {
 		this.setTask(task);
 		this.setEstado(Tarea.EstadoTarea.CREADA);
 		// Actualizar estado con los valores propios del task, si procede   ???
-		// Así se evitaría tener que refrescar en el motor (getBandejaEntrada) y proceso (getTareasActivas) o en otros sitios donde se 
+		// Asi se evitaria tener que refrescar en el motor (getBandejaEntrada) y proceso (getTareasActivas) o en otros sitios donde se 
 		// recuperen objetos Task y se quieran convertir a objetos Tarea
 		this.refrescaEstado();
 	}
@@ -78,10 +78,11 @@ public class Tarea {
 		return this.estado;
 	}
 	
-	// MÉTODOS
+	// MeTODOS
 	
     /**
-    * Refresca el estado de la tarea, comprobando la asignación a usuario, si está o no suspendida o si ha sido eliminada, bien por completarse o bien por borrado
+    * Refresca el estado de la tarea, comprobando la asignacion a usuario, 
+    * si esta o no suspendida o si ha sido eliminada, bien por completarse o bien por borrado
     * @return Estado de la tarea
     * @see EstadoTarea
     */		
@@ -101,10 +102,10 @@ public class Tarea {
 		}
 		else{
 			asignado = null;
-			// Obtener el id de la ejecución de la tarea
+			// Obtener el id de la ejecucion de la tarea
 			String idExeTarea = this.task.getExecutionId();	
 			
-		    // La tarea ha podido ser eliminada del TaskService, consultar la razón al histórico
+		    // La tarea ha podido ser eliminada del TaskService, consultar la razon al historico
 			List<HistoricTaskInstance> tareasHco = this.proceso.getMotor().getHistoryService()
 																		  .createHistoricTaskInstanceQuery()																		  
 																		  .executionId(idExeTarea)	
@@ -162,8 +163,9 @@ public class Tarea {
 	}
 	    
     /**
-    * Asigna una tarea a un usuario. Si el usuario no pertenece a alguno de los grupos candidatos establecidos en la tarea, lanza una excepción
-    * @param usuario Identificador del usuario al que se asignará la tarea
+    * Asigna una tarea a un usuario. Si el usuario no pertenece 
+    * a alguno de los grupos candidatos establecidos en la tarea, lanza una excepcion
+    * @param usuario Identificador del usuario al que se asignara la tarea
     * @throws Exception
     */
 	public void asignar(String usuario) throws Exception{				
@@ -216,7 +218,7 @@ public class Tarea {
 	 * Adjunta documento a la tarea 
 	 * @param nombreDoc Nombre del documento
 	 * @param tipoDoc Tipo del documento
-	 * @param descripcionDoc Descripción del adjunto
+	 * @param descripcionDoc Descripcion del adjunto
 	 * @param contenidoDoc Contenido del documento
 	 * @return Identificador del adjunto 
 	 */		
@@ -253,14 +255,14 @@ public class Tarea {
 	}	
 	
 	/**
-	 * Recupera información de un documento adjunto
+	 * Recupera informacion de un documento adjunto
 	 * @param idAdjunto Identificador del adjunto a eliminar
-	 * @param info Información a obtener del adjunto: ATTACHMENT_TYPE (tipo), 
-	 * 												  ATTACHMENT_PROCESS_INSTANCE_ID (identificador del proceso al que se adjuntó), 
-	 * 												  ATTACHMENT_TASK_ID (identificador de la tarea a la que se adjuntó), 
-	 * 												  ATTACHMENT_DESCRIPTION (descripción del adjunto),
+	 * @param info Informacion a obtener del adjunto: ATTACHMENT_TYPE (tipo), 
+	 * 												  ATTACHMENT_PROCESS_INSTANCE_ID (identificador del proceso al que se adjunta), 
+	 * 												  ATTACHMENT_TASK_ID (identificador de la tarea a la que se adjunta), 
+	 * 												  ATTACHMENT_DESCRIPTION (descripcion del adjunto),
 	 * 												  ATTACHMENT_NAME (nombre del adjunto)  
-	 * @return Información solicitada por info
+	 * @return Informacion solicitada por info
 	 */
 	public String getInfoAdjunto (String idAdjunto, String info){		
 		String retorno=null;

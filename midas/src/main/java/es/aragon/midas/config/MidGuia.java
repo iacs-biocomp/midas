@@ -14,7 +14,7 @@ import javax.persistence.Table;
  * 
  */
 @Entity
-@Table(name = "MID_GUIA")
+@Table(name = "mid_guia")
 @NamedQueries({
 		@NamedQuery(name = "MidGuia.findAll", query = "SELECT m FROM MidGuia m"),
 		@NamedQuery(name = "MidGuia.findByAppDst", query = "SELECT m FROM MidGuia m where m.appDst = :appDst") })
@@ -22,12 +22,13 @@ public class MidGuia implements Serializable {
 	private static final long serialVersionUID = 1L;
 
 	@Id
-	@Column(name = "APP_DST")
+	@Column(name = "app_dst")
 	private String appDst;
 
+	@Column(name = "secret")
 	private String secret;
 
-	@Column(name = "URL_DST")
+	@Column(name = "url_dst")
 	private String urlDst;
 
 	public MidGuia() {

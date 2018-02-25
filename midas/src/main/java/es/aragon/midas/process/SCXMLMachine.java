@@ -128,7 +128,7 @@ public class SCXMLMachine extends FSMAbstractMachine {
             
         } catch (Exception e) {
             log.error("Error leyendo maquina " + scFile);
-            log.error("Error general leyendo m�quina", e);
+            log.error("Error general leyendo maquina", e);
         }        
 
     }    

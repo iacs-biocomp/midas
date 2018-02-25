@@ -225,7 +225,7 @@ public class SqlUtil {
 	}
 
 	/**
-	 * Combierte un array de String en una cadena de texto entre paréntesis con
+	 * Combierte un array de String en una cadena de texto entre parentesis con
 	 * cada string encerrado entre comillas y separado por comas, ideal para poder
 	 * ser utilizado con el operador IN.
 	 * @param array String[]

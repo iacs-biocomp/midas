@@ -12,8 +12,12 @@ import javax.naming.ldap.LdapContext;
 
 import es.aragon.midas.config.AppProperties;
 import es.aragon.midas.logging.Logger;
-import es.aragon.midas.util.Base64;
+//import es.aragon.midas.util.Base64;
+import java.util.Base64;
+
 import es.aragon.midas.util.FileEncoder;
+
+
 
 /**
  * Metodos de busqueda de usuarios en el LDAP
@@ -31,7 +35,7 @@ public class LdapUtils {
 	}*/
 	
 	/**
-	 * Devuelve el usuario LDAP según los filtros establecidos para la busqueda.
+	 * Devuelve el usuario LDAP segun los filtros establecidos para la busqueda.
 	 * @param username
 	 * @param password
 	 * @param filtros
@@ -44,7 +48,7 @@ public class LdapUtils {
 		String baseDN = AppProperties.getParameter("midas.ldap.baseDN");
 		UserLdap userLdap = null;
 		
-		// Crea la conexión con LDAP
+		// Crea la conexion con LDAP
 		try {
 			ctx = LdapUtils.getLdapContext(ldapUrl, username, password);
 		} catch (Exception e) {
@@ -80,14 +84,17 @@ public class LdapUtils {
 		String validPassword;
 		
 		try {
-			// Desencripta la contraseña en AES recuperada de base de datos que
+			// Desencripta la contraseÃ±a en AES recuperada de base de datos que
 			// la almacena en Base64
-			validPassword = FileEncoder.decryptString(new String(Base64
-					.decode(AppProperties.getParameter("midas.ldap.validPassword"))));
+			String base64password = AppProperties.getParameter("midas.ldap.validPassword");
+			log.debug("base64 password: " + base64password);
+			String encodedPassword = new String(Base64.getDecoder().decode(base64password));
+			log.debug("Encoded password: " + encodedPassword);
+			validPassword = FileEncoder.decryptBytes(Base64.getDecoder().decode(base64password));
 		} catch (Exception e) {
 			validPassword = "";
 			e.printStackTrace();
-			log.error("Error al obtener el password válido de la tabla de properties", e);
+			log.error("Error al obtener el password valido de la tabla de properties", e);
 		}
 
 		FiltroLdap filtros = new FiltroLdap(mail, null);
@@ -120,45 +127,45 @@ public class LdapUtils {
 	 * Obtiene el mensaje de error que devuelve a partir de una excepcion de
 	 * LDAP
 	 * @param e
-	 * 		Excepción obtenida al autenticar contra el LDAP
-	 * @return Descripción del error que devuelve el LDAP
+	 * 		Excepcion obtenida al autenticar contra el LDAP
+	 * @return Descripcion del error que devuelve el LDAP
 	 */
 	public static String getDescError(Throwable e) {
 		String portal = AppProperties.getParameter("midas.ldap.portal");
 		String message = e.getMessage();
 
 		if (message.contains("data 525")) {
-			return "Usuario y/o contraseña erróneos";
+			return "Usuario y/o contraseÃ±a erroneos";
 		}
 		if (message.contains("data 52e")) {
-			return "Usuario y/o contraseña erróneos";
+			return "Usuario y/o contraseÃ±a erroneos";
 		}
 		if (message.contains("data 530")) {
-			return "No se puede acceder en éstos momentos";
+			return "No se puede acceder en estos momentos";
 		}
 		if (message.contains("data 531")) {
-			return "No se puede acceder desde éste equipo";
+			return "No se puede acceder desde este equipo";
 		}
 		if (message.contains("data 532")) {
-			return "La contraseña ha caducado."
+			return "La contraseÃ±a ha caducado."
 					+ " <br><a href=\""
 					+ portal
-					+ "\">Diríjase al portal del empleado para cambiar la contraseña</a>";
+					+ "\">Dirijase al portal del empleado para cambiar la contraseÃ±a</a>";
 		}
 		if (message.contains("data 533")) {
 			return "Cuenta desactivada en el AD";
 		}
 		if (message.contains("data 534")) {
-			return "El usuario no está autorizado para acceder desde éste equipo";
+			return "El usuario no esta autorizado para acceder desde este equipo";
 		}
 		if (message.contains("data 701")) {
 			return "Cuenta caducada";
 		}
 		if (message.contains("data 773")) {
-			return "Se necesita cambiar la contraseña."
+			return "Se necesita cambiar la contraseÃ±a."
 					+ " <br><a href=\""
 					+ portal
-					+ "\">Diríjase al portal del empleado para cambiar la contraseña</a>";
+					+ "\">Dirijase al portal del empleado para cambiar la contraseÃ±a</a>";
 		}
 		if (message.contains("data 775")) {
 			return "La cuenta ha sido bloqueada";

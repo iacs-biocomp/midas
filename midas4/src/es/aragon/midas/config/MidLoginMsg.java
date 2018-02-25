@@ -13,7 +13,7 @@ import javax.xml.bind.annotation.XmlRootElement;
  * @author carlos
  */
 @Entity
-@Table(name = "MID_LOGIN_MSG")
+@Table(name = "mid_login_msg")
 @XmlRootElement
 @NamedQueries({
     @NamedQuery(name = "MidLoginMsg.findAll", query = "SELECT m FROM MidLoginMsg m"),
@@ -23,9 +23,9 @@ public class MidLoginMsg implements Serializable {
     private static final long serialVersionUID = 1L;
     @Id
     @Basic(optional = false)
-    @Column(name = "LM_CODIGO")
+    @Column(name = "lm_codigo")
     private String lmCodigo;
-    @Column(name = "LM_DESCRIPCION")
+    @Column(name = "lm_descripcion")
     private String lmDescripcion;
 
     public MidLoginMsg() {

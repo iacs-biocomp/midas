@@ -33,7 +33,7 @@ public class DroolsEventListener extends DefaultAgendaEventListener {
      */
     @Override
     public void afterActivationFired(AfterActivationFiredEvent event) {
-        //Añade al List cada regla que se activa	
+        //AÃ±ade al List cada regla que se activa	
         eventosActivados.add(event);
     }
 

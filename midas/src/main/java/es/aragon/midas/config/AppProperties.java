@@ -10,7 +10,7 @@ import org.apache.log4j.Logger;
  * Clase que encapsula y permite el acceso a parametros de la aplicacion a
  * partir del fichero de propiedades ubicado en la ruta interna
  * midasApplication.properties o desde Base de Datos, y que cachea esas
- * propiedades para ser utilizadas desde cualquier punto de la aplicaci�n
+ * propiedades para ser utilizadas desde cualquier punto de la aplicacion
  */
 //TODO eliminar printStackTrace y gestionar excepciones
 public class AppProperties {
@@ -75,7 +75,7 @@ public class AppProperties {
                         .getBundle(ficheroProperties, locale);
             }
         } catch (MissingResourceException me) {
-            String msg = "Ha sido imposible recuperar el fichero de propiedades de la conexi�n.";
+            String msg = "Ha sido imposible recuperar el fichero de propiedades de la conexion.";
             throw new MidasException(msg, me);
         }
 
@@ -111,7 +111,7 @@ public class AppProperties {
                 cargarProperties(FICHERO_CONFIG);
             }
         } catch (Exception e) {
-            String msg = "Ha sido imposible recuperar el fichero de propiedades de la conexi�n.";
+            String msg = "Ha sido imposible recuperar el fichero de propiedades de la conexion.";
             throw new MidasException(msg, e);           
         }
     }
@@ -142,7 +142,7 @@ public class AppProperties {
 
 
     /**
-     * Este m�todo devuelve el valor de configuraci�n asociado a la key
+     * Este metodo devuelve el valor de configuracion asociado a la key
      * introducida. Si la clave no existe, devuelve null.
      *
      * @param keyValorConfiguracion
@@ -157,7 +157,7 @@ public class AppProperties {
 
 
     /**
-     * A�ade un par�metro a la lista de parametros del sistema
+     * Añade un parametro a la lista de parametros del sistema
      *
      * @param codigo
      * @param valor
@@ -170,13 +170,13 @@ public class AppProperties {
             dao.create(codigo, valor, descripcion);
             reload();
         } catch (Exception e) {
-            throw new MidasException("Error a�adiendo parametro", e);
+            throw new MidasException("Error añadiendo parametro", e);
         }
     }
 
 
     /**
-     * Actualiza un par�metro de la lista de parametros del sistema
+     * Actualiza un parametro de la lista de parametros del sistema
      *
      * @param codigo
      * @param valor

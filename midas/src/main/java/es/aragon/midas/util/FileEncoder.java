@@ -6,6 +6,8 @@ import java.util.zip.*;
 import javax.crypto.*;
 import javax.crypto.spec.*;
 
+import es.aragon.midas.logging.Logger;
+
 public class FileEncoder {
 
 	/**
@@ -13,6 +15,12 @@ public class FileEncoder {
 	 */
 	private static String key = "@#12aK%_h!9bP$w#";
 
+	private static Logger log;
+	static {
+		log = new Logger();
+	}
+	
+	
 	/**
 	 * Encripta un fichero.
 	 * 
@@ -59,7 +67,7 @@ public class FileEncoder {
 
 	/**
 	 * Encripta un fichero. El fichero resultante tiene como nombre el mismo del
-	 * original añadiendo la extension ".des".
+	 * original aÃ±adiendo la extension ".des".
 	 * 
 	 * @param inFile
 	 *            Nombre del fichero.
@@ -73,7 +81,7 @@ public class FileEncoder {
 
 	/**
 	 * Encripta un fichero. El fichero resultante tiene como nombre el mismo del
-	 * original añadiendo la extension ".des".
+	 * original aÃ±adiendo la extension ".des".
 	 * 
 	 * @param inFile
 	 *            Nombre del fichero.
@@ -181,11 +189,30 @@ public class FileEncoder {
 	 * @throws Exception
 	 */
 	public static String decryptString(String text) throws Exception {
+		log.debug("Descifrando: " + text);
 		SecretKeySpec secretkey = new SecretKeySpec(key.getBytes(), "AES");
 		Cipher cipher = Cipher.getInstance("AES/ECB/PKCS5PADDING");
 		cipher.init(Cipher.DECRYPT_MODE, secretkey);
 		byte[] result = cipher.doFinal(text.getBytes());
+		log.debug("Descifrado: " + new String(result, "UTF-8"));
 		return new String(result, "UTF-8");
 	}
 
+	
+	/**
+	 * Desencripta una cadena de texto
+	 * 
+	 * @param text
+	 *            Texto encriptado con la cave de midas
+	 * @return Texto desencriptado
+	 * @throws Exception
+	 */
+	public static String decryptBytes(byte[] text) throws Exception {
+		SecretKeySpec secretkey = new SecretKeySpec(key.getBytes(), "AES");
+		Cipher cipher = Cipher.getInstance("AES/ECB/PKCS5PADDING");
+		cipher.init(Cipher.DECRYPT_MODE, secretkey);
+		byte[] result = cipher.doFinal(text);
+		log.debug("Descifrado: " + new String(result, "UTF-8"));
+		return new String(result, "UTF-8");
+	}
 }

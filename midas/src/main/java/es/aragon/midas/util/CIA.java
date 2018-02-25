@@ -3,7 +3,7 @@ package es.aragon.midas.util;
 import es.aragon.midas.logging.Logger;
 
 /**
- * Clase que encapsula funciones útiles del CIA
+ * Clase que encapsula funciones utiles del CIA
  * @author carlos
  *
  */
@@ -30,7 +30,7 @@ public class CIA  {
     }
     
     /**
-     * Devuelve la letra de control asociada a un número
+     * Devuelve la letra de control asociada a un numero
      * @param numero en formato String
      * @return la letra del cia
      */
@@ -52,7 +52,7 @@ public class CIA  {
         } catch (NumberFormatException nfe) {
             log.error("El dato introducido no es un numero");
         } catch (ArrayIndexOutOfBoundsException aioobe) {
-            log.error("El dato introducido no tiene 9 dígitos");
+            log.error("El dato introducido no tiene 9 digitos");
         }
         
         return "PCAFNVBDREKXLSTZJ".substring(res,res+1);
@@ -80,7 +80,7 @@ public class CIA  {
     }
     
     /**
-     * Devuelve la letra de control CIA asociada a un número
+     * Devuelve la letra de control CIA asociada a un numero
      * @param numero
      * @return la letra del CIA
      */
@@ -89,7 +89,7 @@ public class CIA  {
     }
     
     /**
-     * Construye el CIA completo a partir de un número en formato String
+     * Construye el CIA completo a partir de un numero en formato String
      * @param numero en formato String
      * @return el CIA completo
      */
@@ -98,7 +98,7 @@ public class CIA  {
     }
     
     /**
-     * Construye el CIA completo a partir de un número
+     * Construye el CIA completo a partir de un numero
      * @param numero
      * @return el CIA completo
      */
@@ -107,10 +107,10 @@ public class CIA  {
     }
     
     /**
-     * Función de ofuscado de un CIA
+     * Funcion de ofuscado de un CIA
      * @param CIA
-     * @return el código ofuscado
-     * TODO implementar el método obfuscateCIA
+     * @return el codigo ofuscado
+     * TODO implementar el metodo obfuscateCIA
      */
     String obfuscateCIA(String CIA) {
     	return "";

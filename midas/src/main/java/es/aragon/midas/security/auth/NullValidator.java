@@ -10,7 +10,7 @@ import es.aragon.midas.util.StringUtils;
 
 /**
  * LoginValidator que unicamente comprueba que username y password son no nulos.
- * Para pruebas básicas de autenticación.
+ * Para pruebas basicas de autenticacion.
  * 
  * @author carlos
  * 

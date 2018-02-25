@@ -10,12 +10,15 @@ import java.util.Set;
 import javax.persistence.*;
 import javax.xml.bind.annotation.XmlRootElement;
 
+import es.aragon.midas.logging.Logger;
+import es.aragon.midas.util.Utils;
+
 /**
  *
  * @author carlos
  */
 @Entity
-@Table(name = "MID_MENU")
+@Table(name = "mid_menu")
 @XmlRootElement
 @NamedQueries({
     @NamedQuery(name = "MidMenu.findAll", query = "SELECT m FROM MidMenu m"),
@@ -24,24 +27,32 @@ import javax.xml.bind.annotation.XmlRootElement;
     @NamedQuery(name = "MidMenu.findByMnPadre", query = "SELECT m FROM MidMenu m WHERE m.mnPadre = :mnPadre")})
 public class MidMenu implements Serializable {
     private static final long serialVersionUID = 1L;
+
+    @Transient
+    protected Logger log = new Logger();
+    
     @Id
     @Basic(optional = false)
-    @Column(name = "MN_ID")
+    @Column(name = "mn_id")
     private Short mnId;
-    @Column(name = "MN_PADRE")
+    @Column(name = "mn_padre")
     private Short mnPadre;
-    @Column(name = "MN_TEXTO")
+    @Column(name = "mn_texto")
     private String mnTexto;
-    @Column(name = "MN_LINK")
+    @Column(name = "mn_link")
     private String mnLink;
-    @Column(name = "MN_TARGET")
+    @Column(name = "mn_target")
     private String mnTarget;
-    @Column(name = "MN_STYLE")
+    @Column(name = "mn_style")
     private String mnStyle;
-    @JoinColumn(name = "MN_GRANTREQ", referencedColumnName = "GR_ID")
+    @JoinColumn(name = "mn_grantreq", referencedColumnName = "gr_id")
     @ManyToOne
     private MidGrant mnGrantreq;
-
+    
+    @Transient
+    private boolean active;
+    @Transient
+    private MidMenu parentMenu;
 	
     @Transient
     private ArrayList<MidMenu> children = new ArrayList<MidMenu>();    
@@ -50,13 +61,15 @@ public class MidMenu implements Serializable {
     }
 
     public MidMenu(Short mnId, MidGrant midGrants, Short mnPadre,
-                    String mnTexto, String mnLink, String mnTarget) {
+                    String mnTexto, String mnLink, String mnTarget, String mnStyle) {
             this.mnId = mnId;
             this.mnGrantreq = midGrants;
             this.mnPadre = mnPadre;
             this.mnTexto = mnTexto;
             this.mnLink = mnLink;
             this.mnTarget = mnTarget;
+            this.mnStyle = mnStyle;
+            this.active = false;
     }	    
     
     
@@ -78,6 +91,8 @@ public class MidMenu implements Serializable {
 
     public void setMnPadre(Short mnPadre) {
         this.mnPadre = mnPadre;
+        if (mnPadre == 0)
+        	this.parentMenu = null;
     }
 
     public String getMnTexto() {
@@ -161,12 +176,70 @@ public class MidMenu implements Serializable {
             result.mnTexto = this.mnTexto;
             result.mnLink = this.mnLink;
             result.mnTarget = this.mnTarget;
+            result.mnStyle = this.mnStyle;
+            result.active = this.active;
+            
             for (MidMenu mn : children) {
                     if (grants.contains(mn.getMnGrantreq().getGrId()) 
-                                    || grants.contains(Constants.SUPER))
-                            result.addChild(mn.cloneWithGrants(grants));
+                                    || grants.contains(Constants.SUPER)) {
+                    		mn.setParent(result);
+                    		log.debug("incluido menu " + mn.mnTexto + ". Grantreq = " + mn.getMnGrantreq().getGrId());
+                    		MidMenu child = mn.cloneWithGrants(grants);
+                    		child.setParent(result);
+                    		result.addChild(child);
+                    }
             }
             return result;
-    }    
+    }
+
+	public boolean isActive() {
+		return active;
+	}
+	
+	public String getActiveClass() {
+		return active ? "active" : ""; 
+	}
+
+	public void setActive(boolean active) {
+		this.active = active;
+		log.debug("menu " + this.getMnId() + " active ");
+		if (this.parentMenu != null) {
+			this.parentMenu.setActive(active); 
+		} 
+	}    
     
+	/**
+	 * Resetea todas las entradas del menu a No Activo
+	 */
+	public void setAllInactive() {
+		log.debug("Desactivando menu " + this.getMnId());
+		this.active = false;
+		for (MidMenu m : children) {
+			m.setAllInactive();
+		}
+	}
+	
+	public boolean searchActive(String link) {
+		log.debug("Buscando menu activo en :" + this.getMnId());
+		for (MidMenu m : children) {
+			if (link.equals(m.mnLink)) {
+				log.debug("Menu activo: " + m.getMnId() + "=" + link);
+				m.setActive(true);
+				return true;
+			} else if (m.getChildren().size() > 0) {
+				if(m.searchActive(link))
+					return true;
+			}
+		}
+		return false;
+	}
+
+	public MidMenu getParent() {
+		return parentMenu;
+	}
+
+	public void setParent(MidMenu parent) {
+		this.parentMenu = parent;
+	}
+	
 }

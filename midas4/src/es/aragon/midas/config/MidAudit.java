@@ -15,7 +15,7 @@ import javax.xml.bind.annotation.XmlRootElement;
  * @author carlos
  */
 @Entity
-@Table(name = "MID_AUDIT")
+@Table(name = "mid_audit")
 @XmlRootElement
 @NamedQueries({
     @NamedQuery(name = "MidAudit.findAll", query = "SELECT m FROM MidAudit m"),
@@ -32,23 +32,23 @@ public class MidAudit implements Serializable {
     // @Max(value=?)  @Min(value=?)//if you know range of your decimal fields consider using these annotations to enforce field validation
     @Id
     @GeneratedValue(strategy=GenerationType.SEQUENCE, generator="AudSeq")
-    @SequenceGenerator(name="AudSeq",sequenceName="MID_AUDIT_SEQ", allocationSize=1)
-    @Column(name = "AU_ID")
+    @SequenceGenerator(name="AudSeq",sequenceName="mid_audit_seq", allocationSize=1)
+    @Column(name = "au_id")
     private BigDecimal auId;
-    @Column(name = "AU_FECHA")
+    @Column(name = "au_fecha")
     @Temporal(TemporalType.TIMESTAMP)
     private Date auFecha;
-    @Column(name = "AU_USER")
+    @Column(name = "au_user")
     private String auUser;
-    @Column(name = "AU_IDD")
+    @Column(name = "au_idd")
     private String auIdd;
-    @Column(name = "AU_OPER")
+    @Column(name = "au_oper")
     private String auOper;
-    @Column(name = "AU_ENTIDAD")
+    @Column(name = "au_entidad")
     private String auEntidad;
-    @Column(name = "AU_PK")
+    @Column(name = "au_pk")
     private String auPk;
-    @Column(name = "AU_DATA")
+    @Column(name = "au_data")
     private String auData;
 
     public MidAudit() {

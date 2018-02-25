@@ -2,6 +2,8 @@ package es.aragon.midas.security.auth;
 
 import javax.naming.InitialContext;
 
+import es.aragon.midas.config.AppProperties;
+import es.aragon.midas.config.Constants;
 import es.aragon.midas.config.MidUser;
 import es.aragon.midas.dao.UsersDAO;
 import es.aragon.midas.logging.Logger;
@@ -9,7 +11,7 @@ import es.aragon.midas.util.StringUtils;
 
 /**
  * LoginValidator que unicamente comprueba que username y password son no nulos.
- * Para pruebas b�sicas de autenticaci�n.
+ * Para pruebas basicas de autenticacion.
  *
  * @author carlos
  *
@@ -22,6 +24,10 @@ public abstract class LoginValidatorBase implements LoginValidator {
     public MidUser authenticate(String username, String password) {
         UsersDAO dao; 
 
+
+        boolean checkPassword = (AppProperties.getParameter(Constants.CFG_AUTH_IGNOREPASS) == null
+        		|| AppProperties.getParameter(Constants.CFG_AUTH_IGNOREPASS).equals(Constants.FALSE));
+        
         
         if (StringUtils.nb(username) || StringUtils.nb(password)) {
             return null;
@@ -37,7 +43,7 @@ public abstract class LoginValidatorBase implements LoginValidator {
                     dao.create(savedUser);
                 }
                 
-                if (!specificValidation(username, password)) {
+                if (checkPassword && !specificValidation(username, password)) {
                 	savedUser = null;
                 }
                 
@@ -57,5 +63,6 @@ public abstract class LoginValidatorBase implements LoginValidator {
     protected abstract boolean specificValidation(String username, String password);
 
 }
+
 
 

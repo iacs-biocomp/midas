@@ -2,7 +2,7 @@ package es.aragon.midas.util;
 import java.util.Vector;
 
 /**
- * Encapsula un menú de aplicación completo
+ * Encapsula un menu de aplicacion completo
  */
 public class Menu {
 
@@ -29,7 +29,7 @@ public class Menu {
 
 
 /**
- * Inicializa los punteros para la lectura de opciones de menú.
+ * Inicializa los punteros para la lectura de opciones de menu.
  */
   public void reset() {
     subMenu = 0;
@@ -41,12 +41,12 @@ public class Menu {
 
 
   /**
-   * Añade un item de menú al menú.
-   * @param id  Identificador único de la opción
-   * @param padre Número del submenú al que pertenece la opción
-   * @param texto Texto que debe aparecer en el menú
-   * @param link  Link que debe ejecutarse al pulsar sobre el menú
-   * @param target Ventana target de la opción seleccionada
+   * AÃ±ade un item de menu al menu.
+   * @param id  Identificador unico de la opcion
+   * @param padre Numero del submenu al que pertenece la opcion
+   * @param texto Texto que debe aparecer en el menu
+   * @param link  Link que debe ejecutarse al pulsar sobre el menu
+   * @param target Ventana target de la opcion seleccionada
    */
   public void addItem(int id, 
                          int padre, 
@@ -63,14 +63,14 @@ public class Menu {
   }
 
   /**
-   * Devuelve el texto del enlace de la siguiente opción del menú.
+   * Devuelve el texto del enlace de la siguiente opcion del meno.
    */
   public String getLink() {
     return ((MenuItem)level1.elementAt(pointer1)).getLink();
   }
 
   /**
-   * Devuelve el texto que debe aparecer en la siguiente opción de menú.
+   * Devuelve el texto que debe aparecer en la siguiente opcion de meno.
    */
   public String getTexto() {
     return ((MenuItem)level1.elementAt(pointer1)).getTexto();
@@ -85,39 +85,39 @@ public class Menu {
   }
   
   /**
-   * Devuelve el texto del menú de nivel 0 actual.
+   * Devuelve el texto del menu de nivel 0 actual.
    */
   public String getMenuTitle() {
     return ((MenuItem)level0.elementAt(pointer0)).getTexto();
   }
 
   /**
-   * Devuelve el target de la opción del menu.
+   * Devuelve el target de la opcion del menu.
    */
    public String getTarget() {
      return ((MenuItem)level1.elementAt(pointer1)).getTarget();     
    }
 
   /**
-   * Devuelve el id único de la opción de menú principal actual. Este id
-   * corresponderá al campo padre de todas las opciones asociadas 
-   * a este submenú.
+   * Devuelve el id unico de la opcion de menu principal actual. Este id
+   * correspondera al campo padre de todas las opciones asociadas 
+   * a este submenu.
    */
   public int getMenuTitleId() {
     return ((MenuItem)level0.elementAt(pointer0)).getId();  
   }
   
   /**
-   * Devuelve el total de entradas en el menú principal (nivel 0).
+   * Devuelve el total de entradas en el menu principal (nivel 0).
    */
   public int getTotalLevel0() {
     return totalLevel0;
   }
   
   /**
-   * Determina si quedan entradas en el menú principal por leer, y en caso
+   * Determina si quedan entradas en el menu principal por leer, y en caso
    * afirmativo, posiciona el cursor de lectura en la siguiente entrada
-   * de menú.
+   * de menu.
    * @return true en caso afirmativo, o null en caso contrario
    */
   public boolean nextMenu() {
@@ -133,7 +133,7 @@ public class Menu {
   
   
   /**
-   * Establece el número de submenú que se desea recorrer.
+   * Establece el numero de submenu que se desea recorrer.
    */
   public void setSubMenu(int mn) {
     if (!populated)
@@ -156,14 +156,14 @@ public class Menu {
 
 
   /**
-   * Devuelve el número de submenú activo.
+   * Devuelve el numero de submenu activo.
    */
   public int getMenuNumber() {
     return subMenu;
   }
 
   /**
-   * Determina si hay más opciones de menú disponibles en el submenú escogido.
+   * Determina si hay mas opciones de menu disponibles en el submenu escogido.
    * En caso afirmativo, posiciona el puntero sobre la 
    * siguiente opcion, de modo que la siguiente llamanda a getTexto y getLink
    * devuelvan los valores correspondientes.
@@ -183,7 +183,7 @@ public class Menu {
   }
 
   /**
-   * Establece si el menu está poblado de items o no.
+   * Establece si el menu esta poblado de items o no.
    */
   public void setPopulated(boolean p) {
     populated = p;
@@ -197,21 +197,21 @@ public class Menu {
   }
 
   /**
-   * Determina si el menú está poblado o no.
+   * Determina si el menu esta poblado o no.
    */
   public boolean getPopulated() {
     return populated;
   }
 
   /**
-   * Establece si la sesión es válida o no.
+   * Establece si la sesion es valida o no.
    */
   public void setSessionValid(boolean s) {
     sessionValid = s;
   }
 
   /**
-   * Determina si la sesión es válida o no.
+   * Determina si la sesion es valida o no.
    */
   public String getSessionValid() {
     if (sessionValid)
@@ -221,7 +221,7 @@ public class Menu {
   }
 
 /**
- * La clase MenuItem encapsula una opción de menú de aplicación.
+ * La clase MenuItem encapsula una opcion de menu de aplicacion.
  */
 
 
@@ -268,7 +268,7 @@ private class MenuItem
 
 
   /**
-   * Devuelve el id de menu de esta opción.
+   * Devuelve el id de menu de esta opcion.
    */
   int getId()
   {

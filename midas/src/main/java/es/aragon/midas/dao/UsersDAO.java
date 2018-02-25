@@ -95,7 +95,7 @@ public class UsersDAO {
 			role.getMidUserList().add(user);
 			midasEntityManager.merge(role);
 		} catch (Exception e) {
-			log.error("Error añadiendo rol " + role.getRoleId()
+			log.error("Error aÃ±adiendo rol " + role.getRoleId()
 					+ " al  usuario " + user.getUserName(), e);
 			user = null;
 		}
@@ -114,7 +114,7 @@ public class UsersDAO {
 			user.getMidRoleList().remove(role);
 			role.getMidUserList().remove(user);
 			// Elimina haciendo merge en la entidad role ya que es la entidad
-			// maestra en la relación(no contiene el mappedBy)
+			// maestra en la relacion(no contiene el mappedBy)
 			midasEntityManager.merge(role);
 		} catch (Exception e) {
 			log.error("Error eliminando rol " + role.getRoleId()
@@ -135,14 +135,14 @@ public class UsersDAO {
 			if (!user.getMidContextList().contains(context)) {
 				user.getMidContextList().add(context);
 				context.getMidUserList().add(user);
-				log.debug("Añadiendo contexto " + context.getCxId()
+				log.debug("AÃ±adiendo contexto " + context.getCxId()
 						+ " al  usuario " + user.getUserName());
 				midasEntityManager.merge(context);
 			} else {
-				log.warn("No se añade contexto preasignado");
+				log.warn("No se aÃ±ade contexto preasignado");
 			}
 		} catch (Exception e) {
-			log.error("Error añadiendo contexto " + context.getCxId()
+			log.error("Error aÃ±adiendo contexto " + context.getCxId()
 					+ " al  usuario " + user.getUserName(), e);
 			user = null;
 		}
@@ -160,7 +160,7 @@ public class UsersDAO {
 			user.getMidContextList().remove(context);
 			context.getMidUserList().remove(user);
 			// Elimina haciendo merge en la entidad context ya que es la entidad
-			// maestra en la relación(no contiene el mappedBy)
+			// maestra en la relacion(no contiene el mappedBy)
 			midasEntityManager.merge(context);
 		} catch (Exception e) {
 			log.error("Error eliminando contexto " + context.getCxId()

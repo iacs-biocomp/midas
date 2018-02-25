@@ -7,13 +7,13 @@ import java.util.ArrayList;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.NoSuchElementException;
-import oracle.jdbc.OracleTypes;
-import oracle.sql.ARRAY;
+//import oracle.jdbc.OracleTypes;
+//import oracle.sql.ARRAY;
 import org.apache.commons.beanutils.BeanUtils;
 import org.apache.commons.beanutils.PropertyUtils;
 
 /**
- * <h1>Referencia r�pida</h1>
+ * <h1>Referencia rapida</h1>
  * <ul>
  * <li>Generar una cadena de llamada a procedimiento:
  * <code>genCallString()</code></li>
@@ -24,37 +24,37 @@ import org.apache.commons.beanutils.PropertyUtils;
  * <li>Borrar un bean: <code>callDeleteBeanProcedure()</code></li>
  * </ul>
  * 
- * <h1>Introducci�n</h1> Esta clase contiene m�todos de utilidad para invocar
+ * <h1>Introduccien</h1> Esta clase contiene metodos de utilidad para invocar
  * procedimientos almacenados en una base de datos Oracle.
  * 
- * Los m�todos de esta clase cubren las siguientes operaciones:
+ * Los metodos de esta clase cubren las siguientes operaciones:
  * <ul>
- * <li>Obtener informaci�n del procedimiento almacenado</li>
+ * <li>Obtener informacion del procedimiento almacenado</li>
  * <li>Construir la cadena de llamada al procedimiento. Esta cadenas tienen la
  * forma: "{call proc_name(?,?,?)}"</li>
- * <li>Rellenar los par�metros de entrada y registrar los par�metros de salida</li>
+ * <li>Rellenar los parametros de entrada y registrar los parametros de salida</li>
  * <li>Invocar el procedimiento</li>
  * <li>Recoger los datos devueltos</li>
  * <li>Rellenar un bean con los datos recogidos</li>
  * </ul>
  * 
  * Para que todo funcione correctamente se debe seguir una nomenclatura de
- * nombres, bastante sencilla y de f�cil cumplimiento.
+ * nombres, bastante sencilla y de facil cumplimiento.
  * 
- * <h1>Nomenclatura de nombres</h1> Los nombres de los par�metros de las
+ * <h1>Nomenclatura de nombres</h1> Los nombres de los parametros de las
  * funciones deben estar escritos separando cada parte del nombre por guiones.
- * Por ejemplo, un par�metro que acepte el nombre de un usuario deber�a llamarse
- * "NOMBRE_USUARIO". El nombre de la propiedad del bean deber� seguir los
- * est�ndares de nomenclatura de java, lo que significa que se escribir� todo
- * junto con la primera letra de cada componente en may�sculas. El ejemplo
- * anterior quedar�a como "nombreUsuario". Los m�todos de esta clase se encargan
+ * Por ejemplo, un parametro que acepte el nombre de un usuario deberia llamarse
+ * "NOMBRE_USUARIO". El nombre de la propiedad del bean deberi seguir los
+ * estandares de nomenclatura de java, lo que significa que se escribira todo
+ * junto con la primera letra de cada componente en mayusculas. El ejemplo
+ * anterior quedaria como "nombreUsuario". Los metodos de esta clase se encargan
  * de convertir entre los nombres cada vez que lo necesitan.
  * 
- * <h1>Tipos de datos</h1> Por otro lado, los tipos de datos tambi�n ser
+ * <h1>Tipos de datos</h1> Por otro lado, los tipos de datos tambien ser
  * similares. En los beans de la parte java se deben usar clases para los tipos
- * de datos, nunca los tipos b�sicos, o se producir�an NullPointerException en
- * caso de que se devuelva un valor NULL. Adem�s para los n�meros se deben usar
- * tipos de doble precisi�n, como "Double" o "Long".
+ * de datos, nunca los tipos basicos, o se producirian NullPointerException en
+ * caso de que se devuelva un valor NULL. Ademas para los numeros se deben usar
+ * tipos de doble precision, como "Double" o "Long".
  * 
  * <table>
  * <thead>
@@ -85,7 +85,7 @@ import org.apache.commons.beanutils.PropertyUtils;
  * </tr>
  * <tr>
  * <td>ARRAY</td>
- * <td>Array de tipos b�sicos</td>
+ * <td>Array de tipos basicos</td>
  * </tr>
  * <tr>
  * <td>CHAR y VARCHAR2</td>
@@ -94,78 +94,78 @@ import org.apache.commons.beanutils.PropertyUtils;
  * </tbody>
  * </table>
  * 
- * <h1>Creaci�n de la cadena de llamada al procedimiento</h1> Las cadenas de
+ * <h1>Creacion de la cadena de llamada al procedimiento</h1> Las cadenas de
  * llamada a procedimiento tienen todas las siguiente forma:
  * <code>{call esquema.paquete.procedimiento(?,?,?)}</code>
  * 
- * Cada "?" representa un par�metro de entrada o salida. El m�todo
+ * Cada "?" representa un parametro de entrada o salida. El metodo
  * <code>genCallString()</code> es el encargado de generar esta cadena a partir
  * de los datos del procedimiento. Para calcularla obtiene los metadatos del
- * procedimiento almacenado y extrae el n�mero de columnas del procedimiento. Si
- * se va a utilizar m�ltiples veces un reducido n�mero de llamadas, este m�todo
- * puede almacenar las cadenas generadas en un ArrayList y as� devolverlas la
- * pr�xima vez que se necesiten sin necesidad de volver a generarlas.
+ * procedimiento almacenado y extrae el numero de columnas del procedimiento. Si
+ * se va a utilizar multiples veces un reducido numero de llamadas, este metodo
+ * puede almacenar las cadenas generadas en un ArrayList y asa devolverlas la
+ * proxima vez que se necesiten sin necesidad de volver a generarlas.
  * 
- * <h1>Invocaci�n del procedimiento</h1> El m�todo principal de invocaci�n a
- * procedimientos almacenados es <code>callProcedure()</code>. Este m�todo se
- * encarga de llamar al procedimiento de generaci�n de la cadena de llamada a
- * procedimiento, de rellenar los par�metros de entrada, registrar los de salida
- * y devolver los datos. Si alguno de los par�metros de salida es un tipo de
- * referencia, devolver� un ResultSet para extraer los datos del cursor. En caso
- * de tipos b�sicos realizar� las conversiones anteriormente descritas.
+ * <h1>Invocacion del procedimiento</h1> El metodo principal de invocacion a
+ * procedimientos almacenados es <code>callProcedure()</code>. Este metodo se
+ * encarga de llamar al procedimiento de generacion de la cadena de llamada a
+ * procedimiento, de rellenar los parametros de entrada, registrar los de salida
+ * y devolver los datos. Si alguno de los parametros de salida es un tipo de
+ * referencia, devolvera un ResultSet para extraer los datos del cursor. En caso
+ * de tipos basicos realizara las conversiones anteriormente descritas.
  * 
- * <h1>Wrappers de <code>callProcedure</code></h1> Este m�todo es muy potente
- * pero tambi�n muy complejo, por lo que hay una serie de wrappers para llamar a
+ * <h1>Wrappers de <code>callProcedure</code></h1> Este metodo es muy potente
+ * pero tambien muy complejo, por lo que hay una serie de wrappers para llamar a
  * ciertos tipos de procedimientos muy habituales, como guardar un Bean en la
  * base de datos, o eliminar un registro. Los wrappers disponibles son los
  * siguientes:
  * <ul>
  * <li><code>callDeleteBeanProcedure></code>: Invoca un procedimiento almacenado
- * que realizar� un "DELETE" de una fila de datos. Generalmente suelen recibir
- * un �nico par�metro (la PK) y no devuelven nada. El bean que se pasa como
- * par�metro de este m�todo debe llevar rellenada la propiedad que guarde la PK
+ * que realizara un "DELETE" de una fila de datos. Generalmente suelen recibir
+ * un unico parametro (la PK) y no devuelven nada. El bean que se pasa como
+ * parametro de este metodo debe llevar rellenada la propiedad que guarde la PK
  * de una fila</li>
  * 
  * <li><code>callFindBeansProcedure</code>: Invoca un procedumiento que acepta
- * tantos par�metros como campos de b�squeda. Los par�metros de b�squeda los
- * puede coger este m�todo de dos partes: de las propiedades del bean o del
- * <code>HashMap</code> que se pasan como par�metros. Los valores
- * <code>null</code> los convierte autom�ticamente en "%".</li>
+ * tantos parametros como campos de busqueda. Los parametros de busqueda los
+ * puede coger este metodo de dos partes: de las propiedades del bean o del
+ * <code>HashMap</code> que se pasan como parametros. Los valores
+ * <code>null</code> los convierte automaticamente en "%".</li>
  * 
  * <li><code>callGetBeanProcedure</code>: Invoka un procedumiento que obtiene
- * una �nica l�nea de datos de una tabla con la Primary Key especificada. Los
- * datos son devueltos en un par�metro de salida de tipo referencia (cursor).
+ * una unica lonea de datos de una tabla con la Primary Key especificada. Los
+ * datos son devueltos en un parametro de salida de tipo referencia (cursor).
  * Los valores devueltos en ese cursor se mapean automaticamente en las
  * propiedades del bean suministrado.</li>
  * 
- * <li><code>callInsertBeanProcedure</code>: Invoca a un procedimiento que har�
+ * <li><code>callInsertBeanProcedure</code>: Invoca a un procedimiento que hara
  * un INSERT de los datos del bean en la tabla correspondiente de la base de
- * datos. El procedimiento almacenado debe tener tantos par�metros de entrada
+ * datos. El procedimiento almacenado debe tener tantos parametros de entrada
  * como columnas se almacenen en la tabla correspondiente de la base de datos.
- * Las propiedades del bean se extraen autom�ticamente y se pasan como
- * par�metros. Si la propiedad que almacena el valor de la PK es nula, deber�a
+ * Las propiedades del bean se extraen automaticamente y se pasan como
+ * parametros. Si la propiedad que almacena el valor de la PK es nula, deberia
  * generarse este valor en el procedimiento almacenado antes de hacer un insert,
- * y devolverlo al realizar la inserci�n.</li>
+ * y devolverlo al realizar la insercion.</li>
  * 
  * <li><code>callSimpleGetProcedure</code>: Llama a un procedimiento simple que
- * devuelve uno o varios valores simples a partir de los par�metros indicados.
- * Los valores de los par�metros se pasan en un <code>HashMap</code>. Las claves
- * del hash ser�n los nombres de los par�metros del procedimiento <b>siguiendo
+ * devuelve uno o varios valores simples a partir de los parametros indicados.
+ * Los valores de los parametros se pasan en un <code>HashMap</code>. Las claves
+ * del hash seran los nombres de los parametros del procedimiento <b>siguiendo
  * el estandar java</b>, como si fueran las propiedades de un bean. Este
  * procedimiento devuelve los datos obtenidos como otro <code>HashMap</code>,
- * donde los nombres de las claves son el nombre de los par�metros de salida del
+ * donde los nombres de las claves son el nombre de los parametros de salida del
  * procecimiento, y el valor, el valor devuelto</li>
  * 
- * <li><code>callSimpleProcedure</code>: Este es el procedimiento m�s sencillo,
- * y sirve para ejecutar un procedimiento almacenado que no devuelva ning�n
- * valor. De forma similar al anterior, los par�metros del procedimiento
+ * <li><code>callSimpleProcedure</code>: Este es el procedimiento mas sencillo,
+ * y sirve para ejecutar un procedimiento almacenado que no devuelva ningun
+ * valor. De forma similar al anterior, los parametros del procedimiento
  * almacenado se pasan mapeados en un <code>HashMap</code>.</li>
  * 
  * <li><code>callUpdateBeanProcedure</code>: Invoca a un procedimiento
- * almacenado que realizar� un UPDATE sobre una �nica fila de una base de datos.
- * Los valores del bean que se pasa de par�metro se usar�n para rellenar los
- * par�metros de entrada del procedimiento, y todos los par�metros rellenados se
- * usar�n para machacar los datos existente.</li>
+ * almacenado que realizara un UPDATE sobre una unica fila de una base de datos.
+ * Los valores del bean que se pasa de parametro se usaran para rellenar los
+ * parametros de entrada del procedimiento, y todos los parametros rellenados se
+ * usaran para machacar los datos existente.</li>
  * </ul>
  * 
  * @author rcorral
@@ -325,12 +325,12 @@ public class DBUtils {
 			case Types.SMALLINT:
 				value = rs.getLong(col);
 				break;
-			case OracleTypes.DATE:
+//			case OracleTypes.DATE:
 				/*
 				 * java.sql.Date date = rs.getDate(col); if (date != null){
 				 * value = new Date(date.getTime()); } break;
 				 */
-			case OracleTypes.TIMESTAMP:
+			case Types.TIMESTAMP:
 				Timestamp tstamp = rs.getTimestamp(col);
 				if (tstamp != null) {
 					value = new Date(tstamp.getTime());
@@ -439,9 +439,10 @@ public class DBUtils {
 			case Types.OTHER:
 				if (TRACE)
 					log.trace(" > ARRAY/OTHER");
-				if (value instanceof oracle.sql.ARRAY) {
+/*				Comentado para eliminar dependencias con el paquete Oracle
+ * 				if (value instanceof oracle.sql.ARRAY) {
 					cstm.setArray(paramNumber, (ARRAY) value);
-				}
+				} */
 				break;
 			default:
 				if (TRACE)
@@ -671,7 +672,7 @@ public class DBUtils {
 	 * @param con
 	 *            Connection
 	 * @param schema
-	 *            Table�s schema
+	 *            Tables schema
 	 * @param tableName
 	 *            Table's name
 	 * @return ResultSet with primary keys useful information
@@ -767,7 +768,7 @@ public class DBUtils {
 					if (TRACE)
 						log.trace("  - " + c + ": " + paramName + "("
 								+ strColType + "): <OUT CURSOR>");
-					cstm.registerOutParameter(c, OracleTypes.CURSOR);
+					cstm.registerOutParameter(c, Types.REF_CURSOR);
 					obj[0] = c;
 					obj[1] = paramName;
 					outParams.add(obj);

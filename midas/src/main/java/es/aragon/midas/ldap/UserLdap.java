@@ -15,10 +15,10 @@ import javax.naming.directory.SearchResult;
  */
 public class UserLdap {
 	/**
-	 * Patrón de busqueda de grupos del LDAP para los usuarios.
+	 * Patron de busqueda de grupos del LDAP para los usuarios.
 	 * 		El patron obtiene el String de cada uno de los grupos de la siguiente forma:
 	 * 	Empieza por "CN= " + Crea un grupo para todo el contenido que tenga
-	 * 		Letras, números y "-" hasta encontrar un separador, en este caso ","
+	 * 		Letras, numeros y "-" hasta encontrar un separador, en este caso ","
 	 * 	Despues tiene en cuenta cualquier tipo de contenido encontrado. El cual simplemente
 	 * 		Descartaremos
 	 *  
@@ -37,7 +37,7 @@ public class UserLdap {
     
     /**
      * Constructor de UserLdap
-     * 		Según el resultado de la busqueda se establecen los parametros.
+     * 		Segun el resultado de la busqueda se establecen los parametros.
      * @param result
      * @throws NamingException
      */
@@ -62,11 +62,11 @@ public class UserLdap {
 		
 		/**
 		 * Recorre todos los atributos memberOf encontrados en el LDAP
-		 * 		y establece los valores de los grupos según el filtro definido al principio.
-		 * 	Se obtiene así los grupos LDAP a los que pertenece el usuario y se guardan en un List.
+		 * 		y establece los valores de los grupos segun el filtro definido al principio.
+		 * 	Se obtiene asi los grupos LDAP a los que pertenece el usuario y se guardan en un List.
 		 * 
-		 * 	Estos grupos serán los que nos permitan obtener los grants que tendrá el usuario
-		 * 		según sus roles de LDAP.
+		 * 	Estos grupos seran los que nos permitan obtener los grants que tendra el usuario
+		 * 		segun sus roles de LDAP.
 		 */
 		groupsLDAP = new ArrayList<String>();
 		Attribute memberOf = result.getAttributes().get("memberOf");

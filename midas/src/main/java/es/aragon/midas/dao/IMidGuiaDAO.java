@@ -6,7 +6,7 @@ public interface IMidGuiaDAO {
 	
 	/**
 	 * Obtiene los datos para conectarse a otro sistema mediante GUIA.
-	 * @param appDst Nombre de la aplicación para la conexión de GUIA. 
+	 * @param appDst Nombre de la aplicacion para la conexion de GUIA. 
 	 * @return Objeto con los datos necesarios para generar un token de GUIA.
 	 */
 	public MidGuia findByAppDst(String appDst);

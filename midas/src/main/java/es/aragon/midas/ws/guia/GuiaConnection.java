@@ -33,7 +33,7 @@ import org.apache.commons.httpclient.protocol.Protocol;
 import org.codehaus.jackson.map.ObjectMapper;
 
 /**
- * Encapsula una conexiï¿½n a GUIA
+ * Encapsula una conexion a GUIA
  * 
  * @author Carlos
  */
@@ -66,14 +66,14 @@ public class GuiaConnection {
 	 * Valida un token contra GUIA.
 	 * 
 	 * @param token
-	 *            Token generado por guia desde la aplicación de origen.
+	 *            Token generado por guia desde la aplicacion de origen.
 	 * @param appSrc
-	 *            Nombre de la aplicación de origen.
-	 * @return Obtiene un XML con el resultado de la validación de GUIA. Si es
-	 *         correcta tendrá los datos del usuario.
+	 *            Nombre de la aplicacion de origen.
+	 * @return Obtiene un XML con el resultado de la validacion de GUIA. Si es
+	 *         correcta tendra los datos del usuario.
 	 */
 	public String validateToken(String token, String appSrc) {
-		// Consulta los parámetros para hacer la consulta a GUIA
+		// Consulta los parametros para hacer la consulta a GUIA
 		String appDst = AppProperties.getParameter("midas.guia.appName");
 		String url = AppProperties.getParameter(Constants.URL_GUIA_AUTH);
 
@@ -94,40 +94,40 @@ public class GuiaConnection {
 	}
 
 	/**
-	 * Genera una URL construida para acceder a una aplicación destino con token de GUIA
+	 * Genera una URL construida para acceder a una aplicacion destino con token de GUIA
 	 * 
 	 * @param midGuia
 	 *            Objeto con los datos de la tabla MID_GUIA para generar el
 	 *            token de GUIA
 	 * @param nif
-	 *            NIF del usuario para generar el token GUIA. Será el usuario
-	 *            con el que se accedera a la aplicación destino.
-	 * @return URL con la que se puede acceder a la aplicación destino.
-	 *         Contendrá el token generado por GUIA.
+	 *            NIF del usuario para generar el token GUIA. Sera el usuario
+	 *            con el que se accedera a la aplicacion destino.
+	 * @return URL con la que se puede acceder a la aplicacion destino.
+	 *         Contendra el token generado por GUIA.
 	 */
 	public String generateTokenUrl(MidGuia midGuia, String nif) {
 		return generateTokenUrl(midGuia, nif, "");
 	}
 
 	/**
-	 * Genera una URL construida para acceder a una aplicación destino con token de GUIA
+	 * Genera una URL construida para acceder a una aplicacion destino con token de GUIA
 	 * 
 	 * @param midGuia
 	 *            Objeto con los datos de la tabla MID_GUIA para generar el
 	 *            token de GUIA
 	 * @param nif
-	 *            NIF del usuario para generar el token GUIA. Será el usuario
-	 *            con el que se accedera a la aplicación destino.
+	 *            NIF del usuario para generar el token GUIA. Sera el usuario
+	 *            con el que se accedera a la aplicacion destino.
 	 * @param customParameters
-	 *            parámetros variables para añadir a la URL generada
-	 * @return URL con la que se puede acceder a la aplicación destino.
-	 *         Contendrá el token generado por GUIA.
+	 *            parametros variables para aÃ±adir a la URL generada
+	 * @return URL con la que se puede acceder a la aplicacion destino.
+	 *         Contendra el token generado por GUIA.
 	 */
 	public String generateTokenUrl(MidGuia midGuia, String nif,
 			String customParameters) {
 		SimpleDateFormat sf = new SimpleDateFormat("yyyyMMddHHmmss");
 
-		// Obtiene parámetros para generar el token de GUIA
+		// Obtiene parametros para generar el token de GUIA
 		String appSrc = AppProperties.getParameter("midas.guia.appName");
 		String url = AppProperties.getParameter(Constants.URL_GUIA_AUTH);
 		String secret = midGuia.getSecret();
@@ -165,7 +165,7 @@ public class GuiaConnection {
 			token = matcher.group(1);
 		}
 
-		// Genera la url de acceso a la aplicación destino
+		// Genera la url de acceso a la aplicacion destino
 		String tokenUrl = midGuia.getUrlDst();
 
 		tokenUrl = tokenUrl.replace("${TOKEN}", token);
@@ -194,6 +194,49 @@ public class GuiaConnection {
 
 	}
 
+
+	/**
+	 * Devuelve informaciÃ³n del usuario desde GUIA
+	 * @param login
+	 * @return objeto InfoUserResponse con la informaciÃ³n del usuario
+	 */
+	public InfoUserResponse infoUser(String login) {
+		PostMethod method;
+		InfoUserResponse resp;
+		String url = AppProperties.getParameter(Constants.URL_GUIA_AUTH);
+		method = new PostMethod(url);
+		method.getParams().setParameter(HttpMethodParams.RETRY_HANDLER,
+				new DefaultHttpMethodRetryHandler(3, false));
+		NameValuePair[] data = { new NameValuePair("out", "xml"),
+				new NameValuePair("s", "infoUser"),
+				new NameValuePair("login", login)
+				};
+		method.setRequestBody(data);
+		String response = evaluateResponse(method, url);
+		log.debug("Guia response: " + response);
+        if (response != null && !response.startsWith("KO")) {
+    		try {
+    			JAXBContext jc = JAXBContext.newInstance(InfoUserResponse.class);
+    			Unmarshaller unmarshaller = jc.createUnmarshaller();
+    			StringReader reader = new StringReader(
+    					"<?xml version=\"1.0\" encoding=\"UTF-8\" standalone=\"yes\"?>"
+    							+ response);
+    			resp = (InfoUserResponse) unmarshaller.unmarshal(reader);
+    		} catch (Exception e) {
+    			resp = new InfoUserResponse("K11", "Error parseando respuesta de Guia / InfoUser");
+    			log.error("Error parseando respuesta de Guia / infoUser", e);
+    			log.error("Respuesta de GUIA: " + response);
+    		}
+        } else {
+			resp = new InfoUserResponse("K12", "Error Conectando a GUIA. Respuesta nula");
+        }
+
+        return resp;
+	}	
+	
+	
+	
+	
 	/**
 	 * Executes call to HTTP method and evaluates result. Is call from auth and
 	 * verifyTicket

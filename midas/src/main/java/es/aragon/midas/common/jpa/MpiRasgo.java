@@ -44,7 +44,7 @@ public class MpiRasgo implements Serializable {
 	}
 
 	/**
-	 * Obtiene fecha de modificaci�n
+	 * Obtiene fecha de modificacion
 	 * @return
 	 */
 	public Date getDatmod() {
@@ -53,7 +53,7 @@ public class MpiRasgo implements Serializable {
 
 	
 	/**
-	 * Establece la fecha de modificaci�n
+	 * Establece la fecha de modificacion
 	 * @param datmod
 	 */
 	public void setDatmod(Date datmod) {

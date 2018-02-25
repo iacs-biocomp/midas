@@ -17,7 +17,7 @@ import org.apache.commons.io.FileUtils;
 import es.aragon.midas.vo.FileMetadata;
 
 /**
- * Control de ficheros y navegación por el servidor
+ * Control de ficheros y navegacion por el servidor
  * @author Jorge Landa
  */
 public class FilesAction extends MidasActionSupport {
@@ -28,7 +28,7 @@ public class FilesAction extends MidasActionSupport {
     private final String CARPETA_VERSIONES = "versiones";
     private final String EXTENSION_VERSIONES = ".bak";
 	
-    //Variables de navegación
+    //Variables de navegacion
 	private String path = "/";
 	private InputStream inputStream;
 	private String fileName;
@@ -38,7 +38,7 @@ public class FilesAction extends MidasActionSupport {
 	private String filename;
 	private String contentType;			// ??
 	
-	//Variables de listas de contenido del directorio y segmentación en el path
+	//Variables de listas de contenido del directorio y segmentacion en el path
 	private List<FileMetadata> three = new ArrayList<FileMetadata>();
 	private List<String> redirect = new ArrayList<String>();
 	
@@ -75,12 +75,12 @@ public class FilesAction extends MidasActionSupport {
 	public String upload() throws IOException{
 		setRedirect();
 		
-		/** Si el path termina en / lo devuelve integro, sino le añade "/" */
+		/** Si el path termina en / lo devuelve integro, sino le aÃ±ade "/" */
 		if(!path.endsWith("/")) {
 			path += "/";
         }
 		
-		//Establece la ruta de las versiones, al path actual le añade la carpeta versiones
+		//Establece la ruta de las versiones, al path actual le aÃ±ade la carpeta versiones
         String rutaVersiones = path + CARPETA_VERSIONES;
 		
         if(uploadFile != null){
@@ -93,7 +93,7 @@ public class FilesAction extends MidasActionSupport {
             		carpetaVersiones.mkdirs();
             	}
             	
-            	//Establece el nuevo nombre para la versión .bak, nombre del fichero + fecha de creación  + .bak
+            	//Establece el nuevo nombre para la version .bak, nombre del fichero + fecha de creacion  + .bak
             	String nuevoNombre = filename + getDateFormatted(getDateNow(), FORMAT_DATE_HOUR_SNS) + EXTENSION_VERSIONES;
             	
             	File moveFile = new File(path, nuevoNombre);
@@ -118,7 +118,7 @@ public class FilesAction extends MidasActionSupport {
     			throw e;
     		}
             
-            //Recargamos el árbol de contenido del directorio en el que nos encontramos
+            //Recargamos el arbol de contenido del directorio en el que nos encontramos
             three.clear();
     		String result = setThree();
     		
@@ -129,9 +129,9 @@ public class FilesAction extends MidasActionSupport {
     			return "files";
     		}
         }
-        /** Control de Error de fichero nulo. Se excluye la acción*/
+        /** Control de Error de fichero nulo. Se excluye la accion*/
         else{
-            //Recargamos el árbol de contenido del directorio en el que nos encontramos
+            //Recargamos el arbol de contenido del directorio en el que nos encontramos
         	three.clear();
     		String result = setThree();
     		
@@ -149,7 +149,7 @@ public class FilesAction extends MidasActionSupport {
 	/**
 	 * Devuelve el Path
 	 * 		Si el path termina en / lo devuelve integro
-	 * 		sino le añade /
+	 * 		sino le aÃ±ade /
 	 * @return
 	 */
 	public String getPath(){
@@ -169,7 +169,7 @@ public class FilesAction extends MidasActionSupport {
 	}
 	
 	/**
-	 * Devuelve el resultado del árbol de contenidos de un directorio
+	 * Devuelve el resultado del arbol de contenidos de un directorio
 	 * 		establece el arbol de directorio o descarga el fichero
 	 * @return
 	 * @throws FileNotFoundException 
@@ -177,7 +177,7 @@ public class FilesAction extends MidasActionSupport {
 	public String setThree() throws FileNotFoundException{
 		File file = new File(path);
 		
-		/** Si el fichero es un directorio lo recorremos y añadimos su contenido al listado de directorio */
+		/** Si el fichero es un directorio lo recorremos y aÃ±adimos su contenido al listado de directorio */
 		if(file.isDirectory()){
 			if(file.listFiles() != null){
 				for (File fichero : file.listFiles()) {
@@ -190,7 +190,7 @@ public class FilesAction extends MidasActionSupport {
 			}
 			
 			/*
-			 * Proceso de ordenación de ficheros del directorio
+			 * Proceso de ordenacion de ficheros del directorio
 			 * 		El directorio es ordenado para que muestre primero los Directorios
 			 * 	Y despues los ficheros
 			 */
@@ -224,7 +224,7 @@ public class FilesAction extends MidasActionSupport {
 	
 	/**
 	 * Establece el redirect.
-	 * 		Divive el Path según los / y nos permite la navegación por las distintas
+	 * 		Divive el Path segun los / y nos permite la navegacion por las distintas
 	 *      subdirectorios.
 	 */
 	public void setRedirect(){

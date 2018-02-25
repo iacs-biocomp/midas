@@ -19,12 +19,12 @@ import org.hibernate.annotations.LazyCollection;
 import org.hibernate.annotations.LazyCollectionOption;
 
 /**
- * Encapsula los datos de acceso y seguridad de un usuario de la aplicación
+ * Encapsula los datos de acceso y seguridad de un usuario de la aplicaciï¿½n
  *
  * @author carlos
  */
 @Entity
-@Table(name = "MID_USERS")
+@Table(name = "mid_users")
 @XmlRootElement
 @NamedQueries({
     @NamedQuery(name = "MidUser.findAll", query = "SELECT m FROM MidUser m ORDER BY m.userName"),
@@ -35,64 +35,64 @@ public class MidUser implements Serializable {
 
     private static final long serialVersionUID = 1L;
     /**
-     * Código de acceso del usuario a la aplicación (login)
+     * Cï¿½digo de acceso del usuario a la aplicaciï¿½n (login)
      */
     @Id
     @Basic(optional = false)
-    @Column(name = "USER_NAME")
+    @Column(name = "user_name")
     private String userName;
 
     /**
      * Nombre real del usuario
      */
-    @Column(name = "NAME")
+    @Column(name = "name")
     private String name;
 
     /**
      * Primer apellido del usuario
      */
-    @Column(name = "LASTNAME1")
+    @Column(name = "lastname1")
     private String lastname1;
 
     
     /**
      * Segundo apellido del usuario
      */
-    @Column(name = "LASTNAME2")
+    @Column(name = "lastname2")
     private String lastname2;
 
     /**
-     * Identificador único del usuario (DNI)
+     * Identificador ï¿½nico del usuario (DNI)
      */
-    @Column(name = "IDD")
+    @Column(name = "idd")
     private String idd;
 
     
     /**
-     * Contraseña encriptada, en caso de autenticación contra Base de Datos
+     * Contraseï¿½a encriptada, en caso de autenticaciï¿½n contra Base de Datos
      */
-    @Column(name = "PWD")
+    @Column(name = "pwd")
     private String pwd;
 
     
     /**
-     * Fecha / hora del último login en la aplicación
+     * Fecha / hora del ï¿½ltimo login en la aplicaciï¿½n
      */
-    @Column(name = "LAST_LOGIN")
+    @Column(name = "last_login")
     @Temporal(TemporalType.DATE)
     private Date lastLogin;
 
     /**
      * Usuario activo / inactivo
-     * Un usuario inactivo no puede acceder a la aplicación.
-     * Para bloquear el acceso de un usuario a la aplicación, no se elimina el mismo de la tabla de usuarios
+     * Un usuario inactivo no puede acceder a la aplicaciï¿½n.
+     * Para bloquear el acceso de un usuario a la aplicaciï¿½n, no se elimina el mismo de la tabla de usuarios
      * sino que se marca como ACTIVO = 0
      */
-    @Column(name = "ACTIVE")
+    @Column(name = "active")
     private Character active;
 
     /**
-     * Lista de Roles a los que está asociado el usuario
+     * Lista de Roles a los que estï¿½ asociado el usuario
      */
     @XmlTransient
     @ManyToMany(mappedBy = "midUserList", cascade=CascadeType.ALL)
@@ -100,7 +100,7 @@ public class MidUser implements Serializable {
     private List<MidRole> midRoleList;
 
     /**
-     * Lista de contextos a los que está asociado el usuario
+     * Lista de contextos a los que estï¿½ asociado el usuario
      */
     @XmlTransient    
     @ManyToMany(mappedBy = "midUserList")
@@ -375,8 +375,8 @@ public class MidUser implements Serializable {
     }
 
     /**
-     * Determina si el usuario está asociado a un contexto determinado
-     * @param context Código del contexto buscado
+     * Determina si el usuario estï¿½ asociado a un contexto determinado
+     * @param context Cï¿½digo del contexto buscado
      * @return
      */
     public boolean isInContext(String context) {
@@ -392,8 +392,8 @@ public class MidUser implements Serializable {
     }
     
     /**
-     * Determina si el usuario está asociado a un contexto determinado
-     * @param context Código del contexto buscado
+     * Determina si el usuario estï¿½ asociado a un contexto determinado
+     * @param context Cï¿½digo del contexto buscado
      * @param key Tipo de contexto
      * @return
      */

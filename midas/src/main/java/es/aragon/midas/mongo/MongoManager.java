@@ -32,7 +32,7 @@ public class MongoManager {
 	private MongoDatabase mongoDatabase;
 
 	/**
-	 * Asigna los parámetros para conectar a la base de MongoDB
+	 * Asigna los parametros para conectar a la base de MongoDB
 	 * 
 	 * @param host
 	 *            IP donde se encuentra el servidor mongo
@@ -48,7 +48,7 @@ public class MongoManager {
 	}
 
 	/**
-	 * Abre la conexión con mongo
+	 * Abre la conexion con mongo
 	 */
 	public void open() {
 		mongoClient = new MongoClient(host, port);
@@ -56,7 +56,7 @@ public class MongoManager {
 	}
 
 	/**
-	 * Cierra la conexión con mongo
+	 * Cierra la conexion con mongo
 	 */
 	public void close() {
 		mongoClient.close();
@@ -64,11 +64,11 @@ public class MongoManager {
 	}
 
 	/**
-	 * Busca todos los documentos en una colección
+	 * Busca todos los documentos en una coleccion
 	 * 
 	 * @param collection
-	 *            Nombre de la colección
-	 * @return Lista con todos los documentos JSON encontrados en la colección
+	 *            Nombre de la coleccion
+	 * @return Lista con todos los documentos JSON encontrados en la coleccion
 	 * @throws MidasException
 	 */
 	public List<Document> findAll(String collection) throws MidasException {
@@ -79,11 +79,11 @@ public class MongoManager {
 	 * Realiza una consulta a una coleccion aplicando un filtro
 	 * 
 	 * @param collection
-	 *            Nombre de la colección
+	 *            Nombre de la coleccion
 	 * @param filter
 	 *            Contiene las condiciones que se aplican el la consulta y las
 	 *            reglas para ordenar el resultado obtenido
-	 * @return Lista con todos los documentos JSON encontrados en la colección
+	 * @return Lista con todos los documentos JSON encontrados en la coleccion
 	 * @throws MidasException
 	 */
 	public List<Document> find(String collection, MongoFilter filter)
@@ -99,10 +99,10 @@ public class MongoManager {
 	}
 
 	/**
-	 * Crea un nuevo documento JSON en una colección
+	 * Crea un nuevo documento JSON en una coleccion
 	 * 
 	 * @param collection
-	 *            Nombre de la colección
+	 *            Nombre de la coleccion
 	 * @param document
 	 *            Documento JSON para crear
 	 */
@@ -112,10 +112,10 @@ public class MongoManager {
 	}
 
 	/**
-	 * Crea varios documentos JSON en una colección
+	 * Crea varios documentos JSON en una coleccion
 	 * 
 	 * @param collection
-	 *            Nombre de la colección
+	 *            Nombre de la coleccion
 	 * @param documents
 	 *            Lista con los documentos JSON para insertar
 	 */
@@ -125,14 +125,14 @@ public class MongoManager {
 	}
 
 	/**
-	 * Modifica los documentos que cumplan alguna condición en una coleccion
+	 * Modifica los documentos que cumplan alguna condicion en una coleccion
 	 * 
 	 * @param collection
-	 *            Nombre de la colección
+	 *            Nombre de la coleccion
 	 * @param filter
 	 *            Condiciones para que el documento sea modificado
 	 * @param updates
-	 *            Lista de cambios para aplicar en la modificación
+	 *            Lista de cambios para aplicar en la modificacion
 	 * @throws MidasException
 	 */
 	public void update(String collection, MongoFilter filter, UpdateList updates)
@@ -142,16 +142,16 @@ public class MongoManager {
 	}
 
 	/**
-	 * Remplaza en una colección un documento por otro que mantendrá en mismo
+	 * Remplaza en una coleccion un documento por otro que mantendra en mismo
 	 * _id
 	 * 
 	 * @param collection
-	 *            Nombre de la colección
+	 *            Nombre de la coleccion
 	 * @param oldDocument
 	 *            Version anterior del documento para buscarla en la base de
 	 *            datos
 	 * @param newDocument
-	 *            Nueva versión por la cual será remplazada
+	 *            Nueva version por la cual sera remplazada
 	 * @throws MongoWriteException
 	 *             El _id de los dos documentos debe ser el mismo
 	 */
@@ -162,10 +162,10 @@ public class MongoManager {
 	}
 
 	/**
-	 * Elimina un documento de una colección
+	 * Elimina un documento de una coleccion
 	 * 
 	 * @param collection
-	 *            Nombre de la colección
+	 *            Nombre de la coleccion
 	 * @param document
 	 *            JSON del documento para identificarlo
 	 */
@@ -175,10 +175,10 @@ public class MongoManager {
 	}
 
 	/**
-	 * Elimina los documentos de una colección cuando cumplan un filtro
+	 * Elimina los documentos de una coleccion cuando cumplan un filtro
 	 * 
 	 * @param collection
-	 *            Nombre de la colección
+	 *            Nombre de la coleccion
 	 * @param filter
 	 *            Condiciones que aplica para buscar que documentos hay que
 	 *            borrar

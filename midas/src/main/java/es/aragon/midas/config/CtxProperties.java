@@ -9,7 +9,7 @@ import javax.servlet.http.HttpServletRequest;
  * Clase con diversas utilidades y constantes.
  */
 public class CtxProperties {
-    /** Propiedades de la aplicaci�n **/
+    /** Propiedades de la aplicacion **/
     static Properties appProperties;
     
 
@@ -44,7 +44,7 @@ public class CtxProperties {
     
 
 	/**
-	 * Obtiene el valor de una propiedad a partir del archivo de propiedades de la aplicaci�n.
+	 * Obtiene el valor de una propiedad a partir del archivo de propiedades de la aplicacion.
 	 * @param request
 	 * @param propertyName
 	 * @return
@@ -66,7 +66,7 @@ public class CtxProperties {
     
     
     /**
-     * Obtiene el valor de una propiedad a partir del archivo de propiedades de la aplicaci�n.
+     * Obtiene el valor de una propiedad a partir del archivo de propiedades de la aplicacion.
      * @param propertyName Nombre de la propiedad
      * @return String con el valor de la propiedad
      */
@@ -124,7 +124,7 @@ public class CtxProperties {
         //Si falla, lo intenta con el web.xml
         if (tmpValue == null) {
             tmpValue = getFromWebContextProperties(request, propertyName);
-            //Si tambi�n falla, devuelve el valor por defecto
+            //Si tambien falla, devuelve el valor por defecto
             if (tmpValue == null) {
                 tmpValue = defaultValue;
             }

@@ -5,6 +5,8 @@ import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.List;
 import java.util.Map;
+import java.util.Set;
+import java.util.Arrays;
 
 import org.apache.commons.beanutils.PropertyUtils;
 
@@ -309,4 +311,42 @@ public class Utils {
             return dni;
         }
     }
+    
+    
+	/**
+	 * Convierte un Set de strings en un string, concatenado con comas
+	 * @param set
+	 * @return
+	 */
+    public static String setToString(Set<String> set) {
+
+		// allocate memory for string array
+		String[] array = new String[set.size()];
+
+		// copy elements from set to string array
+		int i = 0;
+		for (String s: set)
+			array[i++] = s;
+
+		return Arrays.toString(array);
+	}    
+ 
+	/**
+	 * Convierte un Set de strings en un string, concatenado con comas
+	 * @param set
+	 * @return
+	 */
+    public static String listToString(List<String> set) {
+
+		// allocate memory for string array
+		String[] array = new String[set.size()];
+
+		// copy elements from set to string array
+		int i = 0;
+		for (String s: set)
+			array[i++] = s;
+
+		return Arrays.toString(array);
+	}        
+    
 }

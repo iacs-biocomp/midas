@@ -5,6 +5,7 @@
 package es.aragon.midas.dao;
 
 import es.aragon.midas.config.MidContext;
+import es.aragon.midas.config.MidRole;
 import es.aragon.midas.logging.Logger;
 import java.util.List;
 import java.util.Set;
@@ -20,7 +21,7 @@ public class GrantsLoader {
     
     public Set<String> grantLdapRole(String ldapRole) {
         try {
-            GrantsDAO dao = (GrantsDAO) new InitialContext().lookup("java:module/GrantsDAO");
+            IGrantsDAO dao = (IGrantsDAO) new InitialContext().lookup("java:module/GrantsDAO");
             return dao.grantsByLdapRole(ldapRole);
         } catch (NamingException ne) {
             log.error("Imposible obtener GrantsDAO en MidUser", ne);
@@ -30,7 +31,7 @@ public class GrantsLoader {
     
     public Set<String> obtainGrants(String userName) {
        try {
-            GrantsDAO dao = (GrantsDAO) new InitialContext().lookup("java:module/GrantsDAO");
+            IGrantsDAO dao = (IGrantsDAO) new InitialContext().lookup("java:module/GrantsDAO");
             return dao.grantsByUser(userName);
         } catch (NamingException ne) {
             log.error("Imposible obtener GrantsDAO en MidUser", ne);
@@ -48,6 +49,21 @@ public class GrantsLoader {
             return null;
         }
 
+    }
+    
+    public MidRole getRoleByLdap(String ldapRole) {
+        try {
+            IGrantsDAO dao = (IGrantsDAO) new InitialContext().lookup("java:module/GrantsDAO");
+            log.debug("Recuperando role para ldap/cat: " + ldapRole);
+            MidRole r = dao.getRoleByLdap(ldapRole);
+            if (r != null) {
+                log.debug("Rol recuperado:  " + r.getRoleId());
+            }
+            return r;
+        } catch (NamingException ne) {
+            log.error("Imposible obtener GrantsDAO en MidUser", ne);
+            return null;
+        }    	
     }
     
 }

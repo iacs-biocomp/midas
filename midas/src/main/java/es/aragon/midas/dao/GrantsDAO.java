@@ -6,15 +6,17 @@ import java.util.Set;
 
 import javax.ejb.Stateless;
 import javax.persistence.EntityManager;
+import javax.persistence.NoResultException;
 import javax.persistence.PersistenceContext;
 import javax.persistence.Query;
 
 import es.aragon.midas.config.MidGrant;
+import es.aragon.midas.config.MidRole;
 import es.aragon.midas.logging.Logger;
 
 
 @Stateless
-public class GrantsDAO {
+public class GrantsDAO implements IGrantsDAO {
 
     //private EntityManager em = ConnectionFactory.getMidasEMF().createEntityManager();  
     @PersistenceContext(unitName="midas4")
@@ -23,11 +25,10 @@ public class GrantsDAO {
         
 	static Logger log = new Logger();        
     
-	/**
-	 * Devuelve un HashSet con todos los permisos de un grupo LDAP
-	 * @param role
-	 * @return
+	/* (non-Javadoc)
+	 * @see es.aragon.midas.dao.IGrantsDAO#grantsByLdapRole(java.lang.String)
 	 */
+	@Override
 	public Set<String> grantsByLdapRole (String role) {
 		Set<String> grants = new HashSet<String>(0);
 
@@ -50,11 +51,10 @@ public class GrantsDAO {
 	}
 
 	
-	/**
-	 * Devuelve un HashSet con todos los permisos de un usuario
-	 * @param username
-	 * @return
+	/* (non-Javadoc)
+	 * @see es.aragon.midas.dao.IGrantsDAO#grantsByUser(java.lang.String)
 	 */
+	@Override
 	public Set<String> grantsByUser (String username) {
 		Set<String> grants = new HashSet<String>(0);
 		try {
@@ -72,6 +72,10 @@ public class GrantsDAO {
 		return grants;
 	}
 	
+	/* (non-Javadoc)
+	 * @see es.aragon.midas.dao.IGrantsDAO#findAll()
+	 */
+	@Override
 	public List<MidGrant> findAll () {
 		Query query = midasEntityManager.createNamedQuery("MidGrant.findAll");
 		@SuppressWarnings("unchecked")
@@ -79,21 +83,63 @@ public class GrantsDAO {
 		return grants;
 	}
 	
+	/* (non-Javadoc)
+	 * @see es.aragon.midas.dao.IGrantsDAO#findByGrId(java.lang.String)
+	 */
+	@Override
 	public MidGrant findByGrId(String grId){
 		Query query = midasEntityManager.createNamedQuery("MidGrant.findByGrId");
 		MidGrant grant = (MidGrant) query.setParameter("grId",grId).getSingleResult();		
 		return grant; 
 	}
 	
+	/* (non-Javadoc)
+	 * @see es.aragon.midas.dao.IGrantsDAO#save(es.aragon.midas.config.MidGrant)
+	 */
+	@Override
 	public void save(MidGrant grant){
 		midasEntityManager.merge(grant);
 	}
 
 
+	/* (non-Javadoc)
+	 * @see es.aragon.midas.dao.IGrantsDAO#delete(es.aragon.midas.config.MidGrant)
+	 */
+	@Override
 	public void delete(MidGrant grant) {
 		midasEntityManager.remove(midasEntityManager.merge(grant));
 		
 	}
 
+	
+	/* (non-Javadoc)
+	 * @see es.aragon.midas.dao.IGrantsDAO#getRoleByLdap(String)
+	 */
+	@Override	
+	public MidRole getRoleByLdap(String roleLdap) {
+		Query query = midasEntityManager.createNamedQuery("MidRolesLdap.findRoleByLdap")
+                .setParameter("roleLdap", roleLdap);
+
+		MidRole r = null;
+
+		try{
+			r = (MidRole) query.getSingleResult();
+		} catch (NoResultException nre){
+			//Ignore this because as per our logic this is ok!
+		}
+		
+		return r;
+	}	
+	
+	/* (non-Javadoc)
+	 * @see es.aragon.midas.dao.IGrantsDAO#findAll()
+	 */
+	@Override
+	public List<MidRole> findAllRoles () {
+		Query query = midasEntityManager.createNamedQuery("MidRole.findAll");
+		@SuppressWarnings("unchecked")
+		List<MidRole> roles = query.getResultList();		
+		return roles;
+	}	
 	
 }

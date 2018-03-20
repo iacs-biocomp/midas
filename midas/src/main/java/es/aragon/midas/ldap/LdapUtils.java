@@ -79,7 +79,7 @@ public class LdapUtils {
 	 * @return True si el nombre existe, false si no existe
 	 * @throws NamingException
 	 */
-	public static UserLdap getUserLogin(String mail) throws NamingException {
+	public static UserLdap getUserByMail(String mail) throws NamingException {
 		String validUserName = AppProperties.getParameter("midas.ldap.validUser");
 		String validPassword;
 		
@@ -107,6 +107,37 @@ public class LdapUtils {
 		}
 	}
 
+	
+	
+	public static UserLdap getUserByName(String name) throws NamingException {
+		String validUserName = AppProperties.getParameter("midas.ldap.validUser");
+		String validPassword;
+		
+		try {
+			// Desencripta la contraseña en AES recuperada de base de datos que
+			// la almacena en Base64
+			String base64password = AppProperties.getParameter("midas.ldap.validPassword");
+			log.debug("base64 password: " + base64password);
+			String encodedPassword = new String(Base64.getDecoder().decode(base64password));
+			log.debug("Encoded password: " + encodedPassword);
+			validPassword = FileEncoder.decryptBytes(Base64.getDecoder().decode(base64password));
+		} catch (Exception e) {
+			validPassword = "";
+			e.printStackTrace();
+			log.error("Error al obtener el password valido de la tabla de properties", e);
+		}
+
+		FiltroLdap filtros = new FiltroLdap(null, name);
+		UserLdap userLdap= getUserLdap(validUserName, validPassword, filtros);
+		
+		if(userLdap != null){
+			return userLdap;
+		}else{
+			return null;
+		}
+	}	
+	
+	
 	/*
 	 * Establece los parametros de Contexto necesarios para la busqueda en el LDAP
 	 */

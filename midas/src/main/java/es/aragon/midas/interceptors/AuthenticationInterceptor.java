@@ -1,4 +1,4 @@
-/**
+	/**
  *
  */
 package es.aragon.midas.interceptors;
@@ -53,6 +53,7 @@ public class AuthenticationInterceptor implements Interceptor {
         }
         
        if (user == null) {
+    	   log.setUser("");
             //The user has not logged in yet
             if (action instanceof LoginAction) {
                 // el usuario intenta logarse. Dejamos pasar
@@ -73,11 +74,13 @@ public class AuthenticationInterceptor implements Interceptor {
         		return Constants.INDEX;
         	}
         	
-        	// el usuario esta logado
+            MDC.put("action", actionInvocation.getInvocationContext().getName());
+
+            // el usuario esta logado
             if (action instanceof UserAware) {
                 ((UserAware) action).setUser(user);
             }
-            MDC.put("action", actionInvocation.getInvocationContext().getName());
+
             log.debug("Accediendo a " + actionInvocation.getInvocationContext().getName());
 
             if (action instanceof MidasActionSupport) {

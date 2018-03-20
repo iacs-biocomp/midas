@@ -158,13 +158,19 @@ public class DashboardAction extends MidasActionSupport {
 				    String jsLine = null;
 				    
 					if (js != null && !js.isEmpty()) {
-						log.debug(" Leyendo frame script " + js);
-						jsReader = new BufferedReader(new FileReader (basePath + "dashboard/scripts/" + js));
-						
-						// insert frame lines
-						while((jsLine = jsReader.readLine()) != null) {
-							scriptGlobal.append(jsLine);
-							scriptGlobal.append(Constants.LS);
+						if (js.startsWith("http")) {
+							scriptGlobal.append("</script>");
+							scriptGlobal.append("<script src=\"" + js + "\"></script>");
+							scriptGlobal.append("<script>");
+						} else {
+							log.debug(" Leyendo frame script " + js);
+							jsReader = new BufferedReader(new FileReader (basePath + "dashboard/frames/js/" + js));
+							
+							// insert frame lines
+							while((jsLine = jsReader.readLine()) != null) {
+								scriptGlobal.append(jsLine);
+								scriptGlobal.append(Constants.LS);
+							}
 						}
 					}
 					

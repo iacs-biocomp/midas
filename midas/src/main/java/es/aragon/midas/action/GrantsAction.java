@@ -7,7 +7,7 @@ import javax.ejb.EJB;
 import org.apache.commons.validator.GenericValidator;
 
 import es.aragon.midas.config.MidGrant;
-import es.aragon.midas.dao.GrantsDAO;
+import es.aragon.midas.dao.IGrantsDAO;
 
 
 /**
@@ -24,7 +24,7 @@ public class GrantsAction extends MidasActionSupport {
 	}
 	
 	@EJB(name="GrantsDAO")
-	GrantsDAO grantsDAO;
+	IGrantsDAO grantsDAO;
 	
 	private MidGrant grant = new MidGrant();
 

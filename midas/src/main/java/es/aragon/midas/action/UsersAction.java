@@ -75,7 +75,7 @@ public class UsersAction extends MidasActionSupport {
 
 		log.debug("Buscando el username para el email: " + userNew.getEmail());
 		try {
-			UserLdap userByLdap = LdapUtils.getUserLogin(userNew.getEmail());
+			UserLdap userByLdap = LdapUtils.getUserByMail(userNew.getEmail());
 			if(userByLdap != null){
 				userNew.setUserName(userByLdap.getLogin());
 				userNew.setIdd(userByLdap.getNif());

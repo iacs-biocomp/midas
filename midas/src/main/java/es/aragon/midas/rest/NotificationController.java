@@ -11,10 +11,7 @@ import javax.ws.rs.POST;
 import javax.ws.rs.Path;
 import javax.ws.rs.Produces;
 import javax.ws.rs.core.MediaType;
-
-import es.aragon.midas.config.Constants;
 import es.aragon.midas.config.MidNotification;
-import es.aragon.midas.config.MidUser;
 import es.aragon.midas.dao.IMessagesDAO;
 
 @Path("/notifications")
@@ -23,7 +20,10 @@ public class NotificationController extends MidasRestAbstractController {
 	
 	@Inject
     private IMessagesDAO dao;
-    
+	
+	{
+		setGrantRequired("PUBLIC");
+	}
 
     public NotificationController() {
 	}
@@ -34,10 +34,16 @@ public class NotificationController extends MidasRestAbstractController {
 	@Consumes("application/json")
 	@Produces(MediaType.TEXT_PLAIN)
 	public String markAsRead(MidNotification m) {
-		if (dao != null && m.getId() > 0) {
-			dao.markNotAsRead(m.getId());
+		if(setUser() ) {
+			if (dao != null && m.getId() > 0) {
+				dao.markNotAsRead(m.getId());
+			}
+			return "OK";
+		
+		} else {
+			
+			return "ERROR";
 		}
-		return "OK";
 	}
 
 	
@@ -47,9 +53,9 @@ public class NotificationController extends MidasRestAbstractController {
 	public List<MidNotification> getUnread() {
 		List<MidNotification> lista;
 		lista = new ArrayList<MidNotification>();
-		
-    	user = (MidUser) request.getSession().getAttribute(Constants.USER);
-		if(user != null) {
+
+		if(setUser() ) {
+
 			log.info("Obteniendo notificaciones del usuario " + user.getUserName());
 			if (dao != null)
 				lista = dao.findNotByReceiverStatus(user.getUserName(), "S");
@@ -58,6 +64,7 @@ public class NotificationController extends MidasRestAbstractController {
 				m.setMessage("Error creando mensajes");
 				lista.add(m);
 			}
+
 		} else {
 			log.info("Obteniendo mensajes de Usuario no definido");
 		}

@@ -8,6 +8,8 @@ import javax.xml.bind.annotation.XmlRootElement;
 
 import org.apache.commons.lang3.time.DateUtils;
 
+import es.aragon.midas.logging.Logger;
+
 import java.util.Calendar;
 import java.util.Date;
 
@@ -28,6 +30,8 @@ import java.util.Date;
 public class MidMessage implements Serializable {
 	private static final long serialVersionUID = 1L;
 
+	static Logger log = new Logger();      
+	
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)	
 	private Integer id;
@@ -112,10 +116,10 @@ public class MidMessage implements Serializable {
 	
 	public String getSendDateS() {
 		SimpleDateFormat dt1 = new SimpleDateFormat("dd-MM-yyyy");
-		SimpleDateFormat dt2 = new SimpleDateFormat("hh:mm");
+		SimpleDateFormat dt2 = new SimpleDateFormat("HH:mm");
 		Date truncatedDate = DateUtils.truncate(this.sendDate, Calendar.DATE);
 		Date today = DateUtils.truncate(new Date(), Calendar.DATE);
-		if (truncatedDate == today) {
+		if (truncatedDate.equals(today) ) {
 			return dt2.format(this.sendDate);
 		} else {
 			return dt1.format(this.sendDate);

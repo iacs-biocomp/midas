@@ -3,8 +3,7 @@
  */
 package es.aragon.midas.security;
 
-import java.util.Arrays;
-import java.util.List;
+
 import java.util.Map;
 
 import javax.inject.Inject;
@@ -15,7 +14,6 @@ import javax.servlet.http.HttpServletRequest;
 import org.apache.struts2.interceptor.SessionAware;
 
 import es.aragon.midas.action.MidasActionSupport;
-import es.aragon.midas.config.AppProperties;
 import es.aragon.midas.config.Constants;
 import es.aragon.midas.config.MidUser;
 import es.aragon.midas.dao.UsersDAO;
@@ -23,9 +21,7 @@ import es.aragon.midas.exception.MidasJPAException;
 import es.aragon.midas.logging.IAccessLogger;
 import es.aragon.midas.logging.Logger;
 import es.aragon.midas.util.StringUtils;
-import es.aragon.midas.util.Utils;
-import es.aragon.midas.ws.guia.GuiaConnection;
-import es.aragon.midas.ws.guia.InfoUserResponse;
+
 
 /**
  * Action que permite que un usuario asuma la identidad de otro usuario

@@ -2,11 +2,6 @@ package es.aragon.midas.action;
 
 import java.io.FileInputStream;
 import java.io.OutputStream;
-
-import javax.servlet.http.HttpServletResponse;
-
-import org.apache.struts2.interceptor.ServletResponseAware;
-
 import es.aragon.midas.config.AppProperties;
 
 /**
@@ -14,7 +9,7 @@ import es.aragon.midas.config.AppProperties;
  * @author Carlos
  *
  */
-public class StaticContentAction extends MidasActionSupport implements ServletResponseAware {
+public class StaticContentAction extends MidasContentSupport {
 
 	private static final long serialVersionUID = 1L;
 
@@ -22,15 +17,9 @@ public class StaticContentAction extends MidasActionSupport implements ServletRe
 	setGrantRequired("PUBLIC");
 	}
 
-	HttpServletResponse response;
 	String basePath = AppProperties.getParameter("midas.staticContent.path");
 	String src;
 
-	@Override
-	public void setServletResponse(HttpServletResponse response) {
-	    this.response = response;    
-	}
-	
 	
 	public void setSrc(String src) {
 	    this.src = src;    

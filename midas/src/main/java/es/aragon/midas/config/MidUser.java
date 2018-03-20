@@ -369,6 +369,7 @@ public class MidUser implements Serializable {
 		GrantsLoader ld = new GrantsLoader();
 		Set<String> toAdd = ld.grantLdapRole(ldapRole);
 		grants.addAll(toAdd);
+		this.midRoleList.add(ld.getRoleByLdap(ldapRole));
 	}
 
 	/**
@@ -642,7 +643,7 @@ public class MidUser implements Serializable {
 				List<String> groupsLDAP = Arrays.asList(this.getInfoUser().getGroupsLDAP().split("\\s*,\\s*"));
 	
 				// Si no hay roles propios de la aplicación, tomamos roles desde GUIA (LDAP y categoría profesional)
-				if (this.getMidRoleList() != null && this.getMidRoleList().isEmpty()) {
+				if (this.getMidRoleList() == null || this.getMidRoleList().isEmpty()) {
 
 					for (String lg : groupsLDAP) {
 						this.grantLdapRole(lg);

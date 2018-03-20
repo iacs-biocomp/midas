@@ -76,6 +76,9 @@ public class LoginAction extends ActionSupport implements SessionAware, ServletR
 		List<String> LdapRoles;
 		UsersDAO dao;
 		
+		log.setUser(username);
+		log.setAction("Login");		
+		
 		try {
 			dao = (UsersDAO) new InitialContext().lookup("java:module/UsersDAO");
 		} catch (NamingException e) {

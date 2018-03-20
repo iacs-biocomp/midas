@@ -35,7 +35,7 @@ import org.hibernate.annotations.LazyCollectionOption;
 @NamedNativeQueries({
 	@NamedNativeQuery(name = "findGrantsByLdap", query = "select gr_id, gr_desc from " +
 													 "mid_grants join mid_rolegrants on gr_id = rg_grant " + 
-													 "join mid_roles on rg_role = role_id " + 
+													 "join mid_roles_ldap on rg_role = role_id " + 
 													 "where :roleLdap like role_ldap", resultClass = MidGrant.class)
 })
 
@@ -123,5 +123,5 @@ import org.hibernate.annotations.LazyCollectionOption;
     public String toString() {
         return "es.aragon.midas.config.MidGrant[ grId=" + grId + " ]";
     }
-    
+
 }

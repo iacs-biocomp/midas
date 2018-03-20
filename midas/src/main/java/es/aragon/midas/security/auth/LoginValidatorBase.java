@@ -43,7 +43,7 @@ public abstract class LoginValidatorBase implements LoginValidator {
                     dao.create(savedUser);
                 }
                 
-                if (checkPassword && !specificValidation(username, password)) {
+                if (!specificValidation(username, password, checkPassword)) {
                 	savedUser = null;
                 }
                 
@@ -60,7 +60,7 @@ public abstract class LoginValidatorBase implements LoginValidator {
     }
 
 
-    protected abstract boolean specificValidation(String username, String password);
+    protected abstract boolean specificValidation(String username, String password, boolean checkPassword);
 
 }
 

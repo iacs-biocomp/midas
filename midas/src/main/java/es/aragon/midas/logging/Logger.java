@@ -41,6 +41,14 @@ public class Logger {
     
     
     /**
+     * Asigna en el MDC la clave primaria de la entidad
+     * @param pk 
+     */
+    public void setAction(String action) {
+    	 MDC.put("action", action);    	
+    }
+    
+    /**
      * Registra un mensaje de info.
      */
     public void info(Object o) {

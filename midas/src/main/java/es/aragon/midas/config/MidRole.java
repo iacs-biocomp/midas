@@ -22,13 +22,14 @@ import org.hibernate.annotations.LazyCollectionOption;
 @Table(name = "mid_roles")
 @XmlRootElement
 @NamedQueries({
-    @NamedQuery(name = "MidRole.findAll", query = "SELECT m FROM MidRole m ORDER BY m.roleId "),
+    @NamedQuery(name = "MidRole.findAll", query = "SELECT m FROM MidRole m ORDER BY m.roleOrder DESC, m.roleId "),
     @NamedQuery(name = "MidRole.findAllUngiven", 
     	query = "SELECT m FROM MidRole m WHERE m NOT IN " +
     			"	(SELECT r FROM MidRole r join r.midUserList u WHERE u.userName = :userName) ORDER BY m.roleId"),
     @NamedQuery(name = "MidRole.findByRoleId", query = "SELECT m FROM MidRole m WHERE m.roleId = :roleId"),
-    @NamedQuery(name = "MidRole.findByRoleDesc", query = "SELECT m FROM MidRole m WHERE m.roleDesc = :roleDesc"),
-    @NamedQuery(name = "MidRole.findByRoleLdap", query = "SELECT m FROM MidRole m WHERE m.roleLdap = :roleLdap")})
+    //@NamedQuery(name = "MidRole.findByRoleLdap", query = "SELECT m FROM MidRole m WHERE m.roleLdap = :roleLdap"),
+    @NamedQuery(name = "MidRole.findByRoleDesc", query = "SELECT m FROM MidRole m WHERE m.roleDesc = :roleDesc")
+})
 public class MidRole implements Serializable {
     private static final long serialVersionUID = 1L;
     @Id
@@ -37,8 +38,8 @@ public class MidRole implements Serializable {
     private String roleId;
     @Column(name = "role_desc")
     private String roleDesc;
-    @Column(name = "role_ldap")
-    private String roleLdap;
+    @Column(name = "role_order")
+    private Integer roleOrder;
     @JoinTable(name = "mid_userroles", joinColumns = {
         @JoinColumn(name = "ur_role", referencedColumnName = "role_id")}, inverseJoinColumns = {
         @JoinColumn(name = "ur_name", referencedColumnName = "user_name")})
@@ -81,14 +82,6 @@ public class MidRole implements Serializable {
 
     public void setRoleDesc(String roleDesc) {
         this.roleDesc = roleDesc;
-    }
-
-    public String getRoleLdap() {
-        return roleLdap;
-    }
-
-    public void setRoleLdap(String roleLdap) {
-        this.roleLdap = roleLdap;
     }
 
     @XmlTransient
@@ -143,6 +136,15 @@ public class MidRole implements Serializable {
     public String toString() {
         return "es.aragon.midas.config.MidRole[ roleId=" + roleId + " ]";
     }
+
+	public Integer getRoleOrder() {
+		return roleOrder;
+	}
+
+	public void setRoleOrder(Integer roleOrder) {
+		this.roleOrder = roleOrder;
+	}
+
 
 
 }

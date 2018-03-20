@@ -48,6 +48,7 @@ public class BasicTableRenderer implements IRenderer {
 		BufferedReader jsReader = null;		// frame snippet reader
 	    String frameLine = null;
 	    int order = frame.getOrder();
+	    int suborder = frame.getSuborder();
 	    snippet = frame.getDBFrameType().getSnippet();
 		js = frame.getDBFrameType().getJs();
 	    
@@ -72,6 +73,8 @@ public class BasicTableRenderer implements IRenderer {
 					Matcher titleMatcher = Constants.TITLEPATTERN.matcher(frameLine);
 					Matcher headerMatcher = Constants.HEADERPATTERN.matcher(frameLine);
 					Matcher dataMatcher = Constants.DATAPATTERN.matcher(frameLine);
+					Matcher frameMatcher = Constants.FRAMEPATTERN.matcher(frameLine);	
+					
 				
 		        	if (headerMatcher.matches()) {
 		        		
@@ -98,6 +101,10 @@ public class BasicTableRenderer implements IRenderer {
 		        		
 		        		content.append(dataMatcher.group(2));
 		        		
+		        	} else if (frameMatcher.matches()) {
+		        		content.append(frameMatcher.group(1) + order + "_" + suborder);
+		        		content.append(frameMatcher.group(2));
+		        	
 		        	} else {
 		        		content.append(frameLine);
 		        	}
@@ -120,7 +127,7 @@ public class BasicTableRenderer implements IRenderer {
 		    }
 			
 			
-			// If frame_type js, insert now
+/*			// If frame_type js, insert now
 			try {
 				
 				if (js != null && !js.isEmpty()) {
@@ -164,7 +171,7 @@ public class BasicTableRenderer implements IRenderer {
 		    } finally {
 				if (jsReader != null)
 					jsReader.close();
-		    }
+		    }*/
 			
 			
 			// leemos y enviamos javascript del frame

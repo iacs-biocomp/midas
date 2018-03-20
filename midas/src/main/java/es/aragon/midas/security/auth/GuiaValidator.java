@@ -25,25 +25,34 @@ public class GuiaValidator extends LoginValidatorBase {
      * @param password
      * @return
      */
-    protected boolean specificValidation(String username, String password) {
+    protected boolean specificValidation(String username, String password, boolean checkPassword) {
         boolean retval = false;
-        try {
-	    	GuiaConnection con = new GuiaConnection();
-	        AuthGuiaResponse resp = null;
-	        String response = con.auth(username.toLowerCase(), password);
-	        if (response != null) {
-	            resp = con.xmlMapping(response);
-	        }
-	        
-	        if (resp != null && resp.getResult().equals("OK")) {
-	        	retval = true;
-	        } else {
-	        	retval = false;
-	        }  
-	    } catch(Exception e) {
-	        log.error("Error conectando a GUIA.", e);
-	        retval = false;
-	    }
+
+        if (checkPassword) {
+
+        	try {
+		    	GuiaConnection con = new GuiaConnection();
+		        AuthGuiaResponse resp = null;
+	
+		        String response = con.auth(username.toLowerCase(), password);
+		        if (response != null) {
+		            resp = con.xmlMapping(response);
+		        }
+		        
+		        if (resp != null && resp.getResult().equals("OK")) {
+		        	retval = true;
+		        } else {
+		        	retval = false;
+		        }
+
+        	} catch(Exception e) {
+		        log.error("Error conectando a GUIA.", e);
+		        retval = false;
+		    }
+        
+        } else {
+        	retval = true;
+        }
         
         return retval;
     

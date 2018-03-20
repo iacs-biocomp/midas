@@ -61,7 +61,7 @@ public abstract class MidasContentSupport extends ActionSupport
     protected HttpServletRequest request;
 
     protected String pathinfo;
-	private HttpServletResponse response;
+    protected HttpServletResponse response;
 	
     /*
      * (non-Javadoc) @see

@@ -10,7 +10,7 @@ import es.aragon.midas.config.MidContext;
 import es.aragon.midas.config.MidGrant;
 import es.aragon.midas.config.MidRole;
 import es.aragon.midas.dao.ContextsDAO;
-import es.aragon.midas.dao.GrantsDAO;
+import es.aragon.midas.dao.IGrantsDAO;
 import es.aragon.midas.dao.RolesDAO;
 
 
@@ -31,7 +31,7 @@ public class RolesAction extends MidasActionSupport {
 	RolesDAO rolesDAO;
 	
 	@EJB(name="GrantsDAO")
-	GrantsDAO grantsDAO;
+	IGrantsDAO grantsDAO;
 	
 	@EJB(name="ContextsDAO")
 	ContextsDAO contextsDAO;

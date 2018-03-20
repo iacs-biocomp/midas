@@ -27,7 +27,7 @@ public class LDAPValidator extends LoginValidatorBase {
 	 * @param password
 	 * @return
 	 */
-	protected boolean specificValidation(String username, String password) {
+	protected boolean specificValidation(String username, String password, boolean checkPassword) {
 		// Borra anteriores excepciones del LDAP
 		ldapException = null;
 
@@ -36,15 +36,28 @@ public class LDAPValidator extends LoginValidatorBase {
 		
 		try {
 			FiltroLdap filtros = new FiltroLdap(null, username.toLowerCase());
-			UserLdap userByLdap = LdapUtils.getUserLdap(userDN, password, filtros);
+			UserLdap userByLdap = null;
 			
-			ListIterator<String> it = userByLdap.getGroupsLDAP().listIterator();
+			if (checkPassword) {
+				userByLdap = LdapUtils.getUserLdap(userDN, password, filtros);
+			} else {
+				userByLdap = LdapUtils.getUserByName(username);
+			}
+			
+			log.debug("Validando al usuario " + username);
+			
+			if (userByLdap == null)
+				retval = false;
+			
+/*			No tomamos roles ni permisos desde LDAP directamente. si fuera necesario, los cogeríamos desde GUIA
+ * 
+ * 			ListIterator<String> it = userByLdap.getGroupsLDAP().listIterator();
 			while(it.hasNext()){
 				String m = it.next();
 				log.debug("ROL COGIDO DE LDAP: " + m);
 				savedUser.grantLdapRole(m);
 			}
-			
+*/		
 			retval = true;
 		} catch (NamingException ne) {
 			log.error("Error conectando a LDAP.", ne);

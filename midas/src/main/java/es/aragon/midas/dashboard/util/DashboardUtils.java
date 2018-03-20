@@ -1,11 +1,18 @@
 package es.aragon.midas.dashboard.util;
 
 import java.util.HashMap;
+import java.util.List;
 import java.util.Set;
 import java.util.regex.Matcher;
 
+import javax.inject.Inject;
+
 import es.aragon.midas.dashboard.config.Constants;
+import es.aragon.midas.config.MidGrant;
+import es.aragon.midas.config.MidRole;
 import es.aragon.midas.config.MidUser;
+import es.aragon.midas.dao.IGrantsDAO;
+
 
 /**
  * 
@@ -16,6 +23,8 @@ public class DashboardUtils {
 	
 	public static HashMap<String, String> sectores = new HashMap<String, String>(10);
 	
+	@Inject
+    private IGrantsDAO dao;
 	
 	public DashboardUtils() {
 		sectores.put("AL", "42");
@@ -74,7 +83,20 @@ public class DashboardUtils {
     				insertValue = "&sector=" + sectores.get(user.getInfoUser().getSecId());
 
     		} else if ("role".equals(insertCode)) {
-    			if (user.isGranted("FULL_COORD"))
+    			List<MidRole> roleList = user.getMidRoleList();
+    			MidRole selected = null;
+    			// Seleccionamos el rol del usuario con mayor role_order
+    			for (MidRole r: roleList) {
+    				if (r != null && r.getRoleOrder() > 0 ) {
+    					if (selected == null || (r.getRoleOrder() > selected.getRoleOrder()) )
+    						selected = r;
+    				}
+    			}
+    			if (selected != null) {
+    				insertValue = "&role=" + selected.getRoleId().toLowerCase();
+    		}
+
+/*    			if (user.isGranted("FULL_COORD"))
     				insertValue = "&role=full_coord";
     			else if (user.isGranted("COORD_AE"))
     				insertValue = "&role=coord_ae";
@@ -89,7 +111,7 @@ public class DashboardUtils {
     			else if (user.isGranted("ENF_AP"))
     				insertValue = "&role=enf_ap";
     			else if (user.isGranted("FAC_AP"))
-    				insertValue = "&role=fac_ap";
+    				insertValue = "&role=fac_ap"; */
     		}
     		if (insertValue != null)
     			s = usrMatcher.group(1) + insertValue + usrMatcher.group(3);

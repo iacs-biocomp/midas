@@ -26,6 +26,8 @@ public class Menu {
 	 */
 	private static synchronized void getDBMenu() {
 		Logger log = new Logger();
+		log.setUser("");
+		log.setAction("getDBMenu");
 		log.debug("Cargando el menu en de la aplicacion desde base de datos");
 		try {
 			MenuDAO dao = (MenuDAO) new InitialContext()

@@ -35,5 +35,5 @@ public class Constants {
 	private static final String headerRegex = "(.*)\\{header\\}(.*)";	
 	public static final Pattern HEADERPATTERN = Pattern.compile(headerRegex);
 	private static final String dataRegex = "(.*)\\{data\\}(.*)";	
-	public static final Pattern DATAPATTERN = Pattern.compile(dataRegex);	
+	public static final Pattern DATAPATTERN = Pattern.compile(dataRegex);
 }

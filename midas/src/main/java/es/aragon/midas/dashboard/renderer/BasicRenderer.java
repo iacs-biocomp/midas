@@ -77,7 +77,8 @@ public class BasicRenderer implements IRenderer {
 		        		
 		        	} else if (textMatcher.matches()) {
 		        		content.append(textMatcher.group(1));
-		        		content.append(frame.getComment());
+		        		if (frame.getComment() != null)
+		        			content.append(frame.getComment());
 		        		content.append(textMatcher.group(2));
 		        		
 		        	} else if (urlMatcher.matches()) {

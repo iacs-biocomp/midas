@@ -9,6 +9,7 @@ package es.aragon.midas.config;
  */
 public class Constants {
 	final public static String USER = "userObject";
+	final public static String LOGINS = "loginListObject";
 	
 	final public static String CFG_JNDIDS = "midas.datasource";
 	final public static String CFG_DBSCHEMA = "midas.database.schema";

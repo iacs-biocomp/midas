@@ -5,6 +5,7 @@ package es.aragon.midas.security;
 
 import java.util.Arrays;
 import java.util.Calendar;
+import java.util.HashMap;
 import java.util.List;
 import java.util.ListIterator;
 import java.util.Map;
@@ -14,6 +15,7 @@ import javax.naming.InitialContext;
 import javax.naming.NamingException;
 import javax.servlet.http.HttpServletRequest;
 
+import org.apache.struts2.interceptor.ApplicationAware;
 import org.apache.struts2.interceptor.ServletRequestAware;
 import org.apache.struts2.interceptor.SessionAware;
 import org.json.JSONObject;
@@ -23,6 +25,7 @@ import com.opensymphony.xwork2.ActionSupport;
 import es.aragon.midas.config.AppProperties;
 import es.aragon.midas.config.Constants;
 import es.aragon.midas.config.MidUser;
+import es.aragon.midas.config.MidUserSessions;
 import es.aragon.midas.dao.UsersDAO;
 import es.aragon.midas.exception.MidasJPAException;
 import es.aragon.midas.ldap.LdapUtils;
@@ -40,10 +43,11 @@ import es.aragon.midas.ws.guia.InfoUserResponse;
  * @author carlos
  * 
  */
-public class LoginAction extends ActionSupport implements SessionAware, ServletRequestAware {
+public class LoginAction extends ActionSupport implements SessionAware, ServletRequestAware, ApplicationAware {
 
 	private static final long serialVersionUID = 1L;
 	private Map<String, Object> session;
+	private Map<String, Object> application;
 	private String username;
 	private String password;
 	private String ticket;
@@ -225,6 +229,9 @@ public class LoginAction extends ActionSupport implements SessionAware, ServletR
 				
 				// user.grantLdapRole("APP-MID-ADMIN");
 				session.put(Constants.USER, user);
+				MidUserSessions us = MidUserSessions.getInstance();
+				us.setUserSession(user.getUserName(), user);
+				log.trace("Insertado el usuario " + user.getUserName() + " en UserSessions");
 				request.setAttribute(Constants.USER, user);
 				accessLogService.setUser(user.getUserName());
 				lopd.setUser(user.getUserName());
@@ -422,6 +429,12 @@ public class LoginAction extends ActionSupport implements SessionAware, ServletR
 		int l = urlAction.length();
 		if (urlAction.endsWith("?")) l--;
 		this.urlAction = urlAction.substring(1, l);
+	}
+
+	@Override
+	public void setApplication(Map<String, Object> application) {
+		this.application = application;		
+		
 	}
 
 }

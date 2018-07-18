@@ -28,7 +28,7 @@ public class Constants {
 	public static final Pattern TITLEPATTERN = Pattern.compile(titleRegex);
 	private static final String textRegex = "(.*)\\{text\\}(.*)";	
 	public static final Pattern TEXTPATTERN = Pattern.compile(textRegex);
-	private static final String usrRegex = "(.*)\\{(cias|zbs|sector|role|service)\\}(.*)";	
+	private static final String usrRegex = "(.*)\\{(cias|zbs|sector|role|service|token)\\}(.*)";	
 	public static final Pattern USRPATTERN = Pattern.compile(usrRegex);
 	private static final String urlRegex = "(.*)\\{url\\}(.*)";	
 	public static final Pattern URLPATTERN = Pattern.compile(urlRegex);
@@ -36,4 +36,6 @@ public class Constants {
 	public static final Pattern HEADERPATTERN = Pattern.compile(headerRegex);
 	private static final String dataRegex = "(.*)\\{data\\}(.*)";	
 	public static final Pattern DATAPATTERN = Pattern.compile(dataRegex);
+	private static final String shinyRegex = "(.*)\\{shiny\\}(.*)";	
+	public static final Pattern SHINYPATTERN = Pattern.compile(shinyRegex);
 }

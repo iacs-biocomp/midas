@@ -84,7 +84,7 @@ public class BasicRenderer implements IRenderer {
 		        	} else if (urlMatcher.matches()) {
 		        		
 		        		content.append(urlMatcher.group(1));
-		        		content.append(utils.parseUserData(frame.getPath(), user));
+		        		content.append(utils.parseUrl(utils.parseUserData(frame.getPath(), user)));
 		        		content.append(urlMatcher.group(2));
 		        		
 		        	} else if (frameMatcher.matches()) {

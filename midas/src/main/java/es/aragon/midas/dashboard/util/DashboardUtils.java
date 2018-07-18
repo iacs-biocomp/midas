@@ -8,9 +8,12 @@ import java.util.regex.Matcher;
 import javax.inject.Inject;
 
 import es.aragon.midas.dashboard.config.Constants;
+import es.aragon.midas.config.AppProperties;
 import es.aragon.midas.config.MidGrant;
+import es.aragon.midas.logging.Logger;
 import es.aragon.midas.config.MidRole;
 import es.aragon.midas.config.MidUser;
+import es.aragon.midas.config.MidUserSessions;
 import es.aragon.midas.dao.IGrantsDAO;
 
 
@@ -20,6 +23,8 @@ import es.aragon.midas.dao.IGrantsDAO;
  *
  */
 public class DashboardUtils {
+	
+    protected Logger log = new Logger();
 	
 	public static HashMap<String, String> sectores = new HashMap<String, String>(10);
 	
@@ -94,7 +99,11 @@ public class DashboardUtils {
     			}
     			if (selected != null) {
     				insertValue = "&role=" + selected.getRoleId().toLowerCase();
-    		}
+    			}
+    		
+    		} else if ("token".equals(insertCode)) {
+    			MidUserSessions ses = MidUserSessions.getInstance();
+    				insertValue = "&token=" + ses.getUserCode(user.getUserName());
 
 /*    			if (user.isGranted("FULL_COORD"))
     				insertValue = "&role=full_coord";
@@ -122,4 +131,22 @@ public class DashboardUtils {
     	}
     	return s;
 	}
+	
+	
+	
+	/**
+	 * 
+	 * @param s
+	 * @return
+	 */
+	public String parseUrl (String s) {
+		Matcher shinyMatcher = Constants.SHINYPATTERN.matcher(s);
+
+    	if (shinyMatcher.matches()) {
+    		String insertValue = AppProperties.getParameter("bigan.shiny.server");
+    		s = shinyMatcher.group(1) + insertValue + shinyMatcher.group(2);
+    	} 		
+
+    	return s;
+	}	
 }

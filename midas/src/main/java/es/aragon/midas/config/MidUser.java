@@ -644,7 +644,7 @@ public class MidUser implements Serializable {
 	
 				// Si no hay roles propios de la aplicación, tomamos roles desde GUIA (LDAP y categoría profesional)
 				if (this.getMidRoleList() == null || this.getMidRoleList().isEmpty()) {
-
+					this.setMidRoleList(new ArrayList<MidRole>());
 					for (String lg : groupsLDAP) {
 						this.grantLdapRole(lg);
 					}

@@ -16,6 +16,7 @@ import org.apache.struts2.interceptor.SessionAware;
 import es.aragon.midas.action.MidasActionSupport;
 import es.aragon.midas.config.Constants;
 import es.aragon.midas.config.MidUser;
+import es.aragon.midas.config.MidUserSessions;
 import es.aragon.midas.dao.UsersDAO;
 import es.aragon.midas.exception.MidasJPAException;
 import es.aragon.midas.logging.IAccessLogger;
@@ -96,6 +97,8 @@ public class AliasAction extends MidasActionSupport implements SessionAware {
 			
 			// user.grantLdapRole("APP-MID-ADMIN");
 			session.put(Constants.USER, newUser);
+			MidUserSessions us = MidUserSessions.getInstance();
+			us.setUserSession(newUser.getUserName(), newUser);
 			request.setAttribute(Constants.USER, newUser);
 			log.debug("Creando sesion de usuario " + newUsername);
 

@@ -5,14 +5,14 @@ package es.aragon.midas.security;
 
 import es.aragon.midas.action.MidasActionSupport;
 import es.aragon.midas.config.Constants;
+import es.aragon.midas.config.MidUserSessions;
 import es.aragon.midas.exception.MidasJPAException;
 import es.aragon.midas.logging.IAccessLogger;
-import es.aragon.midas.util.Utils;
 
 import java.util.Map;
 
 import javax.inject.Inject;
-import javax.servlet.http.HttpServletRequest;
+
 
 import org.apache.struts2.interceptor.SessionAware;
 
@@ -25,7 +25,7 @@ public class LogoutAction extends MidasActionSupport implements SessionAware {
 	private static final long serialVersionUID = 1L;
 	@Inject
 	private IAccessLogger aLog;
-	private HttpServletRequest request;
+
 	Map<String, Object> session; 
 
 	private static final String AUDIT_ENTITY = "Logout";		
@@ -40,12 +40,13 @@ public class LogoutAction extends MidasActionSupport implements SessionAware {
 	@Override
 	public String execute() throws MidasJPAException {
 		aLog.setUser(getUser().getUserName());
+		MidUserSessions us = MidUserSessions.getInstance();
 
 		
 		if (user.isAliased()) {
 			log.debug("Saliendo de aliasing como usuario" + user.getUserName());
 			audit.log("ALX", AUDIT_ENTITY, user.getActualUser().getUserName(), "El usuario recupera su identidad. Ya no es " + user.getUserName());
-
+			us.removeUserSession(user.getUserName());
 			session.put(Constants.USER, user.getActualUser());
 			return SUCCESS;
 			
@@ -58,7 +59,7 @@ public class LogoutAction extends MidasActionSupport implements SessionAware {
 			}
 			//request.getSession().invalidate();
 			session.clear();
-			
+			us.removeUserSession(user.getUserName());
 			return LOGOUT;
 		}
 	}

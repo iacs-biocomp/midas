@@ -657,6 +657,7 @@ public class MidUser implements Serializable {
 					log.debug("Añadiendo CSSUC: " + uc); 
 					this.addMidContext("CSSUC", uc);
 				}
+				this.addMidContext("SEC", this.getInfoUser().getSecId());
 				
 				log.debug("Cargados grupos LDAP y UCS del alias");
 				

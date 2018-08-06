@@ -21,6 +21,7 @@ public class Constants {
 	final public static String MESSAGES_MANAGER = "midas.messages.active";
 	final public static String NOTIFICATIONS_MANAGER = "midas.notifications.active";
 	final public static String CAUFORM_MANAGER = "midas.cauform.active";
+	final public static String DEBUG_MODE = "midas.debugmode";
 	
 
 	final public static String CFG_PARAMDB = "midas.paramDB";

@@ -170,15 +170,19 @@ public class BasicRenderer implements IRenderer {
 					while((frameLine = jsReader.readLine()) != null) {
 						Matcher frameMatcher = Constants.FRAMEPATTERN.matcher(frameLine);	
 						Matcher urlMatcher = Constants.URLPATTERN.matcher(frameLine);
+						Matcher titleMatcher = Constants.TITLEPATTERN.matcher(frameLine);
 
 						if (frameMatcher.matches()) {
 			        		script.append(frameMatcher.group(1) + order + "_" + suborder);
 			        		script.append(frameMatcher.group(2));
 						} else if (urlMatcher.matches()) {
 							script.append(urlMatcher.group(1));
-							script.append(utils.parseUserData(frame.getPath(), user));
+							script.append(utils.parseUrl(utils.parseUserData(frame.getPath(), user)));
 			        		script.append(urlMatcher.group(2));
-							
+						} else if (titleMatcher.matches()) {
+							script.append(titleMatcher.group(1));
+							script.append(frame.getTitle());
+							script.append(titleMatcher.group(2));
 						} else {
 			        		script.append(frameLine);
 			        	}

@@ -120,23 +120,27 @@ public class MidUserSessions {
 
 	    log.trace("Solicitud de datos de " + result[0] + "|" + result[1] + "|" + result[2]);
 		MidUser ses = (MidUser)sessions.get(result[0]);
-		if (ses != null) {
-			if ( Long.parseLong(result[1]) == ses.getLastLogin().getTime() ) {
-					if (Long.parseLong(result[2]) - GregorianCalendar.getInstance().getTimeInMillis() < 300000 ) {
-					} else {
-						ses = new MidUser();
-						ses.setUserName("Usuario no autorizado");
-						log.trace("Tiempo excedido");
-					}
+
+		// En modo DEBUG no validamos el token
+		if(!AppProperties.getParameter(Constants.DEBUG_MODE).equals("true")) {
+			if (ses != null) {
+				if ( Long.parseLong(result[1]) == ses.getLastLogin().getTime() ) {
+						if (Long.parseLong(result[2]) - GregorianCalendar.getInstance().getTimeInMillis() < 300000 ) {
+						} else {
+							ses = new MidUser();
+							ses.setUserName("Usuario no autorizado");
+							log.trace("Tiempo excedido");
+						}
+				} else {
+					ses = new MidUser();
+					ses.setUserName("Usuario no autorizado");
+					log.trace("No coincide lastLogin: " + result[1] + "<->" + ses.getLastLogin().getTime());
+				}
 			} else {
+				log.trace("Usuario no recuperado");
 				ses = new MidUser();
 				ses.setUserName("Usuario no autorizado");
-				log.trace("No coincide lastLogin: " + result[1] + "<->" + ses.getLastLogin().getTime());
 			}
-		} else {
-			log.trace("Usuario no recuperado");
-			ses = new MidUser();
-			ses.setUserName("Usuario no autorizado");
 		}
 		return ses;
 	}	

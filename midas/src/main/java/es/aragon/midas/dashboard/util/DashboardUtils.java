@@ -135,16 +135,19 @@ public class DashboardUtils {
 	
 	
 	/**
-	 * 
-	 * @param s
-	 * @return
+	 * Transforma el contenido del parámetro "path" del frame, si se encuentra en el snippet el patrón
+	 * {ext_*}, y lo sustituye por la dirección que se encuentra en el parámetro bigan.*.server de la
+	 * tabla mid_app_properties.
+	 * @param s cadena a procesar
+	 * @return cadena procesada
 	 */
 	public String parseUrl (String s) {
 		Matcher shinyMatcher = Constants.SHINYPATTERN.matcher(s);
-
+		log.debug("Busca match para " + s);
     	if (shinyMatcher.matches()) {
-    		String insertValue = AppProperties.getParameter("bigan.shiny.server");
-    		s = shinyMatcher.group(1) + insertValue + shinyMatcher.group(2);
+    		log.debug("Match encontrado: " + shinyMatcher.group(2));
+    		String insertValue = AppProperties.getParameter("bigan." + shinyMatcher.group(2) + ".server");
+    		s = shinyMatcher.group(1) + insertValue + shinyMatcher.group(3);
     	} 		
 
     	return s;

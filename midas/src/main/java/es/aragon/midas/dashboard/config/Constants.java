@@ -36,6 +36,6 @@ public class Constants {
 	public static final Pattern HEADERPATTERN = Pattern.compile(headerRegex);
 	private static final String dataRegex = "(.*)\\{data\\}(.*)";	
 	public static final Pattern DATAPATTERN = Pattern.compile(dataRegex);
-	private static final String shinyRegex = "(.*)\\{shiny\\}(.*)";	
+	private static final String shinyRegex = "(.*)\\{ext_(.*)\\}(.*)";	
 	public static final Pattern SHINYPATTERN = Pattern.compile(shinyRegex);
 }

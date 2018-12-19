@@ -40,14 +40,16 @@ public class LDAPValidator extends LoginValidatorBase {
 			
 			if (checkPassword) {
 				userByLdap = LdapUtils.getUserLdap(userDN, password, filtros);
+				log.debug("Validando al usuario " + username);
+				
+				if (userByLdap != null)
+					retval = true;
+
 			} else {
-				userByLdap = LdapUtils.getUserByName(username);
-			}
+				//userByLdap = LdapUtils.getUserByName(username);
+				retval = true;
+			} 
 			
-			log.debug("Validando al usuario " + username);
-			
-			if (userByLdap == null)
-				retval = false;
 			
 /*			No tomamos roles ni permisos desde LDAP directamente. si fuera necesario, los cogeríamos desde GUIA
  * 
@@ -58,7 +60,6 @@ public class LDAPValidator extends LoginValidatorBase {
 				savedUser.grantLdapRole(m);
 			}
 */		
-			retval = true;
 		} catch (NamingException ne) {
 			log.error("Error conectando a LDAP.", ne);
 			retval = false;

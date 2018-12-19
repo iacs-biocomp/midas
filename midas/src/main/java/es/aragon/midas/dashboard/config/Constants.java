@@ -28,7 +28,7 @@ public class Constants {
 	public static final Pattern TITLEPATTERN = Pattern.compile(titleRegex);
 	private static final String textRegex = "(.*)\\{text\\}(.*)";	
 	public static final Pattern TEXTPATTERN = Pattern.compile(textRegex);
-	private static final String usrRegex = "(.*)\\{(cias|zbs|sector|role|service|token)\\}(.*)";	
+	private static final String usrRegex = "(.*)\\{(cias|zbs|sectorn?|role|service|token)\\}(.*)";	
 	public static final Pattern USRPATTERN = Pattern.compile(usrRegex);
 	private static final String urlRegex = "(.*)\\{url\\}(.*)";	
 	public static final Pattern URLPATTERN = Pattern.compile(urlRegex);

@@ -203,6 +203,7 @@ public class GuiaConnection {
 	public InfoUserResponse infoUser(String login) {
 		PostMethod method;
 		InfoUserResponse resp;
+		StringReader reader;
 		String url = AppProperties.getParameter(Constants.URL_GUIA_AUTH);
 		method = new PostMethod(url);
 		method.getParams().setParameter(HttpMethodParams.RETRY_HANDLER,
@@ -218,9 +219,13 @@ public class GuiaConnection {
     		try {
     			JAXBContext jc = JAXBContext.newInstance(InfoUserResponse.class);
     			Unmarshaller unmarshaller = jc.createUnmarshaller();
-    			StringReader reader = new StringReader(
+    			if (!response.startsWith("<?")) {
+    				 reader = new StringReader(
     					"<?xml version=\"1.0\" encoding=\"UTF-8\" standalone=\"yes\"?>"
     							+ response);
+    			} else {
+    				reader = new StringReader(response);
+    			}
     			resp = (InfoUserResponse) unmarshaller.unmarshal(reader);
     		} catch (Exception e) {
     			resp = new InfoUserResponse("K11", "Error parseando respuesta de Guia / InfoUser");

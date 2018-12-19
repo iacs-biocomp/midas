@@ -84,9 +84,15 @@ public class DashboardUtils {
     				}
     			}    			
     		} else if ("sector".equals(insertCode)) {
-    			if (user.getInfoUser() != null && !user.getInfoUser().getSecId().isEmpty())
-    				insertValue = "&sector=" + sectores.get(user.getInfoUser().getSecId());
+    			String sector = user.getFirstContextValue("SEC");
+    			if (!sector.isEmpty())
+    				insertValue = "&sector=" + sector;
 
+    		} else if ("sectorn".equals(insertCode)) {
+    			String sector = user.getFirstContextValue("SEC");
+    			if (!sector.isEmpty())
+    				insertValue = "&sector=" + sectores.get(sector);
+    			
     		} else if ("role".equals(insertCode)) {
     			List<MidRole> roleList = user.getMidRoleList();
     			MidRole selected = null;

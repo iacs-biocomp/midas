@@ -106,6 +106,8 @@ public class LoggerLevelChangerAction extends ActionSupport {
             Logger.getLogger(loggerName).setLevel(Level.FATAL);
         } else if ("warn".equalsIgnoreCase(level)) {
             Logger.getLogger(loggerName).setLevel(Level.WARN);
+        } else if ("trace".equalsIgnoreCase(level)) {
+            Logger.getLogger(loggerName).setLevel(Level.TRACE);
         }
     }
     

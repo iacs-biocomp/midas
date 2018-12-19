@@ -4,10 +4,11 @@
 package es.aragon.midas.dashboard.renderer;
 
 import java.io.BufferedReader;
+import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.io.FileReader;
 import java.io.IOException;
-
+import java.io.InputStreamReader;
 import java.util.regex.Matcher;
 
 
@@ -52,7 +53,7 @@ public class HtmlRenderer implements IRenderer {
 		
 		try {
 			try {
-				frameReader = new BufferedReader(new FileReader (basePath + "dashboard/frames/" + snippet));
+				frameReader = new BufferedReader(new InputStreamReader(new FileInputStream(basePath + "dashboard/frames/" + snippet), "UTF-8"));
 				log.debug(" Leyendo frame " + snippet);
 				
 				// insert frame lines
@@ -96,7 +97,7 @@ public class HtmlRenderer implements IRenderer {
 			try {
 				
 				if (js != null) {
-					jsReader = new BufferedReader(new FileReader (basePath + "dashboard/scripts/" + js));
+					jsReader = new BufferedReader(new InputStreamReader(new FileInputStream(basePath + "dashboard/scripts/" + js), "UTF-8"));
 					log.debug(" Leyendo frame " + js);
 					
 					// insert frame lines
@@ -167,7 +168,7 @@ public class HtmlRenderer implements IRenderer {
 		try {
 			// leemos y enviamos snippet del frame
 			try {
-				frameReader = new BufferedReader(new FileReader (basePath + "dashboard/html/" + snippet));
+				frameReader = new BufferedReader(new InputStreamReader(new FileInputStream(basePath + "dashboard/html/" + snippet), "UTF-8"));
 				log.debug(" Leyendo contenido de " + snippet);
 				while((frameLine = frameReader.readLine()) != null) {
 					content.append(frameLine);
@@ -189,7 +190,7 @@ public class HtmlRenderer implements IRenderer {
 			// leemos y enviamos javascript del frame
 			try {
 				if (js != null) {
-					frameReader = new BufferedReader(new FileReader (basePath + "dashboard/scripts/" + js));
+					frameReader = new BufferedReader(new InputStreamReader(new FileInputStream(basePath + "dashboard/scripts/" + js), "UTF-8"));
 					log.debug(" Leyendo contenido de " + js);
 					while((frameLine = frameReader.readLine()) != null) {
 						script.append(frameLine);

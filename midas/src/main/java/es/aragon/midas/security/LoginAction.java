@@ -3,9 +3,8 @@
  */
 package es.aragon.midas.security;
 
-import java.util.Arrays;
 import java.util.Calendar;
-import java.util.HashMap;
+
 import java.util.List;
 import java.util.ListIterator;
 import java.util.Map;
@@ -15,7 +14,6 @@ import javax.naming.InitialContext;
 import javax.naming.NamingException;
 import javax.servlet.http.HttpServletRequest;
 
-import org.apache.struts2.interceptor.ApplicationAware;
 import org.apache.struts2.interceptor.ServletRequestAware;
 import org.apache.struts2.interceptor.SessionAware;
 import org.json.JSONObject;
@@ -34,20 +32,17 @@ import es.aragon.midas.logging.ILOPDLogger;
 import es.aragon.midas.logging.Logger;
 import es.aragon.midas.security.auth.LoginValidator;
 import es.aragon.midas.util.StringUtils;
-import es.aragon.midas.util.Utils;
 import es.aragon.midas.ws.guia.AuthGuiaDetails;
 import es.aragon.midas.ws.guia.GuiaConnection;
-import es.aragon.midas.ws.guia.InfoUserResponse;
 
 /**
  * @author carlos
  * 
  */
-public class LoginAction extends ActionSupport implements SessionAware, ServletRequestAware, ApplicationAware {
+public class LoginAction extends ActionSupport implements SessionAware, ServletRequestAware {
 
 	private static final long serialVersionUID = 1L;
 	private Map<String, Object> session;
-	private Map<String, Object> application;
 	private String username;
 	private String password;
 	private String ticket;
@@ -431,10 +426,5 @@ public class LoginAction extends ActionSupport implements SessionAware, ServletR
 		this.urlAction = urlAction.substring(1, l);
 	}
 
-	@Override
-	public void setApplication(Map<String, Object> application) {
-		this.application = application;		
-		
-	}
 
 }

@@ -120,6 +120,7 @@ public class MidUserSessions {
 
 	    log.trace("Solicitud de datos de " + result[0] + "|" + result[1] + "|" + result[2]);
 		MidUser ses = (MidUser)sessions.get(result[0]);
+	    log.trace("Recuperada sesion de usuario " + ses.getUserName());
 
 		// En modo DEBUG no validamos el token
 		if(!AppProperties.getParameter(Constants.DEBUG_MODE).equals("true")) {

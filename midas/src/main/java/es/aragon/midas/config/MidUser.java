@@ -12,6 +12,7 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 
+import javax.inject.Inject;
 import javax.persistence.Basic;
 import javax.persistence.Column;
 import javax.persistence.Entity;
@@ -24,13 +25,13 @@ import javax.persistence.Temporal;
 import javax.persistence.TemporalType;
 import javax.persistence.Transient;
 import javax.xml.bind.annotation.XmlRootElement;
-import javax.xml.bind.annotation.XmlTransient;
 
 import org.hibernate.annotations.LazyCollection;
 import org.hibernate.annotations.LazyCollectionOption;
 
 import es.aragon.midas.dao.GrantsLoader;
 import es.aragon.midas.logging.Logger;
+import es.aragon.midas.structure.ISpsStructureDao;
 import es.aragon.midas.util.Utils;
 import es.aragon.midas.ws.guia.GuiaConnection;
 import es.aragon.midas.ws.guia.InfoUserDetails;
@@ -55,6 +56,10 @@ public class MidUser implements Serializable {
 	
 	@Transient
     private Logger log = new Logger();
+	
+	@Inject
+	@Transient
+    private ISpsStructureDao structDao;
 	
 	/**
 	 * Codigo de acceso del usuario a la aplicacion (login)
@@ -118,16 +123,16 @@ public class MidUser implements Serializable {
 
 	/**
 	 * Lista de Roles a los que esta asociado el usuario
-	 */
 	@XmlTransient
+	 */
 	@ManyToMany(mappedBy = "midUserList")
 	@LazyCollection(LazyCollectionOption.FALSE)
 	private List<MidRole> midRoleList;
 
 	/**
 	 * Lista de contextos a los que esta asociado el usuario
-	 */
 	@XmlTransient
+	 */
 	@ManyToMany(mappedBy = "midUserList")
 	@LazyCollection(LazyCollectionOption.FALSE)
 	private List<MidContext> midContextList;
@@ -366,10 +371,12 @@ public class MidUser implements Serializable {
 	 * @param ldapRole
 	 */
 	public void grantLdapRole(String ldapRole) {
-		GrantsLoader ld = new GrantsLoader();
-		Set<String> toAdd = ld.grantLdapRole(ldapRole);
-		grants.addAll(toAdd);
-		this.midRoleList.add(ld.getRoleByLdap(ldapRole));
+		if (ldapRole != null && ! ldapRole.isEmpty()) { 
+			GrantsLoader ld = new GrantsLoader();
+			Set<String> toAdd = ld.grantLdapRole(ldapRole);
+			grants.addAll(toAdd);
+			this.midRoleList.add(ld.getRoleByLdap(ldapRole));
+		}
 	}
 
 	/**
@@ -420,8 +427,16 @@ public class MidUser implements Serializable {
 	 * @param ctx
 	 */
 	public void addMidContext(MidContext ctx) {
-		if (!midContextList.contains(ctx)) {
-			midContextList.add(ctx);
+		try {
+			if (!midContextList.contains(ctx)) {
+				midContextList.add(ctx);
+				log.debug("Añadiendo contexto " + ctx.getCxValue());
+			} else {
+				log.debug("El contexto " + ctx.getCxKey() + "-" + ctx.getCxValue() + " ya existe");
+			}
+		} catch (Exception e) {
+			log.error("Error añadiendo contexto a usuario");
+			e.printStackTrace();
 		}
 	}
 	
@@ -430,9 +445,17 @@ public class MidUser implements Serializable {
 	 * @param ctx
 	 */
 	public void addMidContext(String key, String value) {
-		MidContext ctx = new MidContext(key, value);
-		if (!midContextList.contains(ctx)) {
-			midContextList.add(ctx);
+		try {
+			MidContext ctx = new MidContext(key, value);
+			if (!midContextList.contains(ctx)) {
+				midContextList.add(ctx);
+				log.debug("Añadiendo contexto " + ctx.getCxValue());
+			} else {
+				log.debug("El contexto " + ctx.getCxKey() + "-" + ctx.getCxValue() + " ya existe");
+			}
+		} catch (Exception e) {
+			log.error("Error añadiendo contexto a usuario");
+			e.printStackTrace();
 		}
 	}
 	
@@ -539,6 +562,26 @@ public class MidUser implements Serializable {
 		return s.toString();
 	}
 	
+	/**
+	 * Devuelve el primer valor encontrado para una clave de contexto determinada.
+	 * Dado que los contextos manuales tienen prioridad sobre otros contextos (por ejemplo, los leídos desde getInfoUser, 
+	 * esta función devolverá preferentemente los contextos manuales.
+	 * @param key Clave de contexto solicitada
+	 * @return Primer valor encontrado para esa clave de contexto.
+	 */
+	public String getFirstContextValue(String key) {
+		String s="";
+		for (MidContext m : midContextList) {
+			if (m.getCxKey().equals(key)) {
+				if (m.getCxValue() != null) {
+					s = m.getCxValue();
+					break;
+				}
+			}
+		}
+		return s;
+	}
+	
 	
 	/**
 	 * 
@@ -639,6 +682,8 @@ public class MidUser implements Serializable {
 	    	InfoUserResponse response = con.infoUser(username);
 			log.debug("Leidos datos del usuario " + username + " desde GUIA.");
 			if (response.getResult().startsWith("OK")) {
+				boolean hasCias = false;
+				boolean hasZbs = false;
 				this.setInfoUser(response.getInfoUser());
 				List<String> groupsLDAP = Arrays.asList(this.getInfoUser().getGroupsLDAP().split("\\s*,\\s*"));
 	
@@ -651,12 +696,38 @@ public class MidUser implements Serializable {
 					
 					this.grantLdapRole(this.getInfoUser().getCatrId());
 				}
+
+				// Añadimos CIAS como contexto
+				if (!this.getInfoUser().getCias().isEmpty()) {
+					this.addMidContext("CIAS", this.getInfoUser().getCias());
+					hasCias = true;
+				}
 				
+				// Añadimos cenSanMap como CCSUC
+				if(!this.getInfoUser().getCenSanMapId().isEmpty()) {
+					this.addMidContext("CSSUC", this.getInfoUser().getCenSanMapId());
+					if (this.getInfoUser().getCenSanMapId().startsWith("60") ) {
+						this.addMidContext("ZBS", this.getInfoUser().getCenSanMapId().substring(2));
+						hasZbs = true;
+					}
+				}
+				
+				if (hasCias && !hasZbs) {
+					try {
+						this.addMidContext("ZBS",structDao.getZonaByCias(this.getInfoUser().getCias()));
+					} catch(Exception e) {
+						log.debug("Error obteniendo ISpsStructureDao");
+					}
+				}
+				
+				// Añadimos CSSUCs como contextos
 				List<String> cssUcs = Arrays.asList(this.getInfoUser().getCssUcs().split("\\s*,\\s*"));
 				for (String uc : cssUcs) {
 					log.debug("Añadiendo CSSUC: " + uc); 
 					this.addMidContext("CSSUC", uc);
 				}
+				
+				// Añadimos contexto de SECTOR
 				this.addMidContext("SEC", this.getInfoUser().getSecId());
 				
 				log.debug("Cargados grupos LDAP y UCS del alias");

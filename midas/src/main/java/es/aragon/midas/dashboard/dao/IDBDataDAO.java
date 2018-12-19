@@ -16,4 +16,6 @@ public interface IDBDataDAO {
 
 	List<Object[]> getRawData(String queryStr);
 
+	void getHeaders(String queryStr, List<String> headers, List<Object[]> data);
+
 }

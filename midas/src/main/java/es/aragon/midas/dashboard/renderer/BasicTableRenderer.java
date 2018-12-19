@@ -4,9 +4,12 @@
 package es.aragon.midas.dashboard.renderer;
 
 import java.io.BufferedReader;
+import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.io.FileReader;
 import java.io.IOException;
+import java.io.InputStreamReader;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.regex.Matcher;
 
@@ -14,7 +17,6 @@ import java.util.regex.Matcher;
 import es.aragon.midas.config.AppProperties;
 import es.aragon.midas.config.MidUser;
 import es.aragon.midas.dashboard.jpa.DBFrame;
-import es.aragon.midas.dashboard.util.DashboardUtils;
 import es.aragon.midas.logging.Logger;
 import es.aragon.midas.dashboard.config.Constants;
 import es.aragon.midas.dashboard.dao.IDBDataDAO;
@@ -41,7 +43,6 @@ public class BasicTableRenderer implements IRenderer {
 	public void render(StringBuilder content, StringBuilder script, DBFrame frame, MidUser user) {
 
 		String basePath = AppProperties.getParameter("midas.staticContent.path");
-		DashboardUtils utils = new DashboardUtils();		
 		String snippet = null;					// frame snippet source
 		String js = null;					// frame snippet source
 		BufferedReader frameReader = null;		// frame snippet reader
@@ -64,7 +65,7 @@ public class BasicTableRenderer implements IRenderer {
 		
 		try {
 			try {
-				frameReader = new BufferedReader(new FileReader (basePath + "dashboard/frames/" + snippet));
+				frameReader = new BufferedReader(new InputStreamReader(new FileInputStream(basePath + "dashboard/frames/" + snippet), "UTF-8"));
 				log.debug(" Leyendo frame " + snippet);
 				
 				// insert frame lines
@@ -90,7 +91,19 @@ public class BasicTableRenderer implements IRenderer {
 		        	} else if (dataMatcher.matches()) {
 		        		content.append(dataMatcher.group(1));
 
-						List<Object[]> data = dao.getRawData(frame.getDBQuery().getQuery());
+						//List<Object[]> data = dao.getRawData(frame.getDBQuery().getQuery());
+						List<Object[]> data = new ArrayList<Object[]>();
+						List<String> headers = new ArrayList<String>();
+						dao.getHeaders(frame.getDBQuery().getQuery(), headers, data);
+						
+						content.append("<thead><tr>");
+						
+						for (String c : headers){
+							content.append("<th>" + c + "</th>");
+						}
+		        		
+						content.append("</tr></thead><tbody>");
+
 						for (Object[] row : data ) {
 							content.append("<tr>");
 							for (Object col : row) {
@@ -98,6 +111,7 @@ public class BasicTableRenderer implements IRenderer {
 							}
 							content.append("</tr>");
 						}
+						content.append("</tbody>");
 		        		
 		        		content.append(dataMatcher.group(2));
 		        		
@@ -180,7 +194,7 @@ public class BasicTableRenderer implements IRenderer {
 			try {
 				if (js != null  && !js.isEmpty()) {
 					log.debug(" Leyendo contenido de " + js);
-					jsReader = new BufferedReader(new FileReader (basePath + "dashboard/scripts/" + js));
+					jsReader = new BufferedReader(new InputStreamReader(new FileInputStream(basePath + "dashboard/scripts/" + js), "UTF-8"));
 					while((frameLine = jsReader.readLine()) != null) {
 						script.append(frameLine);
 						script.append(Constants.LS);
@@ -225,6 +239,7 @@ public class BasicTableRenderer implements IRenderer {
 		   header += "<th>" + c + "</th>";
 	   }
 	   return header;
+
 	}
 
 }

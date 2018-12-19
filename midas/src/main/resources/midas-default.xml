@@ -122,7 +122,7 @@
 			<result name="newUserName" type="dispatcher">/midas/newUserName.jsp</result>
         </action>
         
-        <action name="*Files" class="es.aragon.midas.action.FilesAction" method="{1}">
+        <action name="*Files" class="es.aragon.midas.action.FilesAction" method="{1}">	
         	<result name="files">files</result>
         	<result name="download" type="stream">
 				<param name="contentType">application/octet-stream</param>
@@ -139,6 +139,12 @@
             <result name="input">aliasForm</result>
             <result type="redirectAction" name="success">index</result>
         </action>
+        
+        <!--  Gestión de dashboards -->
+        <action name="*DBoard" class="es.aragon.midas.dashboard.action.DashboardManagerAction" method="{1}">
+			<result name="list">dBoardList</result>
+			<result name="templates">dBTemplates</result>
+        </action>        
 
 
     </package>

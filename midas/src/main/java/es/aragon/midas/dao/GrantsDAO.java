@@ -45,7 +45,7 @@ public class GrantsDAO implements IGrantsDAO {
 				
 			}
 		} catch (Exception e){
-                    log.error("Error obteniendo grants de rol LDAP " + role, e);
+            log.error("Error obteniendo grants de rol LDAP " + role, e);
         }
         return grants;
 	}

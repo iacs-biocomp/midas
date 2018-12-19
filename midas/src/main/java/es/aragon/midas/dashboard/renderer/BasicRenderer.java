@@ -53,6 +53,7 @@ public class BasicRenderer implements IRenderer {
 			try {
 				frameReader = new BufferedReader(new InputStreamReader(new FileInputStream(basePath + "dashboard/frames/" + snippet), "UTF-8"));
 						//new FileReader (basePath + "dashboard/frames/" + snippet));
+
 				log.debug(" Leyendo frame " + order + "_" + suborder + ": " + snippet);
 				
 				// insert frame lines
@@ -233,7 +234,7 @@ public class BasicRenderer implements IRenderer {
 			// leemos y enviamos snippet del frame
 			try {
 				log.debug(" Leyendo contenido de " + snippet);
-				frameReader = new BufferedReader(new InputStreamReader(new FileInputStream(basePath + "dashboard/html/" + snippet), "UTF-8"));
+				frameReader = new BufferedReader(new InputStreamReader(new FileInputStream(basePath + "html/" + snippet), "UTF-8"));
 				//frameReader = new BufferedReader(new FileReader (basePath + "dashboard/html/" + snippet));
 				while((frameLine = frameReader.readLine()) != null) {
 					content.append(frameLine);

@@ -117,13 +117,16 @@ public class MidMessage implements Serializable {
 	public String getSendDateS() {
 		SimpleDateFormat dt1 = new SimpleDateFormat("dd-MM-yyyy");
 		SimpleDateFormat dt2 = new SimpleDateFormat("HH:mm");
-		Date truncatedDate = DateUtils.truncate(this.sendDate, Calendar.DATE);
-		Date today = DateUtils.truncate(new Date(), Calendar.DATE);
-		if (truncatedDate.equals(today) ) {
-			return dt2.format(this.sendDate);
-		} else {
-			return dt1.format(this.sendDate);
-		}
+		if(this.sendDate != null) {
+			Date truncatedDate = DateUtils.truncate(this.sendDate, Calendar.DATE);
+			Date today = DateUtils.truncate(new Date(), Calendar.DATE);
+			if (truncatedDate.equals(today) ) {
+				return dt2.format(this.sendDate);
+			} else {
+				return dt1.format(this.sendDate);
+			}
+		} else
+			return "";
 	}
 
 	public void setSendDate(Date sendDate) {

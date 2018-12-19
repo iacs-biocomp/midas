@@ -4,9 +4,11 @@
 package es.aragon.midas.dashboard.renderer;
 
 import java.io.BufferedReader;
+import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.io.FileReader;
 import java.io.IOException;
+import java.io.InputStreamReader;
 import java.util.regex.Matcher;
 
 import es.aragon.midas.dashboard.util.DashboardUtils;
@@ -44,7 +46,7 @@ public class ShinyRenderer implements IRenderer {
 
 		try {
 			try {
-				frameReader = new BufferedReader(new FileReader (basePath + "dashboard/frames/" + snippet));
+				frameReader = new BufferedReader(new InputStreamReader(new FileInputStream(basePath + "dashboard/frames/" + snippet), "UTF-8"));
 				log.debug(" Leyendo frame " + snippet);
 				
 				// insert frame lines

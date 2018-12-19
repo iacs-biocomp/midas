@@ -25,6 +25,8 @@ public class DBDashboard implements Serializable {
 	private String grant;
 
 	private String template;
+	
+	private String script;
 
 	//bi-directional many-to-one association to DBFrame
 	@OneToMany(mappedBy="dbDashboard", fetch = FetchType.EAGER)
@@ -86,6 +88,14 @@ public class DBDashboard implements Serializable {
 		dbFrame.setDBDashboard(null);
 
 		return dbFrame;
+	}
+
+	public String getScript() {
+		return script;
+	}
+
+	public void setScript(String script) {
+		this.script = script;
 	}
 
 }

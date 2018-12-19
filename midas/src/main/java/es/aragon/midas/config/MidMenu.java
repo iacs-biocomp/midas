@@ -11,7 +11,6 @@ import javax.persistence.*;
 import javax.xml.bind.annotation.XmlRootElement;
 
 import es.aragon.midas.logging.Logger;
-import es.aragon.midas.util.Utils;
 
 /**
  *
@@ -183,7 +182,7 @@ public class MidMenu implements Serializable {
                     if (grants.contains(mn.getMnGrantreq().getGrId()) 
                                     || grants.contains(Constants.SUPER)) {
                     		mn.setParent(result);
-                    		log.debug("incluido menu " + mn.mnTexto + ". Grantreq = " + mn.getMnGrantreq().getGrId());
+                    		log.trace("incluido menu " + mn.mnTexto + ". Grantreq = " + mn.getMnGrantreq().getGrId());
                     		MidMenu child = mn.cloneWithGrants(grants);
                     		child.setParent(result);
                     		result.addChild(child);
@@ -202,7 +201,7 @@ public class MidMenu implements Serializable {
 
 	public void setActive(boolean active) {
 		this.active = active;
-		log.debug("menu " + this.getMnId() + " active ");
+		log.trace("menu " + this.getMnId() + " active ");
 		if (this.parentMenu != null) {
 			this.parentMenu.setActive(active); 
 		} 
@@ -212,7 +211,7 @@ public class MidMenu implements Serializable {
 	 * Resetea todas las entradas del menu a No Activo
 	 */
 	public void setAllInactive() {
-		log.debug("Desactivando menu " + this.getMnId());
+		log.trace("Desactivando menu " + this.getMnId());
 		this.active = false;
 		for (MidMenu m : children) {
 			m.setAllInactive();
@@ -220,10 +219,10 @@ public class MidMenu implements Serializable {
 	}
 	
 	public boolean searchActive(String link) {
-		log.debug("Buscando menu activo en :" + this.getMnId());
+		log.trace("Buscando menu activo en :" + this.getMnId());
 		for (MidMenu m : children) {
 			if (link.equals(m.mnLink)) {
-				log.debug("Menu activo: " + m.getMnId() + "=" + link);
+				log.trace("Menu activo: " + m.getMnId() + "=" + link);
 				m.setActive(true);
 				return true;
 			} else if (m.getChildren().size() > 0) {

@@ -33,7 +33,6 @@ public class Constants {
     final public static String CFG_LDAP_SERVER = "midas.ldap.server";
     final public static String CFG_LDAP_DOMAIN = "midas.ldap.dominio";
     
-
     final public static String CFG_GUIA_GET_INFOUSER = "midas.guia.getInfoUser";
     final public static String URL_GUIA_CARD = "midas.guia.card";
     final public static String URL_GUIA_VALIDATE = "midas.guia.validationURL";
@@ -50,6 +49,7 @@ public class Constants {
     final public static String INDEX = "index";
     final public static String GUIA_ACTION = "guiaAction";
     final public static String URL_ACTION = "urlAction";
+    
     
     final public static String MSG_SENT = "S";
     final public static String MSG_READ = "R";

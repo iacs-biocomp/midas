@@ -45,6 +45,7 @@ public abstract class MidasActionSupport extends ActionSupport
     public static final String EDITFORM = "editform";
     public static final String SHOWFORM = "showform";
     public static final String ADDFORM = "addform";
+    public static final String LIST = "list";
     public static final String LOGOUT = "logout";
     
     

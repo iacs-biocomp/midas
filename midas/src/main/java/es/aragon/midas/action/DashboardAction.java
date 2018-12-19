@@ -4,9 +4,10 @@ import es.aragon.midas.action.MidasActionSupport;
 import es.aragon.midas.config.AppProperties;
 
 import java.io.BufferedReader;
+import java.io.FileInputStream;
 import java.io.FileNotFoundException;
-import java.io.FileReader;
 import java.io.IOException;
+import java.io.InputStreamReader;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
@@ -21,7 +22,6 @@ import es.aragon.midas.dashboard.renderer.*;
 import es.aragon.midas.dashboard.config.Constants;
 import es.aragon.midas.dashboard.dao.IDBDashboardDAO;
 
-
 public class DashboardAction extends MidasActionSupport {
 
 
@@ -30,6 +30,9 @@ public class DashboardAction extends MidasActionSupport {
 
 	private static final String orderRegex = "(.*)\\{order:(\\d+)\\}(.*)";	
 	private static final Pattern orderPattern = Pattern.compile(orderRegex);
+	private static final String scriptRegex = "(.*)\\{script\\}(.*)";
+	private static final Pattern scriptPattern = Pattern.compile(scriptRegex);
+	
 
 	
 
@@ -84,8 +87,12 @@ public class DashboardAction extends MidasActionSupport {
 			try {
 		    	template = dashboard.getTemplate();
 		    	frames = dashboard.getDBFrames();
-		    	
-		    	templateReader = new BufferedReader(new FileReader (basePath + "dashboard/templates/" + template));
+
+		    	templateReader = new BufferedReader(
+		    						new InputStreamReader(
+		    							new FileInputStream(basePath + "dashboard/templates/" + template), "UTF-8")
+		    						);
+
 		    	String templateLine = null;
 			    content = new StringBuilder();
 			    script = new StringBuilder();
@@ -95,10 +102,18 @@ public class DashboardAction extends MidasActionSupport {
 		        while((templateLine = templateReader.readLine()) != null) {
 
 		        	Matcher orderMatcher = orderPattern.matcher(templateLine);
+		        	Matcher scriptMatcher = scriptPattern.matcher(templateLine);
 		        	
 		        	// transform line
+		        	// Insert global script entry
+		        	if (scriptMatcher.matches()) {
+		        		content.append(scriptMatcher.group(1));
+		        		content.append(dashboard.getScript());
+		        		content.append(scriptMatcher.group(2));
+		        	}
+
+		        	// Insert frame in order entry
 		        	if (orderMatcher.matches()) {
-		        		
 		        		content.append(orderMatcher.group(1));
 		        		
 		        		// get the frame by order
@@ -132,6 +147,8 @@ public class DashboardAction extends MidasActionSupport {
 		        					
 		        			}
 		        		}
+		        		
+		        		
 
 			        	content.append(orderMatcher.group(3));
 
@@ -164,8 +181,12 @@ public class DashboardAction extends MidasActionSupport {
 							scriptGlobal.append("<script>");
 						} else {
 							log.debug(" Leyendo frame script " + js);
-							jsReader = new BufferedReader(new FileReader (basePath + "dashboard/frames/js/" + js));
 							
+							jsReader = new BufferedReader(
+		    						new InputStreamReader(
+		    							new FileInputStream(basePath + "dashboard/frames/js/" + js), "UTF-8")
+		    						);
+					    	
 							// insert frame lines
 							while((jsLine = jsReader.readLine()) != null) {
 								scriptGlobal.append(jsLine);
@@ -250,6 +271,17 @@ public class DashboardAction extends MidasActionSupport {
 	          | ClassNotFoundException e){
 	        throw new IllegalStateException(e);
 	    }
+	}
+
+
+
+
+
+
+
+
+	public long getDbNumber() {
+		return dbNumber;
 	}
 	
 	

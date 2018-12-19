@@ -1,0 +1,81 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+
+<!DOCTYPE tiles-definitions PUBLIC
+"-//Apache Software Foundation//DTD Tiles Configuration 2.0//EN"
+"http://tiles.apache.org/dtds/tiles-config_2_0.dtd">
+
+<tiles-definitions>
+
+	<definition name="basicLayout" template="/midas/basicLayout.jsp">
+	</definition>
+
+	<definition name="dashBoardLayout" template="/midas/dashBoardLayout.jsp">
+	</definition>
+	
+	<definition name="login" extends="basicLayout">
+	    <put-attribute name="body"   value="/midas/login.jsp"/>      
+	</definition>
+
+	<definition name="logout" extends="basicLayout">
+	    <put-attribute name="body"   value="/midas/logout.jsp"/>      
+	</definition>
+        
+	<definition name="loggedLayout" extends="dashBoardLayout">
+        <put-attribute name="title" 	value="/jsp/title.jsp" />	
+		<put-attribute name="menu"   	value="/midas/menu.jsp"/>
+		<put-attribute name="footer" 	value="/jsp/footer.jsp" />
+		<put-attribute name="cauIcon"   value="/midas/cauIcon.jsp"/>
+		<put-attribute name="messages"  value="/midas/messages.jsp"/>
+		<put-attribute name="notifications"   value="/midas/notifications_ko.jsp"/>
+		<put-attribute name="cauForm"   value="/midas/cauForm.jsp"/>
+	</definition>
+
+	<definition name="forbidden" extends="basicLayout">
+	    <put-attribute name="body"   value="/midas/forbidden.jsp"/>      
+	</definition>
+	
+	<definition name="blank" extends="loggedLayout">
+	    <put-attribute name="body"   value="/midas/blank.jsp"/>      
+	</definition>
+	
+    <definition name="roles" extends="loggedLayout">
+		<put-attribute name="body" value="/midas/roles.jsp" />
+    </definition>
+
+    <definition name="grants" extends="loggedLayout">
+		<put-attribute name="body" value="/midas/grants.jsp" />
+    </definition>
+
+    <definition name="contexts" extends="loggedLayout">
+		<put-attribute name="body" value="/midas/contexts.jsp" />
+    </definition>
+
+    <definition name="users" extends="loggedLayout">
+		<put-attribute name="body" value="/midas/users.jsp" />
+    </definition>	
+    
+    <definition name="files" extends="loggedLayout">
+    	<put-attribute name="body" value="/midas/files.jsp" />
+    </definition>
+
+    <definition name="aliasForm" extends="loggedLayout">
+    	<put-attribute name="body" value="/midas/aliasForm.jsp" />
+    </definition>
+    
+	<definition name="cauManager" extends="loggedLayout">
+		<put-attribute name="body" value="/midas/cauManager.jsp"/>
+		<put-attribute name="script" value="/jsp/scriptContent.jsp"/>	
+	</definition>    
+	
+	
+	<!--  Dashboard management -->
+    <definition name="dBoardList" extends="loggedLayout">
+		<put-attribute name="body" value="/midas/db/dashBoards.jsp" />
+    </definition>
+    	
+    <definition name="dBTemplates" extends="loggedLayout">
+		<put-attribute name="body" value="/midas/db/templates.jsp" />
+    </definition>
+    	
+    	
+</tiles-definitions>

@@ -186,10 +186,10 @@
 		            
 <!--Load JQuery-->
 
-<script src="<s:url value="/js/midas/midas.js"/>"></script>
-<script src="<s:url value="/js/knockout.js"/>"></script>	
-<script src="<s:url value="/js/midas/mid-message.js"/>"></script>
-<script src="<s:url value="/js/bigan/bigan-structure.js"/>"></script>
+<script src="/cdn/js/midas/midas.js"></script>
+<script src="/cdn/js/knockout.js"></script>	
+<script src="/cdn/js/midas/mid-message.js"></script>
+<script src="/cdn/js/bigan/bigan-structure.js"></script>
 <script>
 
 window.open = function (url, name, features, replace) {

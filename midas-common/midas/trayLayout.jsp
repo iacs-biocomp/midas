@@ -15,7 +15,7 @@
         <script type="text/javascript" src="<s:url value="/js/jquery.validationEngine-es.js"/>"></script>
         <script type="text/javascript" src="<s:url value="/js/jquery.validationEngine.js"/>"></script>
         <script type="text/javascript" src="<s:url value="/js/jquery.datePicker.js"/>"></script>
-        <script type="text/javascript" src="<s:url value="/js/midas.js"/>"></script>
+        <script type="text/javascript" src="/cdn/js/midas.js"></script>
     <s:head/>
     </head>
     <body>

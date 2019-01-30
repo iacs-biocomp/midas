@@ -181,15 +181,31 @@
     
     
 	$('.hidable').on('dblclick', function(e) {
+
 		if ($(this).hasClass("col-lg-4")) {
 			$('.hidable').hide();
 			$(this).removeClass("col-lg-4");
+			$(this).addClass("pre-col-lg-4");
 			$(this).addClass("col-lg-12");
 			$(this).show();
 			
+		} else if ($(this).hasClass("col-lg-3")) {
+			$('.hidable').hide();
+			$(this).removeClass("col-lg-3");
+			$(this).addClass("pre-col-lg-3");
+			$(this).addClass("col-lg-12");
+			$(this).show();
+		
 		} else {
 			$(this).removeClass("col-lg-12");
-			$(this).addClass("col-lg-4");
+			if($(this).hasClass("pre-col-lg-3")) {
+				$(this).removeClass("pre-col-lg-3");
+				$(this).addClass("col-lg-3");
+			}
+			if($(this).hasClass("pre-col-lg-4")) {
+				$(this).removeClass("pre-col-lg-4");
+				$(this).addClass("col-lg-4");
+			}
 			$('.hidable').show();
 		}
 		window.dispatchEvent(new Event('resize'));

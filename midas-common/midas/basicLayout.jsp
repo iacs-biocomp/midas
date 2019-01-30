@@ -29,7 +29,7 @@
 	    <script type="text/javascript" src="<s:url value="/js/jquery.min.js"/>"></script>
 	    <script type="text/javascript" src="<s:url value="/js/bootstrap.min.js"/>"></script>
 		<script src="<s:url value="/js/plugins/metismenu/jquery.metisMenu.js"/>"></script>
-	    <script type="text/javascript" src="<s:url value="/js/midas/midas.js"/>"></script>	 
+	    <script type="text/javascript" src="/cdn/js/midas/midas.js"></script>	 
 	    
 	    
 	<!-- HTML5 shim and Respond.js for IE8 support of HTML5 elements and media queries -->

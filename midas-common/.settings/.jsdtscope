@@ -1,0 +1,52 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<classpath>
+	<classpathentry excluding="plugins/select2/|**/node_modules/*|plugins/blockui-master/|plugins/datatables/extensions/ColReorder/js/|plugins/datatables/extensions/AutoFill/js/|plugins/datatables/extensions/RowReorder/js/|plugins/scrollbar/|**/*.min.js|highcharts/lib/|plugins/datatables/|plugins/datatables/extensions/TableTools/js/|plugins/datatables/extensions/ColVis/js/|plugins/jasny/|highcharts/modules/|plugins/peity/|ie9/|plugins/flot/|highcharts/|plugins/chartist/|plugins/datatables/extensions/FixedColumns/js/|d3/|plugins/datatables/extensions/Select/js/|bigan/|highcharts/themes/|plugins/morris/|plugins/datatables/extensions/Responsive/js/|plugins/bootstrap-wysihtml5/|plugins/dropzone/|plugins/wizard/|plugins/datatables/extensions/KeyTable/js/|plugins/chartjs/|plugins/datatables/extensions/FixedHeader/js/|plugins/summernote/|**/bower_components/*|plugins/datepicker/|plugins/nouislider/|viz/|plugins/datatables/extensions/Buttons/js/|tm/|plugins/gridster/|midas/|plugins/sparkline/|plugins/c3/|plugins/metismenu/|plugins/jvectormap/|plugins/colorpicker/|other/|plugins/markdown/|plugins/datatables/extensions/Scroller/js/" kind="src" path="js"/>
+	<classpathentry excluding="**/bower_components/*|**/node_modules/*|**/*.min.js" kind="src" path="js/bigan"/>
+	<classpathentry excluding="**/bower_components/*|**/node_modules/*|**/*.min.js" kind="src" path="js/d3"/>
+	<classpathentry excluding="modules/|**/bower_components/*|themes/|**/node_modules/*|lib/|**/*.min.js" kind="src" path="js/highcharts"/>
+	<classpathentry excluding="**/bower_components/*|**/node_modules/*|**/*.min.js" kind="src" path="js/highcharts/lib"/>
+	<classpathentry excluding="**/bower_components/*|**/node_modules/*|**/*.min.js" kind="src" path="js/highcharts/modules"/>
+	<classpathentry excluding="**/bower_components/*|**/node_modules/*|**/*.min.js" kind="src" path="js/highcharts/themes"/>
+	<classpathentry excluding="**/bower_components/*|**/node_modules/*|**/*.min.js" kind="src" path="js/ie9"/>
+	<classpathentry excluding="**/bower_components/*|**/node_modules/*|**/*.min.js" kind="src" path="js/midas"/>
+	<classpathentry excluding="**/bower_components/*|**/node_modules/*|**/*.min.js" kind="src" path="js/other"/>
+	<classpathentry excluding="**/bower_components/*|**/node_modules/*|**/*.min.js" kind="src" path="js/plugins/blockui-master"/>
+	<classpathentry excluding="**/bower_components/*|**/node_modules/*|**/*.min.js" kind="src" path="js/plugins/bootstrap-wysihtml5"/>
+	<classpathentry excluding="**/bower_components/*|**/node_modules/*|**/*.min.js" kind="src" path="js/plugins/c3"/>
+	<classpathentry excluding="**/bower_components/*|**/node_modules/*|**/*.min.js" kind="src" path="js/plugins/chartist"/>
+	<classpathentry excluding="**/bower_components/*|**/node_modules/*|**/*.min.js" kind="src" path="js/plugins/chartjs"/>
+	<classpathentry excluding="**/bower_components/*|**/node_modules/*|**/*.min.js" kind="src" path="js/plugins/colorpicker"/>
+	<classpathentry excluding="**/node_modules/*|extensions/Responsive/js/|extensions/ColReorder/js/|extensions/KeyTable/js/|extensions/AutoFill/js/|extensions/TableTools/js/|extensions/FixedHeader/js/|extensions/ColVis/js/|**/bower_components/*|extensions/RowReorder/js/|extensions/Scroller/js/|extensions/FixedColumns/js/|**/*.min.js|extensions/Buttons/js/|extensions/Select/js/" kind="src" path="js/plugins/datatables"/>
+	<classpathentry excluding="**/bower_components/*|**/node_modules/*|**/*.min.js" kind="src" path="js/plugins/datatables/extensions/AutoFill/js"/>
+	<classpathentry excluding="**/bower_components/*|**/node_modules/*|**/*.min.js" kind="src" path="js/plugins/datatables/extensions/Buttons/js"/>
+	<classpathentry excluding="**/bower_components/*|**/node_modules/*|**/*.min.js" kind="src" path="js/plugins/datatables/extensions/ColReorder/js"/>
+	<classpathentry excluding="**/bower_components/*|**/node_modules/*|**/*.min.js" kind="src" path="js/plugins/datatables/extensions/ColVis/js"/>
+	<classpathentry excluding="**/bower_components/*|**/node_modules/*|**/*.min.js" kind="src" path="js/plugins/datatables/extensions/FixedColumns/js"/>
+	<classpathentry excluding="**/bower_components/*|**/node_modules/*|**/*.min.js" kind="src" path="js/plugins/datatables/extensions/FixedHeader/js"/>
+	<classpathentry excluding="**/bower_components/*|**/node_modules/*|**/*.min.js" kind="src" path="js/plugins/datatables/extensions/KeyTable/js"/>
+	<classpathentry excluding="**/bower_components/*|**/node_modules/*|**/*.min.js" kind="src" path="js/plugins/datatables/extensions/Responsive/js"/>
+	<classpathentry excluding="**/bower_components/*|**/node_modules/*|**/*.min.js" kind="src" path="js/plugins/datatables/extensions/RowReorder/js"/>
+	<classpathentry excluding="**/bower_components/*|**/node_modules/*|**/*.min.js" kind="src" path="js/plugins/datatables/extensions/Scroller/js"/>
+	<classpathentry excluding="**/bower_components/*|**/node_modules/*|**/*.min.js" kind="src" path="js/plugins/datatables/extensions/Select/js"/>
+	<classpathentry excluding="**/bower_components/*|**/node_modules/*|**/*.min.js" kind="src" path="js/plugins/datatables/extensions/TableTools/js"/>
+	<classpathentry excluding="**/bower_components/*|**/node_modules/*|**/*.min.js" kind="src" path="js/plugins/datepicker"/>
+	<classpathentry excluding="**/bower_components/*|**/node_modules/*|**/*.min.js" kind="src" path="js/plugins/dropzone"/>
+	<classpathentry excluding="**/bower_components/*|**/node_modules/*|**/*.min.js" kind="src" path="js/plugins/flot"/>
+	<classpathentry excluding="**/bower_components/*|**/node_modules/*|**/*.min.js" kind="src" path="js/plugins/gridster"/>
+	<classpathentry excluding="**/bower_components/*|**/node_modules/*|**/*.min.js" kind="src" path="js/plugins/jasny"/>
+	<classpathentry excluding="**/bower_components/*|**/node_modules/*|**/*.min.js" kind="src" path="js/plugins/jvectormap"/>
+	<classpathentry excluding="**/bower_components/*|**/node_modules/*|**/*.min.js" kind="src" path="js/plugins/markdown"/>
+	<classpathentry excluding="**/bower_components/*|**/node_modules/*|**/*.min.js" kind="src" path="js/plugins/metismenu"/>
+	<classpathentry excluding="**/bower_components/*|**/node_modules/*|**/*.min.js" kind="src" path="js/plugins/morris"/>
+	<classpathentry excluding="**/bower_components/*|**/node_modules/*|**/*.min.js" kind="src" path="js/plugins/nouislider"/>
+	<classpathentry excluding="**/bower_components/*|**/node_modules/*|**/*.min.js" kind="src" path="js/plugins/peity"/>
+	<classpathentry excluding="**/bower_components/*|**/node_modules/*|**/*.min.js" kind="src" path="js/plugins/scrollbar"/>
+	<classpathentry excluding="**/bower_components/*|**/node_modules/*|**/*.min.js" kind="src" path="js/plugins/select2"/>
+	<classpathentry excluding="**/bower_components/*|**/node_modules/*|**/*.min.js" kind="src" path="js/plugins/sparkline"/>
+	<classpathentry excluding="**/bower_components/*|**/node_modules/*|**/*.min.js" kind="src" path="js/plugins/summernote"/>
+	<classpathentry excluding="**/bower_components/*|**/node_modules/*|**/*.min.js" kind="src" path="js/plugins/wizard"/>
+	<classpathentry excluding="**/bower_components/*|**/node_modules/*|**/*.min.js" kind="src" path="js/tm"/>
+	<classpathentry excluding="**/bower_components/*|**/node_modules/*|**/*.min.js" kind="src" path="js/viz"/>
+	<classpathentry kind="con" path="org.eclipse.wst.jsdt.launching.JRE_CONTAINER"/>
+	<classpathentry kind="output" path=""/>
+</classpath>

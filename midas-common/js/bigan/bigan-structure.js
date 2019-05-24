@@ -1,202 +1,205 @@
 /* Module for Registration form application */
 var BiganStructure = function () {
 
-	var self = this;
-		
-	var globalSector = ko.observable();
-	var globalZona = ko.observable();
-	var globalCIAS = ko.observable();
-	
+  var self = this;
 
-	//SECTORES
-	
-	var sector = {
-		codigo: "",
-		descripcion: ""
-	}
+  var globalSector = ko.observable();
+  var globalZona = ko.observable();
+  var globalCIAS = ko.observable();
 
-    /* array of notifications */
-    var sectores = ko.observableArray();
-	
-    function addSector(c, d) {
-    	sectores.push({
-        	codigo: c,
-        	descripcion: d
-    	});  
-    }	
+  //DATE
+  var globalYear = ko.observable();
+  var globalDate = ko.observable();
 
-    
-    function getSectores() {
-    	return $.ajax({
-	    	dataType:'json',
-	    	type: 'GET',
-	    	url: 'rest/structure/sectores'
-    	});
-    }  
-    
-    var callbackSectores = function(response) {
- 	   sectores.removeAll();
-        $.each(response, function(index, item) {
-     	   addSector(item.code, item.descrip);
-        });    	
-    };         
-    
-    
-    var setSector = function(s) {
-       if (!s) {
-    	   globalSector(undefined);
-    	   globalZona(undefined);
-       } else {
-	 	   var t = ko.utils.arrayFirst(sectores(), function(f) {return f.codigo === s});
-	 	   if (t && (!globalSector() || s != globalSector().codigo ) ) {
-		 	   //alert("seleccionado " + t.codigo)
-		 	   globalSector(t);
-	 	   }
-       }
-    }
-    
-    
-    // ZONA
-    var zona = {
-			codigo: "",
-			descripcion: ""
-	}
-	
-	var zonas = ko.observableArray();
-	
-	
-    function addZona(c, d) {
-    	zonas.push({
-        	codigo: c,
-        	descripcion: d
-    	});  
-    }		
-    
-   function getZonas() {
-	   return $.ajax({
-		    dataType:'json',
-	    	type: 'GET',
-	    	url: 'rest/structure/zonas/' + globalSector().codigo
-    	});
-    }      
 
-   var callbackZonas = function(response) {
-	   zonas.removeAll();
-       $.each(response, function(index, item) {
-    	   addZona(item.code, item.descrip);
-       });    	
-   };     
-   
+  //SECTORES
+  var sector = {
+    codigo: "",
+    descripcion: ""
+  }
 
-   globalSector.subscribe(function () {
-	   if(typeof globalSector() != 'undefined')
-		   getZonas().done(callbackZonas);
-	   else {
-		   globalZona(undefined);
-	   }
-   });
-   
-   
-    var zonaVisible = ko.computed(function() {
-    	if (typeof globalSector() === "undefined")
-    		return false;
-    	else
-    		return true;
-    });    
-    
-    
-    var setZona = function(s) {
-        if (!s) {
-     	   globalZona(undefined);
-        } else {
- 	 	   var t = ko.utils.arrayFirst(zonas(), function(f) {return f.codigo === s});
- 	 	   if (t && (!globalZona() || s != globalZona().codigo ) ) {
- 		 	   //alert("seleccionado " + t.codigo)
- 		 	   globalZona(t);
- 	 	   }
-        }
-     }    
-    
+  /* array of notifications */
+  var sectores = ko.observableArray();
 
-    // CIAS
-    var cia = {
-			ciasCd: "",
-			zonaCd: "",
-			zonaSt: ""
-	}
-
-	var cias = ko.observableArray();    
-    
-
-    function addCias(c, z, d) {
-    	cias.push({
-        	ciasCd: c,
-        	zonaCd: z,
-        	zonaSt: d
-    	});  
-    }	    
-    
-    function getCiasZona() {
-    	let zc = globalZona().codigo;
-    	return $.ajax({
-	    	dataType:'json',
-	    	type: 'GET',
-	    	url: 'rest/structure/cias/' + zc 
-    	});
-    }  
-    
-    var callbackCiasZona = function(response) {
- 	   cias.removeAll();
-        $.each(response, function(index, item) {
-     	   addCias(item.ciasCd, item.zbsCd, 'ZONA');
-        });    	
-    };     
-    
-
-    globalZona.subscribe(function () {
-    	if(typeof globalZona() != "undefined") {
-    		getCiasZona().done(callbackCiasZona);
-    	}
+  function addSector(c, d) {
+    sectores.push({
+      codigo: c,
+      descripcion: d
     });
-    
-    
-     var ciasVisible = ko.computed(function() {
-     	if (typeof globalSector() === "undefined" || typeof globalZona() === "undefined")
-    		return false;
-    	else
-    		return true;
-     });    
-     
-     
-     //INIT
+  }
 
-  var init = function () {
-	getSectores().done(callbackSectores);	  
-    $(".str-bindable").each(function(){
-        ko.applyBindings(BiganStructure, this);
+
+  function getSectores() {
+    return $.ajax({
+      dataType: 'json',
+      type: 'GET',
+      url: 'rest/structure/sectores'
+    });
+  }
+
+  var callbackSectores = function (response) {
+    sectores.removeAll();
+    $.each(response, function (index, item) {
+      addSector(item.code, item.descrip);
     });
   };
 
-	
+
+  var setSector = function (s) {
+    if (!s) {
+      globalSector(undefined);
+      globalZona(undefined);
+    } else {
+      var t = ko.utils.arrayFirst(sectores(), function (f) { return f.codigo === s });
+      if (t && (!globalSector() || s != globalSector().codigo)) {
+        //alert("seleccionado " + t.codigo)
+        globalSector(t);
+      }
+    }
+  }
+
+
+  // ZONA
+  var zona = {
+    codigo: "",
+    descripcion: ""
+  }
+
+  var zonas = ko.observableArray();
+
+
+  function addZona(c, d) {
+    zonas.push({
+      codigo: c,
+      descripcion: d
+    });
+  }
+
+  function getZonas() {
+    return $.ajax({
+      dataType: 'json',
+      type: 'GET',
+      url: 'rest/structure/zonas/' + globalSector().codigo
+    });
+  }
+
+  var callbackZonas = function (response) {
+    zonas.removeAll();
+    $.each(response, function (index, item) {
+      addZona(item.code, item.descrip);
+    });
+  };
+
+
+  globalSector.subscribe(function () {
+    if (typeof globalSector() != 'undefined')
+      getZonas().done(callbackZonas);
+    else {
+      globalZona(undefined);
+    }
+  });
+
+
+  var zonaVisible = ko.computed(function () {
+    if (typeof globalSector() === "undefined")
+      return false;
+    else
+      return true;
+  });
+
+
+  var setZona = function (s) {
+    if (!s) {
+      globalZona(undefined);
+    } else {
+      var t = ko.utils.arrayFirst(zonas(), function (f) { return f.codigo === s });
+      if (t && (!globalZona() || s != globalZona().codigo)) {
+        //alert("seleccionado " + t.codigo)
+        globalZona(t);
+      }
+    }
+  }
+
+
+  // CIAS
+  var cia = {
+    ciasCd: "",
+    zonaCd: "",
+    zonaSt: ""
+  }
+
+  var cias = ko.observableArray();
+
+
+  function addCias(c, z, d) {
+    cias.push({
+      ciasCd: c,
+      zonaCd: z,
+      zonaSt: d
+    });
+  }
+
+  function getCiasZona() {
+    let zc = globalZona().codigo;
+    return $.ajax({
+      dataType: 'json',
+      type: 'GET',
+      url: 'rest/structure/cias/' + zc
+    });
+  }
+
+  var callbackCiasZona = function (response) {
+    cias.removeAll();
+    $.each(response, function (index, item) {
+      addCias(item.ciasCd, item.zbsCd, 'ZONA');
+    });
+  };
+
+
+  globalZona.subscribe(function () {
+    if (typeof globalZona() != "undefined") {
+      getCiasZona().done(callbackCiasZona);
+    }
+  });
+
+
+  var ciasVisible = ko.computed(function () {
+    if (typeof globalSector() === "undefined" || typeof globalZona() === "undefined")
+      return false;
+    else
+      return true;
+  });
+
+
+  //INIT
+
+  var init = function () {
+    getSectores().done(callbackSectores);
+    $(".str-bindable").each(function () {
+      ko.applyBindings(BiganStructure, this);
+    });
+  };
+
+
   /* execute the init function when the DOM is ready */
   $(init);
 
-  
+
   return {
     /* add members that will be exposed publicly */
-	  globalSector:globalSector,
-	  globalZona:globalZona,
-	  globalCIAS:globalCIAS,
-	  sectores:sectores,
-	  setSector:setSector,
-	  zonas:zonas,
-	  zonaVisible:zonaVisible,
-	  setZona:setZona,
-	  cias:cias,
-	  ciasVisible:ciasVisible
+    globalSector: globalSector,
+    globalZona: globalZona,
+    globalCIAS: globalCIAS,
+    sectores: sectores,
+    setSector: setSector,
+    zonas: zonas,
+    zonaVisible: zonaVisible,
+    setZona: setZona,
+    cias: cias,
+    ciasVisible: ciasVisible,
+    globalYear: globalYear,
   };
 }();
-
 
 
 var bigan_colors = {
@@ -210,7 +213,7 @@ var bigan_colors = {
     '#E8683F',
     '#B81A5D'
   ],
-  positive : [
+  positive: [
     '#0C4828',
     '#1A6E31',
     '#207732',
@@ -225,7 +228,7 @@ var bigan_colors = {
     '#C9D985',
     '#E7E7B9'
   ],
-  neutral : [
+  neutral: [
     '#003C50',
     '#1A6B85',
     '#27758E',
@@ -240,7 +243,7 @@ var bigan_colors = {
     '#C2DAE8',
     '#E3E8F0'
   ],
-  negative : [
+  negative: [
     '#7C170F',
     '#A82D17',
     '#AE3417',
@@ -255,18 +258,18 @@ var bigan_colors = {
     '#E9B855',
     '#F1D676'
   ],
-  neutralOrder: [[6],[3,9],[1,6,11],[1,4,8,11],[0,3,6,9,12],[0,2,5,7,10,12],[0,1,4,6,8,11,12],[0,1,2,4,6,8,10,12]],
-  negativeOrder: [[1],[1,9],[1,6,11],[1,4,8,11],[0,3,6,9,12],[0,2,5,7,10,12],[0,1,4,6,8,11,12],[0,1,2,4,6,8,10,12]],
-  positiveOrder: [[6],[4,10],[1,6,11],[1,4,8,11],[0,3,6,9,12],[0,2,5,7,10,12],[0,1,4,6,8,11,12],[0,1,2,4,6,8,10,12]]
+  neutralOrder: [[6], [3, 9], [1, 6, 11], [1, 4, 8, 11], [0, 3, 6, 9, 12], [0, 2, 5, 7, 10, 12], [0, 1, 4, 6, 8, 11, 12], [0, 1, 2, 4, 6, 8, 10, 12]],
+  negativeOrder: [[1], [1, 9], [1, 6, 11], [1, 4, 8, 11], [0, 3, 6, 9, 12], [0, 2, 5, 7, 10, 12], [0, 1, 4, 6, 8, 11, 12], [0, 1, 2, 4, 6, 8, 10, 12]],
+  positiveOrder: [[6], [4, 10], [1, 6, 11], [1, 4, 8, 11], [0, 3, 6, 9, 12], [0, 2, 5, 7, 10, 12], [0, 1, 4, 6, 8, 11, 12], [0, 1, 2, 4, 6, 8, 10, 12]]
 }
 
-function getBiganColor(index, steps, family){
+function getBiganColor(index, steps, family) {
   if (family == 1) {
-    return positive[ positiveOrder[steps-1][index] ]
+    return positive[positiveOrder[steps - 1][index]]
   } else if (family == 0) {
-    return neutral[ neutralOrder[steps-1][index] ]
+    return neutral[neutralOrder[steps - 1][index]]
   } else {
-    return negative[ negativeOrder[steps-1][index] ]
+    return negative[negativeOrder[steps - 1][index]]
   }
 }
 

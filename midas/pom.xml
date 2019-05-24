@@ -8,6 +8,8 @@
 
 	<properties>
 		<strutsVersion>2.3.34</strutsVersion>
+<!-- 	<activitiVersion>5.19.0.1</activitiVersion>  -->
+  		<activitiVersion>6.0.0</activitiVersion>
 		<droolsVersion>6.3.0.Final</droolsVersion>
     	<maven.compiler.source>1.8</maven.compiler.source>
     	<maven.compiler.target>1.8</maven.compiler.target>		
@@ -67,12 +69,12 @@
 			<artifactId>struts2-tiles-plugin</artifactId>
 			<version>${strutsVersion}</version>
 		</dependency>
-		<dependency>
+<!--		<dependency>
 			<groupId>org.apache.struts</groupId>
 			<artifactId>struts2-cdi-plugin</artifactId>
 			<version>${strutsVersion}</version>
 		</dependency>
-<!--
+
  		<dependency>
 			<groupId>com.jgeppert.struts2.bootstrap</groupId>
 			<artifactId>struts2-bootstrap-plugin</artifactId>
@@ -152,10 +154,10 @@
 		<dependency>
 			<groupId>org.activiti</groupId>
 			<artifactId>activiti-engine</artifactId>
-			<version>5.19.0.1</version>
+			<version>${activitiVersion}</version>
 			<optional>true</optional>
 		</dependency>
-
+		
 		<!-- Librerias de drools opcionales -->
 		<dependency>
 			<groupId>org.drools</groupId>

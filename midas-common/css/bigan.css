@@ -110,3 +110,28 @@ td.peoplelegend {
     opacity: 1;
     transition: opacity 1s;
 }
+
+
+/* Date Slider */
+
+.dateSlider label {
+	position: absolute;
+	width: 20px;
+	margin-top: 20px;
+	margin-left: -10px;
+	text-align: center;
+	font-size: xx-small;
+}
+
+.sliderStartButton {
+	background-color: green;
+	color: white;
+	font-weight: bold;
+}
+
+.sliderStopButton {
+	background-color: red;
+	color: white;
+	font-weight: bold;
+}
+

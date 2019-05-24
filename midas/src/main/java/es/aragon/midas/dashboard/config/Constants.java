@@ -33,6 +33,8 @@ public class Constants {
 	private static final String urlRegex = "(.*)\\{url\\}(.*)";	
 	public static final Pattern URLPATTERN = Pattern.compile(urlRegex);
 	private static final String headerRegex = "(.*)\\{header\\}(.*)";	
+	private static final String queryRegex = "(.*)\\{query\\}(.*)";	
+	public static final Pattern QUERYPATTERN = Pattern.compile(queryRegex);
 	public static final Pattern HEADERPATTERN = Pattern.compile(headerRegex);
 	private static final String dataRegex = "(.*)\\{data\\}(.*)";	
 	public static final Pattern DATAPATTERN = Pattern.compile(dataRegex);

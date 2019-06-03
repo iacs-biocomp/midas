@@ -25,8 +25,8 @@
  		<%= "<link href='" + request.getContextPath() + "/css/" + es.aragon.midas.config.EnvProperties.getProperty("midas.style") + "' rel='stylesheet'>" %>
 		<link href="<s:url value="/css/mouldifi-forms.css"/>" rel="stylesheet"> 
 		<link href="/js/jquery-ui/themes/smoothness/jquery-ui.css" rel="stylesheet">
-		<link href="<s:url value="/css/midas.css"/>" rel="stylesheet">
-		<link href="<s:url value="/css/bigan.css"/>" rel="stylesheet"> 
+		<link href="/cdn/css/midas.css"  rel="stylesheet" type="text/css">
+		<link type="text/css" href="/cdn/css/bigan.css" rel="stylesheet"> 
 
 
 
@@ -36,10 +36,10 @@
 		<script src="<s:url value="/js/plugins/blockui-master/jquery.blockUI.js"/>"></script>
 		<script src="<s:url value="/js/plugins/metismenu/jquery.metisMenu.js"/>"></script>
 
-  		<script src="<s:url value="/js/highcharts/highcharts.js"/>"></script>
- 		<script src="<s:url value="/js/highcharts/highcharts-more.js"/>"></script>
- 		<script src="<s:url value="/js/highcharts/modules/exporting.js"/>"></script>
- 		<script src="<s:url value="/js/d3/d3.v4.min.js"/>"></script>
+  		<script src="<s:url value="/cdn/js/highcharts/highcharts.js"/>"></script>
+ 		<script src="<s:url value="/cdn/js/highcharts/highcharts-more.js"/>"></script>
+ 		<script src="<s:url value="/cdn/js/highcharts/modules/exporting.js"/>"></script>
+ 		<script src="<s:url value="/cdn/js/d3/d3.v4.min.js"/>"></script>
    
 	    
 	<!-- HTML5 shim and Respond.js for IE8 support of HTML5 elements and media queries -->
@@ -189,7 +189,7 @@
 <script src="/cdn/js/knockout.js"></script>	
 <script src="/cdn/js/midas/mid-message.js"></script>
 <!-- <script src="/cdn/js/bigan/bigan-structure.js"></script> -->
-<script src="js/bigan/bigan.js"></script>
+<script src="/cdn/js/bigan/bigan.js"></script>
 <script>
 
 window.open = function (url, name, features, replace) {

@@ -1,3 +1,9 @@
+/**
+ * BIGAN_STRUCTURE
+ */
+
+
+
 /* Module for Registration form application */
 var BiganStructure = function () {
 
@@ -198,11 +204,20 @@ var BiganStructure = function () {
     cias: cias,
     ciasVisible: ciasVisible,
     globalYear: globalYear,
+    globalDate: globalDate
   };
 }();
 
 
-var bigan_colors = {
+
+/**
+ * BIGAN_COLORS
+ */
+
+/**
+ * biganColors: Object to define common color schemes in Bigan
+ */
+var biganColors = {
   qualitative: [
     '#65B32E',
     '#7CBDC4',
@@ -259,17 +274,51 @@ var bigan_colors = {
     '#F1D676'
   ],
   neutralOrder: [[6], [3, 9], [1, 6, 11], [1, 4, 8, 11], [0, 3, 6, 9, 12], [0, 2, 5, 7, 10, 12], [0, 1, 4, 6, 8, 11, 12], [0, 1, 2, 4, 6, 8, 10, 12]],
-  negativeOrder: [[1], [1, 9], [1, 6, 11], [1, 4, 8, 11], [0, 3, 6, 9, 12], [0, 2, 5, 7, 10, 12], [0, 1, 4, 6, 8, 11, 12], [0, 1, 2, 4, 6, 8, 10, 12]],
-  positiveOrder: [[6], [4, 10], [1, 6, 11], [1, 4, 8, 11], [0, 3, 6, 9, 12], [0, 2, 5, 7, 10, 12], [0, 1, 4, 6, 8, 11, 12], [0, 1, 2, 4, 6, 8, 10, 12]]
+  negativeOrder: [[1], [1, 9], [1, 6, 11], [1, 4, 8, 11], [12,9,6,3,0], [0, 2, 5, 7, 10, 12], [0, 1, 4, 6, 8, 11, 12], [0, 1, 2, 4, 6, 8, 10, 12]],
+  positiveOrder: [[6], [4, 10], [1, 6, 11], [1, 4, 8, 11], [0, 3, 6, 9, 12], [0, 2, 5, 7, 10, 12], [0, 1, 4, 6, 8, 11, 12], [0, 1, 2, 4, 6, 8, 10, 12]],
+  QUALITATIVE: 2,
+  POSITIVE : 1,
+  NEUTRAL : 0,
+  NEGATIVE : -1
 }
 
-function getBiganColor(index, steps, family) {
-  if (family == 1) {
-    return positive[positiveOrder[steps - 1][index]]
+
+
+/**
+ * Returns a color from a list
+ * @param index number of color in a list
+ * @param steps number of steps in a list
+ * @param family 2 = qualitative; 1 = positive; 0 = neutral; otherwise negative
+ * @returns
+ */
+function getBiganColor(family, steps, index ) {
+  if (family == 2) {
+	  return biganColors.qualitative[index];
+  } else if (family == 1) {
+    return biganColors.positive[biganColors.positiveOrder[steps - 1][index]]
   } else if (family == 0) {
-    return neutral[neutralOrder[steps - 1][index]]
+    return biganColors.neutral[biganColors.neutralOrder[steps - 1][index]]
   } else {
-    return negative[negativeOrder[steps - 1][index]]
+    return biganColors.negative[biganColors.negativeOrder[steps - 1][index]]
   }
 }
 
+
+/**
+ * return a list of colors from a given family
+ * @param family
+ * @param steps
+ * @returns
+ */
+function getBiganColorList(family, steps) {
+   var colors=[];  
+   for (i=0;i<steps;++i){
+	   colors.push(getBiganColor(family, steps, i));
+   }
+   return colors;
+}
+
+
+function sleep(ms) {
+  return new Promise(resolve => setTimeout(resolve, ms));
+}

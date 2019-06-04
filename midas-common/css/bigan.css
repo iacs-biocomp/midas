@@ -110,3 +110,58 @@ td.peoplelegend {
     opacity: 1;
     transition: opacity 1s;
 }
+
+
+/* Date Slider */
+
+.dateSlider label {
+	position: absolute;
+	width: 20px;
+	margin-top: 20px;
+	margin-left: -10px;
+	text-align: center;
+	font-size: xx-small;
+}
+
+.sliderStartButton {
+	background-color: green;
+	color: white;
+	font-weight: bold;
+}
+
+.sliderStopButton {
+	background-color: red;
+	color: white;
+	font-weight: bold;
+}
+
+
+
+/* Map Sector */
+
+.mapsLegend {
+	line-height: 14px; /*18*/
+	color: #555;
+	float: right;
+	padding: 4px 4px;
+	font: 8px/10px Arial, Helvetica, sans-serif; /* 14-16 */
+    line-height: 12px; /*18*/
+	background: rgba(255,255,255,0.8);
+	box-shadow: 0 0 12px rgba(0,0,0,0.2);
+	border-radius: 3px;
+	position: absolute;
+	bottom: 8px;
+	z-index: 1000;
+}	
+
+.mapsLegend div {
+	padding: 5px;
+}
+.mapsLegend i {
+	width:10px; /* 18 */
+	height:10px; /* 18 */
+	float:left;
+	margin-right: 6px;
+	box-sizing: border-box;
+}
+

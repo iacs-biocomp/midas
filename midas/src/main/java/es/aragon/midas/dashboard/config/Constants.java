@@ -38,4 +38,6 @@ public class Constants {
 	public static final Pattern DATAPATTERN = Pattern.compile(dataRegex);
 	private static final String shinyRegex = "(.*)\\{ext_(.*)\\}(.*)";	
 	public static final Pattern SHINYPATTERN = Pattern.compile(shinyRegex);
+	private static final String queryRegex = "(.*)\\{query\\}(.*)";	
+	public static final Pattern QUERYPATTERN = Pattern.compile(queryRegex);
 }

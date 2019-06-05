@@ -172,6 +172,7 @@ public class BasicRenderer implements IRenderer {
 						Matcher frameMatcher = Constants.FRAMEPATTERN.matcher(frameLine);	
 						Matcher urlMatcher = Constants.URLPATTERN.matcher(frameLine);
 						Matcher titleMatcher = Constants.TITLEPATTERN.matcher(frameLine);
+						Matcher queryMatcher = Constants.QUERYPATTERN.matcher(frameLine);
 
 						if (frameMatcher.matches()) {
 			        		script.append(frameMatcher.group(1) + order + "_" + suborder);
@@ -180,6 +181,10 @@ public class BasicRenderer implements IRenderer {
 							script.append(urlMatcher.group(1));
 							script.append(utils.parseUrl(utils.parseUserData(frame.getPath(), user)));
 			        		script.append(urlMatcher.group(2));
+						} else if (queryMatcher.matches()) {
+							script.append(queryMatcher.group(1));
+							script.append(frame.getDBQuery().getId());
+			        		script.append(queryMatcher.group(2));
 						} else if (titleMatcher.matches()) {
 							script.append(titleMatcher.group(1));
 							script.append(frame.getTitle());

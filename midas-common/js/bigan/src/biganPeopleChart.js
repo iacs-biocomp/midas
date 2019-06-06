@@ -63,7 +63,7 @@ function biganPeopleChart(frame, data) {
 }
 
 
-class PWData {
+/*class PWData {
     constructor ({value,ref, descValue, descRef, color='#ff3030', shadow ='#ff8080'}) {
         this.value = value;
         this.ref = ref;
@@ -72,7 +72,7 @@ class PWData {
         this.color = color;
         this.shadow = shadow;
     }
-}	
+}*/	
 
 
 

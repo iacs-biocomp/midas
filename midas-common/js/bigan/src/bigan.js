@@ -947,13 +947,13 @@ function biganPeopleChart(frame, data) {
     	text = "";
     } else if (data.value < data.ref) {
         text = "<span style='color: " + data.color + "; background: " + data.shadow + ";'>";
-        for (i = 1; i <= data.value ; ++i) {
+        for (i = 1; i <= Math.round(data.value) ; ++i) {
             text += randomText();
             if (i%25 == 0) text +='&nbsp;<br>';
         }
         text += '</span>';
         text += "<span style='background:" + data.shadow + "'>";
-        for (i = i; i <= data.ref ; ++i) {
+        for (i = i; i <= Math.round(data.ref) ; ++i) {
             text += randomText();
             if (i%25 == 0) text +='&nbsp;<br>';
         }
@@ -965,13 +965,13 @@ function biganPeopleChart(frame, data) {
         }
     } else {
         text = "<span style='color: " + data.color + "; background: " + data.shadow + ";'>";
-        for (i = 1; i <= data.ref ; ++i) {
+        for (i = 1; i <= Math.round(data.ref) ; ++i) {
             text += randomText();
             if (i%25 == 0) text +='&nbsp;<br>';
         }
         text += '</span>';
         text += "<span style='color:" + data.color + ";'>";
-        for (i = i; i <= data.value ; ++i) {
+        for (i = i; i <= Math.round(data.value) ; ++i) {
             text += randomText();
             if (i%25 == 0) text +='&nbsp;<br>';
         }
@@ -996,16 +996,16 @@ function biganPeopleChart(frame, data) {
 }
 
 
-/*class PWData {
-    constructor ({value,ref, descValue, descRef, color='#ff3030', shadow ='#ff8080'}) {
-        this.value = value;
-        this.ref = ref;
-        this.descValue = descValue;
-        this.descRef = descRef;
-        this.color = color;
-        this.shadow = shadow;
-    }
-}*/	
+function PWData (value, ref, descValue, descRef, color, shadow) {
+	if (color == undefined) color='#ff3030';
+	if (shadow == undefined) shadow ='#ff8080';
+    this.value = value;
+    this.ref = ref;
+    this.descValue = descValue;
+    this.descRef = descRef;
+    this.color = color;
+    this.shadow = shadow;
+}	
 
 
 

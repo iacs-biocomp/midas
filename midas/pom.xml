@@ -8,13 +8,14 @@
 
 	<properties>
 		<strutsVersion>2.3.34</strutsVersion>
-<!-- 	<activitiVersion>5.19.0.1</activitiVersion>  -->
-  		<activitiVersion>6.0.0</activitiVersion>
+		<activitiVersion>5.19.0.1</activitiVersion>
+  		<!-- <activitiVersion>6.0.0</activitiVersion>  -->
 		<droolsVersion>6.3.0.Final</droolsVersion>
     	<maven.compiler.source>1.8</maven.compiler.source>
     	<maven.compiler.target>1.8</maven.compiler.target>		
 	    <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
 	    <project.reporting.outputEncoding>UTF-8</project.reporting.outputEncoding>
+	    
     </properties>
 
 	<repositories>

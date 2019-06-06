@@ -188,7 +188,6 @@
 <script src="/cdn/js/midas/midas.js"></script>
 <script src="/cdn/js/knockout.js"></script>	
 <script src="/cdn/js/midas/mid-message.js"></script>
-<!-- <script src="/cdn/js/bigan/bigan-structure.js"></script> -->
 <script src="/cdn/js/bigan/bigan.js"></script>
 <script>
 

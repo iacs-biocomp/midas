@@ -9,9 +9,8 @@ import java.util.Map;
 import org.activiti.engine.history.HistoricProcessInstance;
 import org.activiti.engine.history.HistoricTaskInstance;
 import org.activiti.engine.impl.RepositoryServiceImpl;
-//import org.activiti.engine.impl.pvm.PvmActivity;
-//import org.activiti.engine.impl.pvm.ReadOnlyProcessDefinition;
-import org.activiti.engine.impl.util.ProcessDefinitionUtil;
+import org.activiti.engine.impl.pvm.PvmActivity;
+import org.activiti.engine.impl.pvm.ReadOnlyProcessDefinition;
 import org.activiti.engine.runtime.ProcessInstance;
 import org.activiti.engine.task.Attachment;
 import org.activiti.engine.task.Task;
@@ -69,20 +68,17 @@ public class Proceso {
     * @return Informacion solicitada por info
     */
 	public String getInfoNodo(String nodo, String info) {		
-//		PvmActivity targetActivity = null;
+		PvmActivity targetActivity = null;
 		String retInfo = null;
 		
-//        ReadOnlyProcessDefinition procDef = ((RepositoryServiceImpl) this.motor.getRepositoryService())
-//        										.getDeployedProcessDefinition(this.processInstance.getProcessDefinitionId());
-        
-        org.activiti.engine.repository.ProcessDefinition p = ProcessDefinitionUtil.getProcessDefinition(this.processInstance.getProcessDefinitionId());
-        
-        /*        targetActivity = procDef.findActivity(nodo);	    
+        ReadOnlyProcessDefinition procDef = ((RepositoryServiceImpl) this.motor.getRepositoryService())
+        										.getDeployedProcessDefinition(this.processInstance.getProcessDefinitionId());
+        targetActivity = procDef.findActivity(nodo);	    
 		if(targetActivity != null)
 		{		
 			retInfo = (String) targetActivity.getProperty(info);
 		}
-*/			    		
+			    		
 		return retInfo;
 	}	
 	
@@ -147,7 +143,7 @@ public class Proceso {
 	 * @param variables Variables a pasar al proceso necesarias para su ejecucion
 	 */
 	public void signal(Map<String, Object> variables){
-		this.motor.getRuntimeService().trigger(this.processInstance.getId(), variables);		
+		this.motor.getRuntimeService().signal(this.processInstance.getId(), variables);		
 	}
 	
 	/**

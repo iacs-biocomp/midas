@@ -9,9 +9,9 @@ import java.util.Set;
 import org.activiti.engine.delegate.Expression;
 import org.activiti.engine.history.HistoricTaskInstance;
 import org.activiti.engine.impl.persistence.entity.ProcessDefinitionEntity;
+import org.activiti.engine.impl.task.TaskDefinition;
 import org.activiti.engine.repository.ProcessDefinition;
 import org.activiti.engine.task.Attachment;
-import org.activiti.engine.task.IdentityLink;
 import org.activiti.engine.task.Task;
 
 /**
@@ -147,15 +147,19 @@ public class Tarea {
 	public List<String> getGruposTarea() {	
 		List<String> grupos = new ArrayList<String>();
 		
-		List<IdentityLink> links = this.getProceso().getMotor().getTaskService().getIdentityLinksForTask(this.task.getId());
 		
-		for (IdentityLink link : links) {
-			if (link.getType().equals("group")) {
-				grupos.add(link.getGroupId());
-			} else {
-				grupos.add(link.getUserId());
-			}
-		}
+		ProcessDefinition processDefinition = this.getProceso()
+												  .getMotor()
+												  .getRepositoryService()
+												  .getProcessDefinition(this.proceso.getProcessInstance().getProcessDefinitionId());
+		String taskDefinitionKey = this.task.getTaskDefinitionKey();
+		TaskDefinition taskDefinition = ((ProcessDefinitionEntity) processDefinition).getTaskDefinitions().get(taskDefinitionKey);
+		
+		Set<Expression> candidateUserIdExpressions = taskDefinition.getCandidateGroupIdExpressions();		       
+        for (org.activiti.engine.delegate.Expression expression : candidateUserIdExpressions) {
+        	grupos.add(expression.getExpressionText());       
+        }		
+        
 		return grupos;
 	}
 	    

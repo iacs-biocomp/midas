@@ -110,7 +110,12 @@ function biganShowHighChartLineGraph(data, frame, options) {
             shared: true,
             valueSuffix: data.options.valueSuffix
         },
-        legend: {},
+        legend: {
+            itemStyle: {
+                fontWeight: 'normal',
+                fontSize: '10px'
+            }
+        },
         plotOptions: {
             series: {
                 marker: {

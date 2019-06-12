@@ -5,7 +5,9 @@ import es.aragon.midas.config.EnvProperties;
 import javax.servlet.ServletContext;
 import javax.servlet.ServletContextEvent;
 import javax.servlet.ServletContextListener;
+import javax.servlet.annotation.WebListener;
 
+@WebListener
 public final class ProcessContextListener implements ServletContextListener {
 
     

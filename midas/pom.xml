@@ -69,13 +69,13 @@
 			<artifactId>struts2-tiles-plugin</artifactId>
 			<version>${strutsVersion}</version>
 		</dependency>
-<!--		<dependency>
+		<dependency>
 			<groupId>org.apache.struts</groupId>
 			<artifactId>struts2-cdi-plugin</artifactId>
 			<version>${strutsVersion}</version>
 		</dependency>
 
- 		<dependency>
+<!-- 		<dependency>
 			<groupId>com.jgeppert.struts2.bootstrap</groupId>
 			<artifactId>struts2-bootstrap-plugin</artifactId>
 			<version>1.5.2</version>

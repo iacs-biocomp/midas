@@ -1,13 +1,12 @@
 package es.aragon.midas.security.auth;
 
-import java.util.ListIterator;
-
 import es.aragon.midas.config.AppProperties;
 import es.aragon.midas.config.Constants;
 import es.aragon.midas.ldap.FiltroLdap;
 import es.aragon.midas.ldap.LdapUtils;
 import es.aragon.midas.ldap.UserLdap;
 
+import javax.enterprise.inject.Default;
 import javax.naming.NamingException;
 
 /**
@@ -16,6 +15,7 @@ import javax.naming.NamingException;
  * @author carlos
  * 
  */
+@Default
 public class LDAPValidator extends LoginValidatorBase {
 
 	private Throwable ldapException;

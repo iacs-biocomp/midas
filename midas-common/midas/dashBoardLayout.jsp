@@ -60,7 +60,7 @@
 <body oncontextmenu="return true;">
 
 <!-- Page container -->
-<div class="page-container height100 sidebar-collapsed">
+<div class="page-container height100 can-resize">
 
 	<!-- Page Sidebar -->
 	<div class="page-sidebar">

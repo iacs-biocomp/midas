@@ -29,7 +29,13 @@ public class MidasSessionListener implements HttpSessionListener {
 	public void sessionDestroyed(HttpSessionEvent arg0) {
 		MidUserSessions us = MidUserSessions.getInstance();
 		MidUser user = (MidUser) arg0.getSession().getAttribute(Constants.USER);
-		us.removeUserSession(user.getUserName());
+		if (us == null) {
+			log.warn("MidUserSession is null");
+		} else if (user == null) {
+			log.warn("Session destroyed with null user");
+		} else {
+			us.removeUserSession(user.getUserName());
+		}
 		log.debug("Eliminando sesión del usuario " + user.getUserName());
 	}
 	

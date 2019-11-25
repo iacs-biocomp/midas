@@ -132,3 +132,80 @@ function biganShowHighChartLineGraph(data, frame, options) {
     
     return chart;
 }    	
+
+
+
+
+/**
+ * Muestra una pirámide de datos (poblacional...)
+ * @param data
+ * @param frame
+ * @param options
+ * @returns
+ */
+function biganShowHighChartPyramid(data, frame, options) {
+
+	var categories = [], left = [], right = [];
+
+	data.sort(function(a, b){
+		return parseInt(a.edad) - parseInt(b.edad);
+	});
+
+	data.forEach(element => {
+		categories.push(element.category);
+		left.push(parseInt(element.left) * -1);
+		right.push(parseInt(element.right));
+	});
+
+	var chart = Highcharts.chart(frame, {
+		chart: {
+			type: 'bar'
+		},
+		title: {
+			text: options.title
+		},
+		//colors: ['#e15759', '#4e79a7'],
+		colors: biganColors.qualitative.slice(0, 2),
+		xAxis: [{
+			categories: categories,
+			reversed: false,
+			labels: {
+				step: 1
+			}
+		}],
+		yAxis: {
+			title: {
+				text: null
+			},
+			labels: {
+				formatter: function () {
+					return Math.abs(this.value);
+				}
+			}
+		},
+
+		plotOptions: {
+			series: {
+				stacking: 'normal',
+			}
+		},
+
+		tooltip: {
+			formatter: function () {
+				return '<b>' + this.series.name + ', edad ' + this.point.category + '</b><br/>' +
+					'Población: ' + Highcharts.numberFormat(Math.abs(this.point.y), 0);
+			}
+		},
+
+		series: [{
+			name: "Hombres",
+			data: left,
+		}, {
+			name: "Mujeres",
+			data: right,
+		}]
+	});
+
+	return chart;
+}
+

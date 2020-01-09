@@ -302,8 +302,8 @@ input[type="email"], input[type="url"], input[type="search"], input[type="tel"],
 
 input[type="radio"]{
     line-height: normal;
-    width: 3em;
-    height: 3em;
+    width: 1em;
+    height: 1em;
     margin: 2px 2 2;
 }
 

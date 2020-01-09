@@ -1455,7 +1455,7 @@ i.icon-dot-3.icon-more {
 	-moz-box-shadow: 2px 1px 5px rgba(0, 0, 0, 0.25);
 	-webkit-box-shadow: 2px 1px 5px rgba(0, 0, 0, 0.25);
 	box-shadow: 2px 1px 5px rgba(0, 0, 0, 0.25);
-	margin-bottom: 25px;
+	margin-bottom: 10px;
 }
 .shadowless, .panel-minimal {
 	-moz-box-shadow: none;
@@ -3378,6 +3378,7 @@ ul.mail-attachment li {
 .login-branding {
 	margin: auto;
 	padding-top: 100px;
+	padding-bottom: 100px;
 	width: 720px;
 	max-width: 94%;
 }
@@ -3435,9 +3436,8 @@ ul.mail-attachment li {
 .login-banner {
 	font-family: "IBM Plex Sans Bold", sans-serif;
 	font-size: 45px;
-	padding-top: 100px;
-	padding-bottom: 100px;
-	text-align: left;
+	padding: 100px;
+	text-align: center;
 }
 
 
@@ -3446,9 +3446,8 @@ ul.mail-attachment li {
 	.login-banner {
 		font-family: "IBM Plex Sans Bold", sans-serif;
 		font-size: 35px;
-		padding-top: 50px;
-		padding-bottom: 50px;
-		text-align: left;
+		padding: 50px;
+		text-align: center;
 	}
 }
 
@@ -3457,11 +3456,18 @@ ul.mail-attachment li {
 	.login-banner {
 		font-family: "IBM Plex Sans Bold", sans-serif;
 		font-size: 25px;
-		padding-top: 40px;
-		padding-bottom: 40px;
-		text-align: left;
+		padding: 40px;
+		text-align: center;
 	}
 }
+
+.login-logo {
+	display: block; 
+	margin-left: auto; 
+	margin-right: auto;
+	max-width: 50%;	
+}
+ 
 
 
 /**

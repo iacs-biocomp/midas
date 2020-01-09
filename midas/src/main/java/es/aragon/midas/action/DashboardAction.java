@@ -98,7 +98,7 @@ public class DashboardAction extends MidasActionSupport {
 			    script = new StringBuilder();
 			    scriptGlobal = new StringBuilder();
 			    String ls = System.getProperty("line.separator");
-	
+			    script.append("<script>");
 		        while((templateLine = templateReader.readLine()) != null) {
 
 		        	Matcher orderMatcher = orderPattern.matcher(templateLine);
@@ -159,6 +159,8 @@ public class DashboardAction extends MidasActionSupport {
 		        	content.append(ls);
 		        }
 
+			    script.append("</script>");
+
 		    } finally {
 		    	if (templateReader != null)
 		    			templateReader.close();
@@ -175,10 +177,8 @@ public class DashboardAction extends MidasActionSupport {
 				    String jsLine = null;
 				    
 					if (js != null && !js.isEmpty()) {
-						if (js.startsWith("http")) {
-							scriptGlobal.append("</script>");
+						if (js.startsWith("http") || js.startsWith("/") ) {
 							scriptGlobal.append("<script src=\"" + js + "\"></script>");
-							scriptGlobal.append("<script>");
 						} else {
 							log.debug(" Leyendo frame script " + js);
 							

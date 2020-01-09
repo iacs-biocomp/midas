@@ -17,13 +17,11 @@ Descubre el Big data sanitario de Aragón diseñado para profesionales como tú
 	<div class="col-lg-6">
 		<div class="login-branding">
 			<div id="logo">
-				<a href="index.html"><img src='<s:url value="/images/logo.svg" />' alt="Identificacion" title="Identificacion" style="display: block; margin-left: auto; margin-right: auto;"></a>
+				<a href="index.html"><img src='<s:url value="/images/logo.svg" />' class="login-logo" 
+					<%= "alt='" + es.aragon.midas.config.AppProperties.getParameter("app.title") + "' title='" + es.aragon.midas.config.AppProperties.getParameter("app.title") + "'"%>
+				/>
+				</a>
 			</div>
-			<div id="banner">
-				<h2 class="login-banner">
-					<strong id="bannertext"></strong>
-				</h2>
-			</div>	
 		</div>
 		<div id="loginForm" class="login-content">
 			<h2><strong>Bienvenido</strong>. Por favor, identifícate</h2>
@@ -75,14 +73,21 @@ Descubre el Big data sanitario de Aragón diseñado para profesionales como tú
 	    
 			</s:form>
 		</div>
+		<div id="banner">
+			<h2 class="login-banner">
+				<strong id="bannertext">
+				<%= es.aragon.midas.config.AppProperties.getParameter("app.banner") %>
+				</strong>
+			</h2>
+		</div>	
+		
 	</div>
 </div>
 
 <script type="text/javascript" src='<s:url value="/js/jquery.jsonp-2.4.0.min.js"/>'></script>
 
 <script type="text/javascript" src='<s:url value="/js/midas/mid-loginGUIA.js"/>'></script>
-
-<script type="text/javascript" src="/cdn/js/bigan/banner.js"></script>	
+	
 
 <!--<script type="text/javascript">
 	$(document).ready(function() {

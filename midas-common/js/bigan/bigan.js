@@ -74,10 +74,19 @@ Highcharts.setOptions({
 });
         
 
+function formatDateES(date) {
+	console.log(date);
+	d = new Date(date);
+	console.log(d);
+	options = {year: 'numeric',
+			   month: 'short'};
+	s = d.toLocaleDateString("es-ES", options);
+	return s;
+}	
 
 
 function biganShowHighChartLineGraph(data, frame, options) {
-
+	
 	var series = []
 
     data.own.forEach(function(element){
@@ -99,6 +108,7 @@ function biganShowHighChartLineGraph(data, frame, options) {
     data.lines.forEach(function(element, index){
         series.push({
             name: element.name,
+            code: element.code,
             color: biganColors.qualitative[index],
             data: element.values,
             lineWidth: 2,
@@ -116,6 +126,7 @@ function biganShowHighChartLineGraph(data, frame, options) {
     data.ranges.forEach(function(element, index) {
         series.push({
             name: element.name,
+            code: element.code,
             data: element.range,
             type: 'arearange',
             lineWidth: 0,
@@ -153,7 +164,8 @@ function biganShowHighChartLineGraph(data, frame, options) {
         tooltip: {
             crosshairs: true,
             shared: true,
-            valueSuffix: data.options.valueSuffix
+            valueSuffix: data.options.valueSuffix,
+            headerFormat: '<span style="font-size: 10px">{point.key:%b-%Y}</span><br/>'
         },
         legend: {
             itemStyle: {
@@ -192,15 +204,16 @@ function biganShowHighChartPyramid(data, frame, options) {
 
 	var categories = [], left = [], right = [];
 
-	data.sort(function(a, b){
-		return parseInt(a.edad) - parseInt(b.edad);
+	data.data.sort(function(a, b){
+		return parseInt(a.category) - parseInt(b.category);
 	});
 
-	data.forEach(element => {
-		categories.push(element.category);
-		left.push(parseInt(element.left) * -1);
-		right.push(parseInt(element.right));
-	});
+	data.data.forEach(element => {
+			categories.push(element.category);
+			left.push(parseInt(element.left) * -1);
+			right.push(parseInt(element.right));
+		});
+
 
 	var chart = Highcharts.chart(frame, {
 		chart: {
@@ -209,6 +222,9 @@ function biganShowHighChartPyramid(data, frame, options) {
 		title: {
 			text: options.title
 		},
+	    subtitle: {
+	        text: data.subtitle
+	    },		
 		//colors: ['#e15759', '#4e79a7'],
 		colors: biganColors.qualitative.slice(0, 2),
 		xAxis: [{
@@ -254,6 +270,645 @@ function biganShowHighChartPyramid(data, frame, options) {
 	return chart;
 }
 
+
+
+
+/**
+ * Muestra un gráfico de tipo Donut con la serie introducida como data
+ * @param data Objeto con las series de datos a representar
+ * @param frame Frame donde pintar el gráfico
+ * @param options Opciones del gráfico
+ * @returns Una referencia al gráfico
+ */
+function biganShowHighChartDonut(data, frame, options) {
+	var chart = Highcharts.chart(frame, {	
+	    chart: {
+	        plotBackgroundColor: null,
+	        plotBorderWidth: null,
+	        plotShadow: false,
+	        type: 'pie',
+	        events: {
+	        	click:function(e) { //subimos un nivel
+		        	if (BiganStructure) {
+		        		var level = BiganStructure.biganLevel();
+		        		if (level == 'cias')
+		        			BiganStructure.globalCIAS(undefined);
+		        		else if (level == 'zbs')
+		        			BiganStructure.setZona(undefined);
+		        		else if (level == 'sector')
+		        			BiganStructure.setSector(undefined);
+		        	}
+		        }
+	        }
+	    },
+		title: {
+            text: options.title,
+            style:  { "color": "#333333", "fontSize": "12px" }
+        },
+        subtitle: {
+        	text: options.subtitle,
+            style:  { "color": "#333333", "fontSize": "10px" }
+        },
+	    tooltip: {
+	        pointFormat: 'Total: <b>{point.y}</b></br>Porcentaje: <b>{point.percentage:.2f}%</b>',
+	        shared: true,
+	        useHTML: true
+	    },        
+        buttons: {
+            contextButton: {
+                menuItems: ['downloadPNG', 'downloadSVG']
+            }
+        },
+        legend: {
+        	enable: true,
+        	align: 'center',
+        	verticalAlign: 'bottom',
+        	layour: 'vertical'
+        },
+	    plotOptions: {
+	        pie: {
+	            allowPointSelect: true,
+	            cursor: 'pointer',
+		        innerSize: '50%'
+	        }
+	    },
+        series: data
+    });
+    
+    
+    return chart;
+}   
+
+
+
+/**
+ * Función que genera y gestiona un gráfico Highcharts de líneas para nivel Gestor.
+ * Gráfico en línea con un mapa. Todos los datos cargados en el inicio, y filtrados según nivel y detalle.
+ * @param data Datos a mostrar
+ * @param frame Frame donde se va a mostrar el gráfico
+ * @param options Opciones del gráfico
+ * @returns Instancia de objeto para gestión del gráfico
+ */
+function biganManagerHighChart(data, frame, options) {
+	
+
+	/**
+	 * Instancia de gráfico ManagerHighchart 
+	 */
+	var instance = {
+		data: data,
+		frame: frame,
+		options: options,
+		chart: null,
+		lineStruc : { "options": 
+			{ "title": "","xAxisType": "datetime","valueSuffix": options.valueSuffix, "yAxisTitle": options.yAxisTitle}, 
+			"own": [], 
+			"lines": [], 
+			"ranges": [] 
+		}
+	};
+	
+	instance.options = function (o) {
+	    if (!arguments.length) 
+	    	return instance.options;
+	    else {
+	    	for (var attrname in o) { options[attrname] = o[attrname]; }
+	    	return instance;
+	    }
+	}
+	
+	instance.options = function (o) {
+	    if (!arguments.length) 
+	    	return instance.options;
+	    else {
+	    	for (var attrname in o) { options[attrname] = o[attrname]; }
+	    	return instance;
+	    }
+	}
+
+	
+	/**
+	 * Inyecta en el gráfico la serie temporal de Aragón (código 02)
+	 */
+	instance.pushAragon = function () {
+		// Aragon
+		var lineRows = instance.data.filter(row => !row.sector);
+		var serie = { 
+			  "name": 'ARAGÓN', 
+			  "code": '02',
+			  "defaultVisible": true, 
+			  "values": []
+			}	
+		lineRows.forEach(function(element){
+			serie.values.push([element.year*1000, element.valor]);
+			});
+		instance.lineStruc.lines.push(serie);
+		
+		return instance;		
+	};
+
+
+	/**
+	 * Inyecta en el gráfico las series temporales de todos los sectores 
+	 */
+	instance.pushAllSectors = function () {
+		biganSectors.forEach(function(sector){
+			var lineRows = instance.data.filter(row => row.sector == sector && (!row.zona || row.zona == ""));
+			var serie = { 
+				  "name": lineRows[0].snombre, 
+				  "code": sector,
+				  "defaultVisible": true, 
+				  "values": []
+			}	
+			lineRows.forEach(function(element){
+				serie.values.push([element.year*1000, element.valor]);
+			});
+			instance.lineStruc.lines.push(serie);
+		});
+		
+		return instance;			
+	};
+
+	
+	/**
+	 * Inyecta en el gráfico la serie temporal de un sector especificado
+	 */
+	instance.pushSector = function (s) {
+		var lineRows = instance.data.filter(row => row.sector == s && (!row.zona || row.zona == ""));
+		var serie = { 
+			  "name": lineRows[0].snombre, 
+			  "code": s,
+			  "defaultVisible": true, 
+			  "values": []
+		}	
+		lineRows.forEach(function(element){
+			serie.values.push([element.year*1000, element.valor]);
+		});
+		instance.lineStruc.lines.push(serie);
+		
+		return instance;		
+	};
+	
+
+	
+	/**
+	 * Inyecta en el gráfico la serie temporal de una zona especificado
+	 */
+	instance.pushZbs = function  (z) {
+		lineRows = instance.data.filter(row => row.zona == z);
+		var serie = { 
+			  "name": lineRows[0].znombre, 
+			  "code": z,
+			  "defaultVisible": true, 
+			  "values": []
+		}	
+		lineRows.forEach(function(element){
+			serie.values.push([element.year*1000, element.valor]);
+		});
+		instance.lineStruc.lines.push(serie);
+		
+		return instance;
+	};	
+	
+	
+	
+	/**
+	 * Vacía las series de un gráfico 
+	 */
+	instance.empty = function () {
+		instance.lineStruc.own.length = 0;
+		instance.lineStruc.lines.length = 0;
+		instance.lineStruc.ranges.length = 0;
+		
+		return instance;
+	};
+	
+	
+	
+	/**
+	 * Pinta el gráfico en el frame especificado
+	 */
+	instance.paint = function () {
+		instance.chart = biganShowHighChartLineGraph(instance.lineStruc,instance.frame, instance.options); 
+		
+		return instance;
+		
+	};
+	
+	
+	/**
+	 * Actualiza las opciones del gráfico. Sólo se puede ejecutar después de paint, pues tiene que existir ya el gráfico highchart.
+	 */	
+	instance.update = function (options) {
+		instance.chart.update(options);
+		
+		return instance;
+	};
+
+	
+	/**
+	 * Hace visibles todas las series 
+	 */	
+	instance.setAllVisible = function () {
+		instance.chart.series.forEach(function(element) {
+		   element.setVisible(true, false);
+	   });
+		instance.chart.redraw();		
+		
+		return instance;
+	};
+	
+	
+	/**
+	 * Hace ocultas todas las series
+	 */	
+	instance.setAllInvisible = function () {
+		instance.chart.series.forEach(function(element) {
+		   element.setVisible(false, false);
+	   });
+		instance.chart.redraw();		
+		
+		return instance;
+	};	
+	
+	
+	/**
+	 * Hace todas las series ocultas salvo una
+	 */	
+	instance.setAllInvisibleExcept = function (c) {
+		instance.chart.series.forEach(function(element, index) {
+		   element.setVisible((element.userOptions.code == c), false);
+	   });
+	   instance.chart.redraw();
+		
+		return instance;
+	};
+	
+	
+	
+	/**
+	 * Hace visible una serie concreta
+	 */	
+	instance.setVisible = function (c) {
+		instance.chart.series.forEach(function(element, index) {
+			if (element.userOptions.code == c)
+				element.setVisible(true, false);
+	   });
+	   instance.chart.redraw();
+		
+		return instance;
+	};	
+	
+	
+	
+	/**
+	 * Pinta una banda en el gráfico, cubriendo el mes indicado en el parámetro (en formato TimeInMillis)
+	 */	
+	instance.markMonth = function (y) {
+		instance.chart.xAxis[0].removePlotBand('yband');
+		instance.chart.xAxis[0].addPlotBand({color: 'rgba(68, 170, 213, 0.3)', from: y-1250000000, to: y+1250000000, id: 'yband'});
+		
+		return instance;
+	};
+	
+	
+	return instance;
+}
+/**
+ * Clase que implementa un mapa Leaflet
+ * @param frameid Frame en el que representar el mapa
+ * @returns
+ * 
+ * Métodos de instancia
+ * - data() : Obtener, asociar datos a mostrar. Data es un array de valores (id, value) a representar
+ * - domainMax() : Valor máximo, para selección de rango óptimo en la escala de colores
+ * - colordomain : Array de valores de dominio para escala de color
+ * - colorArray  : Array de colores a asociar a cada rango del dominio
+ * - level : Nivel de mapa. Puede ser "sector" o "zbs"
+ */
+function biganLlMap(frameid) {
+	
+	var map = new L.Map(frameid),
+		data = null,
+		colordomain = [20, 40, 60, 80, 100],	//dominio de valores para rango de color
+		legendArray = ['0-20 %', '20 - 40 %', '40 - 60 %', '60 - 80 %', '80 - 100 %'], //Etiquetas de rango de color
+		colorArray = ['#2C7BB6', '#ABD9E9', '#FFFFBF', '#FDAE61', '#D7191C'], // Array por defecto de colores
+		domainMax = 5,	// Valor máximo en dominio
+		level = 'sector',
+		title,
+		units,
+		_filter,
+		_osm = false,
+		levelmaps = [
+				{level: 'sector', map: '/cdn/maps/sectores_WGS84.json'},
+				{level: 'zbs', map: '/cdn/maps/zonas_salud_WGS84.json'}
+			],
+		colorDomains=[	// Rangos posibles de valores para la leyenda y rango de colores
+			 [0.2,0.4,0.6,0.8,1.0],
+			 [1,2,3,4,5],
+			 [2,4,6,8,10],
+			 [5,10,15,20,25],
+			 [10,20,30,40,50],
+			 [20,40,60,80,100]
+		  ];
+	
+	var info = L.control();
+	
+	// create the tile layer with correct attribution
+	var osmUrl='https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png';
+	var osmAttrib='Map data © <a href="https://openstreetmap.org">OpenStreetMap</a> contributors';
+	var osm = new L.TileLayer(osmUrl, {minZoom: 6, maxZoom: 14, attribution: osmAttrib});		
+	
+	
+	
+	var instance = {
+		showLegend : true,
+		colordomain: []
+	};	
+	
+	
+	// Accesor para data
+	instance.data = function (d) {
+	    if (!arguments.length) 
+	    	return data;
+	    else {
+	    	data = d;
+		    return instance;
+	    }
+	};	
+
+
+	// Accesor para domainMax. Valor máximo => colordomain (valores de dominio para escala de color)
+	instance.domainMax = function (m) {
+	    if (!arguments.length) 
+	    	return domainMax;
+	    else {
+	    	var c = 5;
+			for (i=5;i>=0;--i){
+				if (m <= colorDomains[i][4])
+					c = i;
+			}
+		    instance.colordomain(colorDomains[c]);		
+		    return instance;
+	    }
+	}	
+	
+
+	// Accesor para colordomain (valores de dominio para escala de color)
+	instance.colordomain = function (c) {
+	    if (!arguments.length) 
+	    	return colordomain; 
+	    else {
+	    	colordomain = c;
+	    	// set legendArray depending on colordomain
+	    	var prev = 0;
+	    	legendArray = colordomain.map(function(x){retval = prev + "-" + x; prev = x; return retval });
+	    	return instance;
+    	}
+	};		
+	
+	
+	
+	// Accesor para colorArray - Array de colores para rango de valores
+	instance.colorArray = function (c) {
+	    if (!arguments.length) 
+	    	return colorArray; 
+	    else {
+	    	colorArray = c;
+	    	return instance;
+    	}
+	};	
+	
+
+	// Accesor para level
+	instance.level = function (c) {
+	    if (!arguments.length) 
+	    	return level; 
+	    else {
+	    	level = c;
+	    	return instance;
+    	}
+	};		
+
+	
+	// Accesor para filter (sector)
+	instance.filter = function (c) {
+		//console.log('fijando filtro ' + c);
+		_filter = c;
+    	return instance;
+	};		
+	
+	
+	// Accesor para title
+	instance.title = function (c) {
+	    if (!arguments.length) 
+	    	return title; 
+	    else {
+	    	title = c;
+	    	return instance;
+    	}
+	};		
+	
+	// Accesor para title
+	instance.osm = function (c) {
+	    if (!arguments.length) 
+	    	return _osm; 
+	    else {
+	    	_osm = c;
+	    	return instance;
+    	}
+	};			
+	
+	
+	// Accesor para units
+	instance.units = function (c) {
+	    if (!arguments.length) 
+	    	return units; 
+	    else {
+	    	units = c;
+	    	return instance;
+    	}
+	};		
+	
+	
+	/* *****
+	 * funciones internas
+	 * *****/
+	L.TopoJSON = L.GeoJSON.extend({  
+		  addData: function(jsonData, _f) {    
+		    if (jsonData.type === 'Topology') {
+		      for (key in jsonData.objects) {
+		        geojson = topojson.feature(jsonData, jsonData.objects[key]);
+	        	//console.log('filtrando sector ' + _f)
+		        if (_f != undefined) {
+		        	geojson.features = geojson.features.filter(function (d) { return d.properties.sectorcode == _f });	
+		        } 
+		        L.GeoJSON.prototype.addData.call(this, geojson);
+		      }
+		    }    
+		    else {
+		      L.GeoJSON.prototype.addData.call(this, jsonData);
+		    }
+		  }  
+		});
+	
+	
+	
+	// Resalta un poligono al pasar el ratón por encima
+	function highlightFeature(e) {
+	    var layer = e.target;
+
+	    layer.setStyle({
+	        weight: 3,
+	        color: '#666',
+	        dashArray: '',
+	        fillOpacity: 0.7
+	    });
+
+	    if (!L.Browser.ie && !L.Browser.opera && !L.Browser.edge) {
+	        layer.bringToFront();
+	    }
+	    info.update(layer.feature.properties);	    
+	}
+		
+	// Restablece el estilo del polígono
+	function resetHighlight(e) {
+	    var layer = e.target;
+	    layer.setStyle({
+	        weight: 2,
+			opacity: 1,
+	        color: 'white',
+	        dashArray: '3',
+	        fillOpacity: 0.7
+	    });
+	    info.update();	    
+	}
+	
+	
+	// Zoom a un polígono
+	function zoomToFeature(e) {
+	    map.fitBounds(e.target.getBounds());
+	}
+	
+	
+	/*
+	 * Creamos y configuramos la leyenda
+	 */
+	var legend = L.control({position: 'bottomright'});
+	legend.onAdd = function (map) {
+
+	    var div = L.DomUtil.create('div', 'info legend mapsLegend'),
+	        grades = colordomain,
+	        labels = [];
+
+	    // loop through our density intervals and generate a label with a colored square for each interval
+	    for (var i = 0; i < grades.length; i++) {
+	        div.innerHTML +=
+	            '<i style="background:' + colorArray[i] + '"></i> ' +
+	            grades[i] + (grades[i + 1] ? '&ndash;' + grades[i + 1] + '<br>' : '+');
+	    }
+
+	    return div;
+	};
+
+	
+	
+	var info = L.control();
+	info.onAdd = function (map) {
+	    this._div = L.DomUtil.create('div', 'info mapsLegend'); // create a div with a class "info"
+	    this.update();
+	    return this._div;
+	};
+
+	// method that we will use to update the control based on feature properties passed
+	info.update = function (props) {
+	    this._div.innerHTML = '<h4>' + title + '</h4>' +  (props ?
+	        '<b>' + props.name + '</b><br />' + props.value.toFixed(2) + units : '');
+	};
+
+
+
+	
+	
+	
+	/**
+	 * Pinta el mapa en el frame 
+	 */
+	instance.paint = function () {
+
+		map.eachLayer(function(layer) {
+			if (layer != osm)
+				map.removeLayer(layer);
+		});
+		
+		getColor = d3.scaleThreshold()
+	    .domain(colordomain)
+	    .range(colorArray);	
+		
+
+		// start the map in South-East England
+		
+		
+		const topoLayer = new L.TopoJSON();
+
+		$.getJSON(levelmaps.find(item => item.level == level).map)
+		  .done(addTopoData);
+
+		function addTopoData(topoData) {  
+		  console.log("filter: " + _filter);
+		  topoLayer.addData(topoData, _filter);
+		  
+		  topoLayer.eachLayer(function (layer) {  
+			  code = layer.feature.properties.code;
+			  var d = data.find(function (r){return parseInt(r.id) == code});
+			  if (d == undefined) console.log('d undefined for ' + code);
+			  layer.feature.properties.value = d.value;
+			  layer.setStyle({
+				  		fillColor: getColor(d.value),
+						weight: 2,
+						opacity: 1,
+						color: 'white',
+						dashArray: '3',
+						fillOpacity: 0.7
+			  });
+			  layer.on({
+			        mouseover: highlightFeature,
+			        mouseout: resetHighlight
+			  });
+			});	  
+		  topoLayer.on('click', function(e) {
+			  	if (BiganStructure) {
+
+			  		if (BiganStructure.globalDetail() == 'sector') {
+					  	BiganStructure.setSector(e.layer.feature.properties.code);
+			  		} else if (BiganStructure.globalDetail() == 'zbs') {
+					  	if (BiganStructure.globalSector() != e.layer.feature.properties.sectorcode) {
+					  		BiganStructure.setSector(e.layer.feature.properties.sectorcode);
+					  		sleep(1000).then((successMessage) => {
+								// Eliminamos el click si viene de un doble click para zoom a Aragón
+					  			BiganStructure.setZona(e.layer.feature.properties.code);
+					  		})
+					  	}
+			  		}
+			  	}
+			  });
+		  
+		  
+			//map.setView(new L.LatLng(41.5, -0.8896),7);
+		  //map.setView(topoLayer.getBounds().getCenter(),7);
+		  map.fitBounds(topoLayer.getBounds());
+		  if(_osm) map.addLayer(osm);
+		  topoLayer.addTo(map);
+		  legend.addTo(map);
+		  info.addTo(map);
+		}
+
+	}
+	
+	
+	return instance;
+	
+}
 /**
  MAP ARAGON COMPLETO
 */
@@ -631,10 +1286,539 @@ function biganMapAragon(frameid) {
 	
 	return instance;
 }
-/**
+2/**
  * Mapa de Aragón a nivel de sector, con tooltip y posibilidad de recoloreado con el cambio de valores.
  */
-function mapAragonS(frameid) {
+function biganMapAragonZ(frameid) {
+	
+	// padding del mapa
+	var padding = 20,
+		container = d3.select(frameid),
+		width = parseInt(container.style("width")) - 2*padding,	
+		height = 3*width / 2, 
+		data = null,
+		sectores = null,
+		zonas = null,
+		sectorPaths = null,
+		zonaPaths = null,
+		enterZonaPaths = null,
+		title = "leyenda",
+		opacity = 0.7,
+		sectorOpacity = 1,
+		zonaOpacity = 0,
+		mode = "aragon",
+		detail = "sector",
+		actualDetail = "sector",
+		selected = "0",
+		initialized = false,
+		colordomain = [20, 40, 60, 80, 100],
+		legendArray = ['0-20 %', '20 - 40 %', '40 - 60 %', '60 - 80 %', '80 - 100 %'],
+		colorArray = ['#2C7BB6', '#ABD9E9', '#FFFFBF', '#FDAE61', '#D7191C'],
+		domainMax = 5,
+		colorDomains=[
+			 [0.2,0.4,0.6,0.8,1.0],
+			 [1,2,3,4,5],
+			 [2,4,6,8,10],
+			 [5,10,15,20,25],
+			 [10,20,30,40,50],
+			 [20,40,60,80,100]
+		   ];
+
+	
+	var instance = {
+		showLegend : true,
+		//colorArray : ['#2C7BB6', '#ABD9E9', '#FFFFBF', '#FDAE61', '#D7191C'],
+	};
+
+	// Accesor para data
+	instance.data = function (d) {
+	    if (!arguments.length) 
+	    	return data;
+	    else {
+	    	data = d;
+		    return instance;
+	    }
+	};
+		
+	// Accesor para title
+	instance.title = function (t) {
+	    if (!arguments.length) 
+	    	return title;
+	    else {
+	    	title = t;
+	    	return instance;
+	    }
+	};	
+	
+	// Accesor para opacity
+	instance.opacity = function (o) {
+	    if (!arguments.length) 
+	    	return opacity; 
+	    else {
+	    	opacity = o
+	    return instance;
+    	}
+	};		
+	
+
+  // Accesor para legendArray 
+	instance.legendArray = function (l) { 
+		if (!arguments.length) 
+			return legendArray; 
+		else { 
+			legendArray = l;
+			return instance; 
+		} 
+	};
+  
+ 
+	instance.domainMax = function (m) {
+	    if (!arguments.length) 
+	    	return domainMax;
+	    else {
+	    	var c = 5;
+			for (i=5;i>=0;--i){
+				if (m <= colorDomains[i][4])
+					c = i;
+			}
+		    instance.colordomain(colorDomains[c]);		
+		    return instance;
+	    }
+	}
+	
+	// Accesor para colordomain
+	instance.colordomain = function (c) {
+	    if (!arguments.length) 
+	    	return colordomain; 
+	    else {
+	    	colordomain = c;
+	    	// set legendArray depending on colordomain
+	    	var prev = 0;
+	    	legendArray = colordomain.map(function(x){retval = prev + "-" + x; prev = x; return retval });
+	    	return instance;
+    	}
+	};	
+	
+	// Accesor para colorArray
+	instance.colorArray = function (c) {
+	    if (!arguments.length) 
+	    	return colorArray; 
+	    else {
+	    	colorArray = c
+	    	return instance;
+    	}
+	};	
+	
+	// Accesor para colorArray
+	instance.detail = function (c) {
+	    if (!arguments.length) 
+	    	return detail; 
+	    else {
+	    	detail = c
+	    	if (mode == 'aragon') { 
+	    		if (actualDetail != c)
+	    			{setActualDetail(c)}
+	    	}
+	    	else if (actualDetail == 'sector')
+	    		{setActualDetail('zbs')}
+		    return instance;
+	    }
+	}
+	    	
+
+	
+	function setActualDetail(c) {	
+    	if (svg) {
+	        var t = d3.transition().duration(00);
+	        var zindsec = 0;
+	        var zindzon = 0;
+			zonaPaths = svg.selectAll('.zona')
+			sectorPaths = svg.selectAll('.sector')
+	    	if (c == 'zbs') {
+	    		sectorOpacity = 0
+	    		zonaOpacity = opacity
+	    		zindzon = 1000;
+	    		zonaPaths.each(function() {
+    			  this.parentNode.appendChild(this);
+    			});
+	    	} else {
+	    		sectorOpacity = opacity
+	    		zonaOpacity = 0
+	    		zindsec = 1000;
+	    		sectorPaths.each(function() {
+	    			  this.parentNode.appendChild(this);
+	    			});
+	    		
+	    	}
+            zonaPaths.style('opacity', zonaOpacity)
+            sectorPaths.style('opacity', sectorOpacity)
+    	}	    	
+    	actualDetail = c
+	}		
+	
+	
+/*	// Función para determinar el color de cada territorio
+	var color = d3.scaleThreshold()
+	    .domain(colordomain)
+	    .range(instance.colorArray)
+*/	
+	// Proyección mercator escalada y trasladada para centrar Aragon en el mapa
+	var projection = d3.geoMercator()
+	    .scale(height*12)
+	    .translate([3*width / 4, height*10])
+	    
+	// Ajustar la imagen a escala y posición por defecto
+	function setNormalScale() {
+		projection.scale(height*12)
+			.translate([3*width / 4, height*10])
+	}
+	
+	// Path base del mapa
+	var path = d3.geoPath().projection(projection)
+	
+	// SVG del mapa
+	var svg = null
+	
+	
+
+
+	
+	var initialize = function (error, results) {
+			
+	    if (error) {     
+	    	alert(error);
+	        throw error 
+	    }
+		
+	    // Array de features geograficas de los sectores
+	    sectores = topojson.feature(results[0], results[0].objects.sectores_WGS84).features;  
+	    sectores.forEach(function (f) {
+	        // Hacemos que el properties de cada sector sea el registro data
+			// correspondiente
+	        f.properties = data.find(function (d) { 
+	        	if (d.sector == f.properties.code && (!d.zona || d.zona == "")) {
+	        		//d.snombre = f.properties.name;
+	        		return true
+	        	} else {
+	        		return false
+	        	} 
+	        	// return d.sector == f.properties.COD_SECTOR && d.zona == ""
+	        })
+	    })
+	    
+	    
+	    // Array de features geograficas de los sectores
+	    zonas = topojson.feature(results[1], results[1].objects.zonas_salud_WGS84).features;  
+
+	    zonas.forEach(function (f) {
+	        // Hacemos que el properties de cada sector sea el registro data
+			// correspondiente
+	        f.properties = data.find(function (d) { 
+	        	if (d.zona == parseInt(f.properties.code)) {
+	        		d.snombre = f.properties.name;
+	        		return true
+	        	} else {
+	        		return false
+	        	} 
+	        	// return d.sector == f.properties.COD_SECTOR && d.zona == ""
+	        })
+	    })	    
+	    
+
+	    
+	    // Dibujamos la leyenda
+	    if(instance.showLegend) {
+		    var legend = container.append('div')
+		    	.classed('mapsLegend', true)
+		    if (title !== undefined)
+		    	legend.append('div').style('margin-bottom', '3px').style('font-weight', 'bold').text(title)
+		    for (i=0; i<5; ++i) {
+		    	var item=legend.append('div').style('float', 'left');
+		    	item.append('text').text(legendArray[i])
+		    	item.append('i').style('background', colorArray[i]).style('opacity', opacity)
+			    }
+		    }
+		    
+	    instance.repaint(500)
+		
+		initialized = true;
+	}
+	
+	
+	
+	// Redibuja el mapa a la nueva escala
+	instance.repaint = function() {
+
+		width = parseInt(container.style("width")) - 2*padding;	
+		height = 3*width / 2 
+
+		if (svg != null) {
+			svg.remove()
+		}
+		
+		setNormalScale()
+
+		color = d3.scaleThreshold()
+			    .domain(colordomain)
+			    .range(colorArray);
+		
+		svg = container
+		    .append('svg')
+		    .attr('width', width)
+		    .attr('height', height)
+	
+        // preparamos las zonas de salud
+		zonaPaths = svg.selectAll('.zona')
+     	.data(zonas)
+        .enter()
+        .append('path')
+        	.attr('class', 'zona')
+        	.attr('d', path)
+        	.style('fill', function (d) { return color(d.properties.valor) })
+        	.style('opacity', zonaOpacity)
+        	.on('click', function (d) { instance.setZbs(d.properties) })
+        	.on('dblclick', function (d) { instance.setSector(undefined) })
+		
+		sectorPaths = svg.selectAll('.sector')
+        .data(sectores)
+        .enter()
+        .append('path')
+        	.attr('class', 'sector')
+        	.attr('d', path)
+        	.style('fill', function (d) { return color(d.properties.valor) })
+        	.style('opacity', sectorOpacity)
+        	.on('click', function (d) { instance.setSector(d.properties.sector) })
+		        
+	    sectorPaths.append('title').text( function (d) { return d.properties.snombre + "\n" + d.properties.valor } )
+	    zonaPaths.append('title').text( function (d) { return d.properties.znombre + "\n" + d.properties.valor } )
+	    instance.detail(detail);
+	}
+	
+	
+	
+	// Cambiamos el color de los polígonos
+	instance.recolor = function(delay) {
+
+	    sectores.forEach(function (f, i, array) {
+	        var dd = data.find(function (d) { 
+	        	if (d.sector == f.properties.sector) {
+	        		return true
+	        	} else {
+	        		return false
+	        	} 
+	        })
+	        array[i].properties = dd;
+	    })
+	    
+
+	    zonas.forEach(function (f, i, array) {
+	        var dd = data.find(function (d) { 
+	        	if (d.zona == parseInt(f.properties.zona)) {
+	        		return true
+	        	} else {
+	        		return false
+	        	} 
+	        })
+	        array[i].properties = dd;
+	    })	    	    
+	    
+	    color = d3.scaleThreshold()
+		    .domain(colordomain)
+		    .range(colorArray);
+	    
+	    sectorPaths = svg.selectAll('.sector')
+	    sectorPaths.select('title').remove()
+	    sectorPaths
+	    	.data(sectores)
+	        .transition()
+	        .duration(delay)	        
+	        .style('fill', function (d) { 
+	        				return color(d.properties.valor); 
+	        			})
+	        .style('opacity', sectorOpacity)
+	        
+
+	    zonaPaths = svg.selectAll('.zona')
+	    zonaPaths .select('title').remove()
+	    zonaPaths 
+	    	.data(zonas)
+	        .transition()
+	        .duration(delay)	        
+	        .style('fill', function (d) { 
+	        				return color(d.properties.valor); 
+	        			})
+	        .style('opacity', zonaOpacity)
+
+	    sectorPaths
+	        .on('click', function (d) { instance.setSector(d.properties.sector) })
+	        .append('title').text( function (d) { return d.properties.snombre + "\n" + d.properties.valor } )
+
+	    zonaPaths
+	        .on('dblclick', function (d) { instance.setSector(undefined) })
+	        .on('click', function (d) { instance.setZbs(d.properties) })
+	        .append('title').text( function (d) { return d.properties.znombre + "\n" + d.properties.valor } )
+
+	        
+	    if(instance.showLegend) {
+	    	container.selectAll('.mapsLegend').remove();
+		    var legend = container.append('div')
+		    	.classed('mapsLegend', true)
+		    if (title !== undefined)
+		    	legend.append('div').style('margin-bottom', '3px').style('font-weight', 'bold').text(title)
+		    for (i=0; i<5; ++i) {
+		    	var item=legend.append('div').style('float', 'left');
+		    	item.append('text').text(legendArray[i])
+		    	item.append('i').style('background', colorArray[i]).style('opacity', opacity)
+		    	//legend.append('br')
+			    }
+		    }	        
+	        
+	}
+	
+	
+	
+	
+	// Carga los topojson y pinta el mapa
+	instance.paint = function() {
+
+		initialized = false;
+		
+		d3.queue()
+			.defer(d3.json, '/cdn/maps/sectores_WGS84.json')
+		    .defer(d3.json, '/cdn/maps/zonas_salud_WGS84.json')
+		    .awaitAll(initialize)
+
+		$(window).on('resize', function(){
+			instance.repaint()
+		});		    
+		
+		return instance;
+	}	    
+
+  
+	// Zoom centrado a todo Aragon
+	instance.aragonZoom = function () {
+		if (!initialized) return;
+		
+		var t = d3.transition().duration(800)
+        
+        mode = "aragon";
+		selected = "0";
+
+		setActualDetail(detail);
+
+		
+		if (BiganStructure)
+        	BiganStructure.setSector(undefined);	
+
+
+		// projection.scale(_self.height*12).translate([3*_self.width / 4,
+		// _self.height*10])
+        setNormalScale()
+        
+        sectorPaths.transition(t)
+            .attr('d', path)
+
+        zonaPaths.transition(t)
+            .attr('d', path)
+           
+        
+            
+	}
+
+  
+    // Selección del sector sobre el que hemos pulsado con el ratón.
+	instance.setSector = function(id) {
+		if (!initialized) return;		
+
+
+		if (BiganStructure){
+			if (id == undefined) {
+				BiganStructure.setZona();
+			}
+			BiganStructure.setSector(id);
+		}
+
+	}
+	
+	
+    // Selección del sector sobre el que hemos pulsado con el ratón.
+	instance.updateSector = function(id) {
+		if (!initialized) return;		
+
+		if (mode == "sector" && selected  == id) {
+			instance.aragonZoom();
+		} else { 		
+			instance.sectorZoom(id);
+		}
+	}
+		
+	
+    // Selección del sector sobre el que hemos pulsado con el ratón.
+	instance.setZbs = function(id) {
+		if (!initialized) return;		
+		
+		if (BiganStructure) {
+			if (BiganStructure.globalSector() == undefined) {
+				BiganStructure.setSector(id.sector)
+			}
+			// Nos aseguramos de que se ha hecho el zoom a Sector antes de seleccionar zona
+			sleep(1000).then((successMessage) => {
+				// Eliminamos el click si viene de un doble click para zoom a Aragón
+				if (BiganStructure.globalSector() != undefined)
+					BiganStructure.setZona(id.zona)
+			})
+		}
+
+	}	
+	
+	
+	
+	// Zoom al sector seleccionado
+	instance.sectorZoom = function (id) {
+		if (!initialized) return;		
+
+		// click en modo sector, en sector seleccionado. Volvemos a Aragon
+		if (id == undefined || (mode == "sector" && selected  == id)) {
+			instance.aragonZoom();
+			return;
+		} 
+
+		selected = id;
+		mode = "sector";
+		
+		setActualDetail('zbs')
+        
+		// actualDetail = 'zbs'
+		
+        // seleccionamos el sector con codigo id
+        var sector = sectores.find(function (d) { return d.properties.sector === id })
+
+        var t = d3.transition().duration(800)
+
+        projection.fitExtent(
+            [[padding, padding], [width - padding, height - padding]],
+            sector
+        )
+
+        sectorPaths.transition(t)
+            .attr('d', path)
+
+        zonaPaths.transition(t)
+            .attr('d', path)
+        
+
+    }
+
+	return instance;
+}
+
+
+
+	2/**
+ * Mapa de Aragón a nivel de sector, con tooltip y posibilidad de recoloreado con el cambio de valores.
+ */
+function biganMapAragonS(frameid) {
 	
 	// padding del mapa
 	var padding = 20,
@@ -662,7 +1846,8 @@ function mapAragonS(frameid) {
 			 [10,20,30,40,50],
 			 [20,40,60,80,100]
 		   ];
-		
+
+	
 	var instance = {
 		showLegend : true,
 		//colorArray : ['#2C7BB6', '#ABD9E9', '#FFFFBF', '#FDAE61', '#D7191C'],
@@ -787,8 +1972,8 @@ function mapAragonS(frameid) {
 	        // Hacemos que el properties de cada sector sea el registro data
 			// correspondiente
 	        f.properties = data.find(function (d) { 
-	        	if (d.sector == f.properties.COD_SECTOR && (!d.zona || d.zona == "")) {
-	        		d.snombre = f.properties.SECTOR
+	        	if (d.sector == f.properties.code && (!d.zona || d.zona == "")) {
+	        		d.snombre = f.properties.name;
 	        		return true
 	        	} else {
 	        		return false
@@ -797,6 +1982,8 @@ function mapAragonS(frameid) {
 	        })
 	    })
 
+	    
+	    // Dibujamos la leyenda
 	    if(instance.showLegend) {
 		    var legend = container.append('div')
 		    	.classed('mapsLegend', true)
@@ -810,7 +1997,8 @@ function mapAragonS(frameid) {
 		    }
 		    
 	    instance.repaint(500)
-		    
+		
+	    // dibujamos el icono para zoom Aragón
 		d3.select("#icon-aragon")
 			.style("position", "absolute")
 			.style("left", "90%")
@@ -858,6 +2046,8 @@ function mapAragonS(frameid) {
 	}
 	
 	
+	
+	// Cambiamos el color de los polígonos
 	instance.recolor = function(delay) {
 		
 	    sectores.forEach(function (f, i, array) {
@@ -922,8 +2112,8 @@ function mapAragonS(frameid) {
 		    .attr('height', height)
 
 		d3.queue()
-		    .defer(d3.json, 'static.action?src=/maps/sectores_WGS84.json')
-		    .defer(d3.json, 'static.action?src=/maps/zonas_salud_WGS84.json')
+		    .defer(d3.json, '/cdn/maps/sectores_WGS84.json')
+		    //.defer(d3.json, '/cdn/maps/zonas_salud_WGS84.json')
 		    .awaitAll(initialize)		
 
 		$(window).on('resize', function(){
@@ -1019,59 +2209,63 @@ function mapAragonS(frameid) {
  */	
 	
 
-	
-function biganPeopleChart(frame, data) {
-    var peop_elem = "#peop" + frame;
+function biganPeopleChart(d, frame, options) {
+
+    var colorFore = getBiganColor(biganColors.NEGATIVE, 8, 1);
+    var colorBack = biganColors.negative[12];	
+	var peop_elem = "#peop" + frame;
     var val_elem = "#val" + frame;
     var text = "";
     var i;    
     
-    if (!data) {
+    if (!d) {
     	text = "";
-    } else if (data.value < data.ref) {
-        text = "<span style='color: " + data.color + "; background: " + data.shadow + ";'>";
-        for (i = 1; i <= Math.round(data.value) ; ++i) {
-            text += randomText();
-            if (i%25 == 0) text +='&nbsp;<br>';
-        }
-        text += '</span>';
-        text += "<span style='background:" + data.shadow + "'>";
-        for (i = i; i <= Math.round(data.ref) ; ++i) {
-            text += randomText();
-            if (i%25 == 0) text +='&nbsp;<br>';
-        }
-        text += '</span>';
-        for (i = i; i <= 100; ++i) {
-            text += randomText();   
-            if (i%25 == 0) text +='&nbsp;<br>';
-
-        }
     } else {
-        text = "<span style='color: " + data.color + "; background: " + data.shadow + ";'>";
-        for (i = 1; i <= Math.round(data.ref) ; ++i) {
-            text += randomText();
-            if (i%25 == 0) text +='&nbsp;<br>';
-        }
-        text += '</span>';
-        text += "<span style='color:" + data.color + ";'>";
-        for (i = i; i <= Math.round(data.value) ; ++i) {
-            text += randomText();
-            if (i%25 == 0) text +='&nbsp;<br>';
-        }
-        text += '</span>';
-        for (i = i; i <= 100; ++i) {
-            text += randomText();   
-            if (i%25 == 0) text +='&nbsp;<br>';
-
-        }
-
+    	data = d.data;
+    	if (data[0].value < data[1].value) {
+	        text = "<span style='color: " + colorFore + "; background: " + colorBack + ";'>";
+	        for (i = 1; i <= Math.round(data[0].value) ; ++i) {
+	            text += randomText();
+	            if (i%25 == 0) text +='&nbsp;<br>';
+	        }
+	        text += '</span>';
+	        text += "<span style='background:" + colorBack + "'>";
+	        for (i = i; i <= Math.round(data[1].value) ; ++i) {
+	            text += randomText();
+	            if (i%25 == 0) text +='&nbsp;<br>';
+	        }
+	        text += '</span>';
+	        for (i = i; i <= 100; ++i) {
+	            text += randomText();   
+	            if (i%25 == 0) text +='&nbsp;<br>';
+	
+	        }
+	    } else {
+	        text = "<span style='color: " + colorFore + "; background: " + colorBack + ";'>";
+	        for (i = 1; i <= Math.round(data[1].value) ; ++i) {
+	            text += randomText();
+	            if (i%25 == 0) text +='&nbsp;<br>';
+	        }
+	        text += '</span>';
+	        text += "<span style='color:" + colorFore + ";'>";
+	        for (i = i; i <= Math.round(data[0].value) ; ++i) {
+	            text += randomText();
+	            if (i%25 == 0) text +='&nbsp;<br>';
+	        }
+	        text += '</span>';
+	        for (i = i; i <= 100; ++i) {
+	            text += randomText();   
+	            if (i%25 == 0) text +='&nbsp;<br>';
+	
+	        }
+	    }
     }
 
     $(peop_elem).html(text);
 
     if (data) {
-	    text2 = "<span class='valdesc'>" + data.descValue + "</span><br><span class='pctval'  style='color:" + data.color + "'><span style='font-family: WeePeople;'>" + randomText() +" </span>" + data.value + "%</span><br>";
-	    text2 += "<span class='refdesc'>" + data.descRef + "</span><br><span class='pctref'   style='background:" + data.shadow + "'>" + data.ref + "%</span>";
+	    text2 = "<span class='valdesc' style='color:" + colorFore + "'>" + data[0].descvalue + "</span><br><span class='pctval'  style='color:" + colorFore + "'><span style='font-family: WeePeople;'>" + randomText() +" </span>" + data[0].value + "%</span><br>";
+	    text2 += "<span class='refdesc' style='color:" + colorFore + "'>" + data[1].descvalue + "</span><br><span class='pctref'   style='background:" + colorBack + "'>" + data[1].value + "%</span>";
     } else {
     	text2 = "";
     }
@@ -1079,33 +2273,22 @@ function biganPeopleChart(frame, data) {
 }
 
 
-function PWData (value, ref, descValue, descRef, color, shadow) {
-	if (color == undefined) color='#ff3030';
-	if (shadow == undefined) shadow ='#ff8080';
-    this.value = value;
-    this.ref = ref;
-    this.descValue = descValue;
-    this.descRef = descRef;
-    this.color = color;
-    this.shadow = shadow;
-}	
 
-
-
-function biganPeopleNChart(frame, d) {
-	var colors = ['#1b9e77', '#d95f02', '#7570b3', '#e7298a', '#e6ab02', '#666666', '#00ff00', '#0000ff'];
-    var peop_elem = "#peop" + frame;
+function biganPeopleNChart(d, frame, options) {
+	//var colors = ['#1b9e77', '#d95f02', '#7570b3', '#e7298a', '#e6ab02', '#666666', '#00ff00', '#0000ff'];
+    var colors = biganColors.qualitative;
+	var peop_elem = "#peop" + frame;
     var val_elem = "#val" + frame;
     var text = "";
     var text2 = "";
     var total = 0;
     var parcial = 0;
-    var data = d.data;
-
+    var data = {};
     
     if (!d) {
     	text = "";
     } else {
+    	data = d.data;
     	acum = 0;
     	for (c = 0; c < data.length; ++c) {
     		acum += data[c].value;
@@ -1150,6 +2333,11 @@ function biganPeopleNChart(frame, d) {
     
     
     $(val_elem).html(text2);
+    
+    //console.log('frame=' + '#peoptit' + frame + ":" + options.title);
+    
+    $('#peoptit' + frame).html(options.title);		
+
 
     $('.tooltip-container').mouseover(function(){
     	tooltip = $( this ).find( 'span.tooltiptext' );
@@ -1160,8 +2348,20 @@ function biganPeopleNChart(frame, d) {
 
 }/**
  * BIGAN_STRUCTURE
+ * Estructura de datos común para la definición de contextos BIGAN
+ * Requiere: knockout.js
  */
 
+
+
+
+ko.observable.fn.silentUpdate = function(value) {
+    this.notifySubscribers = function() {};
+    this(value);
+    this.notifySubscribers = function() {
+        ko.subscribable.fn.notifySubscribers.apply(this, arguments);
+    };
+};
 
 
 /* Module for Registration form application */
@@ -1177,10 +2377,19 @@ var BiganStructure = function () {
   var globalYear = ko.observable();
   var globalDate = ko.observable();
 
+  var globalDetail = ko.observable('global');
+  
+  
+  const DETAIL1='global';
+  const DETAIL2='sector';
+  const DETAIL3='zbs';
+  
+  
+  
 
   //SECTORES
   var sector = {
-    codigo: "",
+    codigo: undefined,
     descripcion: ""
   }
 
@@ -1208,15 +2417,17 @@ var BiganStructure = function () {
     $.each(response, function (index, item) {
       addSector(item.code, item.descrip);
     });
+    
+    // Forzamos el borrado del sector global. Disparamos evento con globalSector==undefined => Aragón
+    setSector(false);
   };
 
 
   var setSector = function (s) {
     if (!s) {
       globalSector(undefined);
-      globalZona(undefined);
     } else {
-      var t = ko.utils.arrayFirst(sectores(), function (f) { return f.codigo === s });
+      var t = ko.utils.arrayFirst(sectores(), function (f) { return f.codigo == s });
       if (t && (!globalSector() || s != globalSector().codigo)) {
         //alert("seleccionado " + t.codigo)
         globalSector(t);
@@ -1257,15 +2468,22 @@ var BiganStructure = function () {
   };
 
 
+  
+  // enlazamos las zonas al cambio de sector
   globalSector.subscribe(function () {
-    if (typeof globalSector() != 'undefined')
-      getZonas().done(callbackZonas);
+	if (typeof globalSector() != 'undefined' && typeof globalSector().codigo != 'undefined') {
+		getZonas().done(callbackZonas);
+        // Comentado. Fuerza detalle global si se selecciona un sector
+		//if (globalDetail() === DETAIL2)
+        //	globalDetail(DETAIL1);
+    }
     else {
-      globalZona(undefined);
+    	globalZona(undefined);
     }
   });
 
 
+  // Las zonas son visibles si el sector está definido
   var zonaVisible = ko.computed(function () {
     if (typeof globalSector() === "undefined")
       return false;
@@ -1274,11 +2492,12 @@ var BiganStructure = function () {
   });
 
 
+  // asigna una zona global al contexto
   var setZona = function (s) {
     if (!s) {
       globalZona(undefined);
     } else {
-      var t = ko.utils.arrayFirst(zonas(), function (f) { return f.codigo === s });
+      var t = ko.utils.arrayFirst(zonas(), function (f) { return f.codigo == s });
       if (t && (!globalZona() || s != globalZona().codigo)) {
         //alert("seleccionado " + t.codigo)
         globalZona(t);
@@ -1305,6 +2524,8 @@ var BiganStructure = function () {
     });
   }
 
+  
+  // Obtiene los CIAS de la zona global
   function getCiasZona() {
     let zc = globalZona().codigo;
     return $.ajax({
@@ -1322,23 +2543,249 @@ var BiganStructure = function () {
   };
 
 
+  
+  // Vincula la lectura de CIAS a la selección de Zona
   globalZona.subscribe(function () {
     if (typeof globalZona() != "undefined") {
       getCiasZona().done(callbackCiasZona);
+      // Comentado: fuerza detalle 1 si detalle es zona, y se selecciona una zona.
+      //if (globalDetail() === DETAIL3)
+      //  globalDetail(DETAIL1);      
+    } else  {
+    	globalCIAS(undefined);
     }
+   
   });
 
 
+  
+  // Una zona es visible si la zona está definida
   var ciasVisible = ko.computed(function () {
-    if (typeof globalSector() === "undefined" || typeof globalZona() === "undefined")
+    if (typeof globalSector() === "undefined" || 
+    	typeof globalZona() === "undefined" || 
+    	cias().length == 0)
       return false;
     else
       return true;
   });
 
+  
+  // Vincula la lectura de CIAS a la selección de Zona
+  globalCIAS.subscribe(function () {
+    
+	//if (typeof globalCIAS() != "undefined" &&  globalDetail() === DETAIL3) {
+    //  	  globalDetail(DETAIL1);      
+    //}
+  });
+  
+   
+  // Habilita o deshabilita el radiobutton de detalle nivel 2 (sector)
+  var detail2Enabled = ko.computed(function() {
+	  return true;
+	  //return !zonaVisible();
+  });
+  
+  // Habilita o deshabilita el radiobutton de detalle nivel 3 (ZBS)
+  var detail3Enabled = ko.computed(function() {
+	  return true;
+	  //return !ciasVisible();
+  });  
+  
+  
+  var biganLevel = ko.computed(function() {
+	 if (globalSector() == undefined) 
+		 return 'global';
+	 else if (globalZona() == undefined) 
+		 return 'sector';
+	 else if (globalCIAS() == undefined) 
+		 return 'zbs';
+	 else 
+		 return 'cias';
+  });
+  
+  
+  
+  
+  
+  /**
+   * Funciones para acceso a datos de un microservicio REST, a partir de la URL indicada
+   * Si no lleva parámetros, devuelve datos de Aragón
+   * Sector: &level=sector&code=
+   * Zona: &level=zbs&code=
+   * CIAS: &level=cias&code=
+   */
+
+  // Lee los datos de Aragón a partir de una URL dada, para la actualización del componente
+  // colocado en el frame_id
+  function getDataAragon(frame_id, url, callback) {
+	  var options = {title:'Aragón'}  
+	  //$('#tit' + frame_id).html('Aragón');
+ 	  return $.ajax({
+	    	dataType:'json',
+	    	type: 'GET',
+	    	url: url + '&detail=' + globalDetail(),
+	    	success:function(data) {callback(data, frame_id, options)}
+ 		});
+  }  
+  
+  
+  // Lee los datos del sector seleccionado, para refrescar un componente
+  function getDataSector(frame_id, url, callback) {
+	  var options = {title:'Sector: ' + processSectorName(globalSector().descripcion)}
+	  //$('#tit' + frame_id).html('Sector: ' + processSectorName(globalSector().descripcion));
+   	return $.ajax({
+	    	dataType:'json',
+	    	type: 'GET',
+	    	url: url + '&level=sector&code=' + globalSector().codigo + '&detail=' + globalDetail(),
+	    	success:function(data) {callback(data, frame_id, options)}	 	
+	    });
+   }    
+  
+  
+  // Lee los datos de una zona seleccionada, para refrescar un componente
+  function getDataZona(frame_id, url, callback) {
+	  var options = {title:globalZona().descripcion}
+	  //$('#tit' + frame_id).html(globalZona().descripcion);
+   	return $.ajax({
+	    	dataType:'json',
+	    	type: 'GET',
+	    	url: url + '&level=zbs&code=' + globalZona().codigo + '&detail=' + globalDetail(),
+	    	success:function(data) {callback(data, frame_id, options)}	 
+   	});
+  }   
+  
+  // Obtiene por AJAX los datos a nivel de CIAS de una URL
+  function getDataCias(frame_id, url, callback) {
+	  var options = {title:globalCIAS().ciasCd}
+	  //$('#tit' + frame_id).html(globalCIAS().ciasCd);
+  	return $.ajax({
+	    	dataType:'json',
+	    	type: 'GET',
+	    	url: url + '&level=cias&code=' + globalCIAS().ciasCd,
+	    	success:function(data) {callback(data, frame_id, options)}
+  	});
+  }   
+  
+
+  // Devuelve una estructura vacía de datos, a través de la función callback especificada
+  function getDataNull(frame_id, url, callback) {
+	  var options = {title:''}
+	  callback(null, frame_id, options);
+  }   
+
+  
+  
+  
+
+  
+  /**
+   *  Vincula un frame al contexto BiganStructure
+   * @ param frame_id ID del frame que estamos vinculando
+   * @ param url URL desde la que leeremos los datos de refresco
+   * @ callback Función de Callback que llamaremos al recibir los datos, para visualizar el componente.
+   */
+  var linkContext = function (frame_id, url, callback) {
+
+	// Vinculamos CIAS al contexto global 
+	globalCIAS.subscribe(function () {
+		if(typeof globalCIAS() != "undefined") {
+	   		getDataCias(frame_id, url, callback)
+	   	} else {
+	   		if (BiganStructure.globalZona())
+	   			getDataZona(frame_id, url, callback)
+	   	}   
+	});
+	 
+	// Vinculamos Zona al contexto global
+	globalZona.subscribe(function () {
+		if(BiganStructure.globalZona() != undefined) {	
+		   	getDataZona(frame_id, url, callback)
+		} else {
+			if (BiganStructure.globalSector()) {
+			   	getDataSector(frame_id, url, callback)
+			} 
+		} 
+	});
+
+	// Vinculamos Sector al contexto global	
+	globalSector.subscribe(function () {
+		if(BiganStructure.globalSector() != undefined) {
+		   	getDataSector(frame_id, url, callback)
+		} else {
+			getDataAragon(frame_id, url, callback)
+		}
+	});
+	
+	
+	// Vinculamos Sector al contexto global	
+	globalDetail.subscribe(function () {
+		if(typeof globalCIAS() != "undefined") {
+	   		getDataCias(frame_id, url, callback)
+		} else if(typeof BiganStructure.globalZona() != "undefined") {	
+		   	getDataZona(frame_id, url, callback)
+		} else if(typeof BiganStructure.globalSector() != "undefined") {
+		   	getDataSector(frame_id, url, callback)
+		} else {
+			getDataAragon(frame_id, url, callback)
+		}
+	});	
+	
+  }
+  
+  
+  
+  /**
+   *  Vincula un frame al contexto BiganStructure de referencia. Es decir, si cambiamos zona, recargamos sector. Si cambiamos CIAS, 
+   *  recargamos zona, y si cambiamos sector, cargamos Aragón
+   * @ param frame_id ID del frame que estamos vinculando
+   * @ param url URL desde la que leeremos los datos de refresco
+   * @ callback Función de Callback que llamaremos al recibir los datos, para visualizar el componente.
+   */
+  var linkReferenceContext = function (frame_id, url, callback) {
+
+	$(globalCIAS.subscribe(function () {
+		if(typeof globalCIAS() != "undefined") {
+	   		getDataZona(frame_id, url, callback)
+	   	} else {
+		   	getDataSector(frame_id, url, callback)
+	   	}   
+	}));
+	 
+	$(globalSector.subscribe(function () {
+		if(typeof globalSector() != "undefined") {
+			getDataAragon(frame_id, url, callback)
+		} else {
+			getDataNull(frame_id, url, callback)
+		}
+	}));
+	
+	$(globalZona.subscribe(function () {
+		if(typeof globalZona() != "undefined") {	
+			if (globalSector()) {
+				getDataSector(frame_id, url, callback)
+			}
+		} else {
+			getDataAragon(frame_id, url, callback)
+		} 
+	}));
+  }
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  // Inicializamos sector global a "". De esa manera, el primer cambio de sector, aunque sea
+  // a undefined, dispara el evento para actualizar todos los componentes vinculados.
+  globalSector(sector);  
+  
+  
 
   //INIT
-
   var init = function () {
     getSectores().done(callbackSectores);
     $(".str-bindable").each(function () {
@@ -1351,8 +2798,9 @@ var BiganStructure = function () {
   $(init);
 
 
+
+  /* interfaz público del objeto BiganStructure */
   return {
-    /* add members that will be exposed publicly */
     globalSector: globalSector,
     globalZona: globalZona,
     globalCIAS: globalCIAS,
@@ -1363,125 +2811,20 @@ var BiganStructure = function () {
     setZona: setZona,
     cias: cias,
     ciasVisible: ciasVisible,
+    detail2Enabled: detail2Enabled,
+    detail3Enabled: detail3Enabled,
     globalYear: globalYear,
-    globalDate: globalDate
+    globalDate: globalDate,
+    linkContext: linkContext,
+    linkReferenceContext: linkReferenceContext,
+    globalDetail: globalDetail,
+    biganLevel: biganLevel
   };
 }();
 
 
 
 /**
- * BIGAN_COLORS
- */
-
-/**
- * biganColors: Object to define common color schemes in Bigan
- */
-var biganColors = {
-  qualitative: [
-    '#65B32E',
-    '#7CBDC4',
-    '#C0D236',
-    '#3E5B84',
-    '#008C75',
-    '#82428D',
-    '#E8683F',
-    '#B81A5D'
-  ],
-  positive: [
-    '#0C4828',
-    '#1A6E31',
-    '#207732',
-    '#208135',
-    '#289337',
-    '#429E35',
-    '#65B32E',
-    '#89BE47',
-    '#9CC65A',
-    '#B2CF6E',
-    '#C0D47A',
-    '#C9D985',
-    '#E7E7B9'
-  ],
-  neutral: [
-    '#003C50',
-    '#1A6B85',
-    '#27758E',
-    '#3C8EA2',
-    '#4999AB',
-    '#5FA7B5',
-    '#7CBDC4',
-    '#93C7CF',
-    '#A5CED7',
-    '#ADD2DD',
-    '#BBD8E5',
-    '#C2DAE8',
-    '#E3E8F0'
-  ],
-  negative: [
-    '#7C170F',
-    '#A82D17',
-    '#AE3417',
-    '#B63D17',
-    '#C34A17',
-    '#C74F1B',
-    '#CC6B21',
-    '#D6852B',
-    '#DC9635',
-    '#E1A744',
-    '#E6B04D',
-    '#E9B855',
-    '#F1D676'
-  ],
-  neutralOrder: [[6], [3, 9], [1, 6, 11], [1, 4, 8, 11], [0, 3, 6, 9, 12], [0, 2, 5, 7, 10, 12], [0, 1, 4, 6, 8, 11, 12], [0, 1, 2, 4, 6, 8, 10, 12]],
-  negativeOrder: [[1], [1, 9], [1, 6, 11], [1, 4, 8, 11], [12,9,6,3,0], [0, 2, 5, 7, 10, 12], [0, 1, 4, 6, 8, 11, 12], [0, 1, 2, 4, 6, 8, 10, 12]],
-  positiveOrder: [[6], [4, 10], [1, 6, 11], [1, 4, 8, 11], [0, 3, 6, 9, 12], [0, 2, 5, 7, 10, 12], [0, 1, 4, 6, 8, 11, 12], [0, 1, 2, 4, 6, 8, 10, 12]],
-  QUALITATIVE: 2,
-  POSITIVE : 1,
-  NEUTRAL : 0,
-  NEGATIVE : -1
-}
-
-
-
-/**
- * Returns a color from a list
- * @param index number of color in a list
- * @param steps number of steps in a list
- * @param family 2 = qualitative; 1 = positive; 0 = neutral; otherwise negative
- * @returns
- */
-function getBiganColor(family, steps, index ) {
-  if (family == 2) {
-	  return biganColors.qualitative[index];
-  } else if (family == 1) {
-    return biganColors.positive[biganColors.positiveOrder[steps - 1][index]]
-  } else if (family == 0) {
-    return biganColors.neutral[biganColors.neutralOrder[steps - 1][index]]
-  } else {
-    return biganColors.negative[biganColors.negativeOrder[steps - 1][index]]
-  }
-}
-
-
-/**
- * return a list of colors from a given family
- * @param family
- * @param steps
- * @returns
- */
-function getBiganColorList(family, steps) {
-   var colors=[];  
-   for (i=0;i<steps;++i){
-	   colors.push(getBiganColor(family, steps, i));
-   }
-   return colors;
-}
-
-
-function sleep(ms) {
-  return new Promise(resolve => setTimeout(resolve, ms));
-}/**
  *  STATIC TREE MAP
  */
 
@@ -1499,6 +2842,9 @@ function biganStaticTreeMap(frameid, config) {
 			format = config.format,
 			suffix = config.suffix,
 			root = null; //root node of the data hierarchy
+
+		var parent = svgRoot.node().parentNode;
+		var baseHeight = parent.clientHeight;
 		
 		var instance = {};	
 		
@@ -1557,7 +2903,7 @@ function biganStaticTreeMap(frameid, config) {
 		  
 		  var computedStyle = getComputedStyle(element);
 		  width = element.clientWidth;   // width with padding
-		  height = parseInt(width * 0.75) - 30; // reserve space for x-axis
+		  height = baseHeight;
 		  height -= parseFloat(computedStyle.paddingTop) + parseFloat(computedStyle.paddingBottom);
 		  width -= parseFloat(computedStyle.paddingLeft) + parseFloat(computedStyle.paddingRight);	  
 
@@ -1668,4 +3014,142 @@ function biganStaticTreeMap(frameid, config) {
 	  return instance;
 
 	};
-	
+	/**
+ * BIGAN_COLORS
+ */
+
+/**
+ * biganColors: Object to define common color schemes in Bigan
+ */
+var biganColors = {
+  qualitative: [
+    '#65B32E',
+    '#7CBDC4',
+    '#C0D236',
+    '#3E5B84',
+    '#008C75',
+    '#82428D',
+    '#E8683F',
+    '#B81A5D'
+  ],
+  positive: [
+    '#0C4828',
+    '#1A6E31',
+    '#207732',
+    '#208135',
+    '#289337',
+    '#429E35',
+    '#65B32E',
+    '#89BE47',
+    '#9CC65A',
+    '#B2CF6E',
+    '#C0D47A',
+    '#C9D985',
+    '#E7E7B9'
+  ],
+  neutral: [
+    '#003C50',
+    '#1A6B85',
+    '#27758E',
+    '#3C8EA2',
+    '#4999AB',
+    '#5FA7B5',
+    '#7CBDC4',
+    '#93C7CF',
+    '#A5CED7',
+    '#ADD2DD',
+    '#BBD8E5',
+    '#C2DAE8',
+    '#E3E8F0'
+  ],
+  negative: [
+    '#7C170F',
+    '#A82D17',
+    '#AE3417',
+    '#B63D17',
+    '#C34A17',
+    '#C74F1B',
+    '#CC6B21',
+    '#D6852B',
+    '#DC9635',
+    '#E1A744',
+    '#E6B04D',
+    '#E9B855',
+    '#F1D676'
+  ],
+  neutralOrder: [[6], [3, 9], [1, 6, 11], [1, 4, 8, 11], [0, 3, 6, 9, 12], [0, 2, 5, 7, 10, 12], [0, 1, 4, 6, 8, 11, 12], [0, 1, 2, 4, 6, 8, 10, 12]],
+  negativeOrder: [[1], [1, 9], [1, 6, 11], [1, 4, 8, 11], [12,9,6,3,0], [0, 2, 5, 7, 10, 12], [0, 1, 4, 6, 8, 11, 12], [0, 1, 2, 4, 6, 8, 10, 12]],
+  positiveOrder: [[6], [4, 10], [1, 6, 11], [1, 4, 8, 11], [0, 3, 6, 9, 12], [0, 2, 5, 7, 10, 12], [0, 1, 4, 6, 8, 11, 12], [0, 1, 2, 4, 6, 8, 10, 12]],
+  QUALITATIVE: 2,
+  POSITIVE : 1,
+  NEUTRAL : 0,
+  NEGATIVE : -1
+}
+
+
+
+/**
+ * Returns a color from a list
+ * @param index number of color in a list
+ * @param steps number of steps in a list
+ * @param family 2 = qualitative; 1 = positive; 0 = neutral; otherwise negative
+ * @returns
+ */
+function getBiganColor(family, steps, index ) {
+  if (family == 2) {
+	  return biganColors.qualitative[index];
+  } else if (family == 1) {
+    return biganColors.positive[biganColors.positiveOrder[steps - 1][index]]
+  } else if (family == 0) {
+    return biganColors.neutral[biganColors.neutralOrder[steps - 1][index]]
+  } else {
+    return biganColors.negative[biganColors.negativeOrder[steps - 1][index]]
+  }
+}
+
+
+/**
+ * return a list of colors from a given family
+ * @param family
+ * @param steps
+ * @returns
+ */
+function getBiganColorList(family, steps) {
+   var colors=[];  
+   for (i=0;i<steps;++i){
+	   colors.push(getBiganColor(family, steps, i));
+   }
+   return colors;
+}
+
+
+
+/**
+ * Duerme durante un número especificado de milisegundos
+ * @param ms
+ * @returns
+ */
+function sleep(ms) {
+  return new Promise(resolve => setTimeout(resolve, ms));
+}
+
+
+
+
+const biganSectors = ["11","12","21","31","32","41","42","51"];
+
+
+
+/**
+ * Procesa los nombres de sector. Convierte a capitalizado, excepto extensión de nombre
+ * BARBASTRO -> Barbastro
+ * ZARAGOZA III -> Zaragoza III
+ * @param string
+ * @returns
+ */
+function processSectorName (string) {
+	var name_array = string.split(' ');
+	name_array[0] = name_array[0].charAt(0).toUpperCase() + name_array[0].slice(1).toLowerCase(); 
+	return name_array.join(' '); 
+}
+  

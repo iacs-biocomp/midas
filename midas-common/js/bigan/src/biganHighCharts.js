@@ -29,10 +29,19 @@ Highcharts.setOptions({
 });
         
 
+function formatDateES(date) {
+	console.log(date);
+	d = new Date(date);
+	console.log(d);
+	options = {year: 'numeric',
+			   month: 'short'};
+	s = d.toLocaleDateString("es-ES", options);
+	return s;
+}	
 
 
 function biganShowHighChartLineGraph(data, frame, options) {
-
+	
 	var series = []
 
     data.own.forEach(function(element){
@@ -54,6 +63,7 @@ function biganShowHighChartLineGraph(data, frame, options) {
     data.lines.forEach(function(element, index){
         series.push({
             name: element.name,
+            code: element.code,
             color: biganColors.qualitative[index],
             data: element.values,
             lineWidth: 2,
@@ -71,6 +81,7 @@ function biganShowHighChartLineGraph(data, frame, options) {
     data.ranges.forEach(function(element, index) {
         series.push({
             name: element.name,
+            code: element.code,
             data: element.range,
             type: 'arearange',
             lineWidth: 0,
@@ -108,7 +119,8 @@ function biganShowHighChartLineGraph(data, frame, options) {
         tooltip: {
             crosshairs: true,
             shared: true,
-            valueSuffix: data.options.valueSuffix
+            valueSuffix: data.options.valueSuffix,
+            headerFormat: '<span style="font-size: 10px">{point.key:%b-%Y}</span><br/>'
         },
         legend: {
             itemStyle: {
@@ -147,15 +159,16 @@ function biganShowHighChartPyramid(data, frame, options) {
 
 	var categories = [], left = [], right = [];
 
-	data.sort(function(a, b){
-		return parseInt(a.edad) - parseInt(b.edad);
+	data.data.sort(function(a, b){
+		return parseInt(a.category) - parseInt(b.category);
 	});
 
-	data.forEach(element => {
-		categories.push(element.category);
-		left.push(parseInt(element.left) * -1);
-		right.push(parseInt(element.right));
-	});
+	data.data.forEach(element => {
+			categories.push(element.category);
+			left.push(parseInt(element.left) * -1);
+			right.push(parseInt(element.right));
+		});
+
 
 	var chart = Highcharts.chart(frame, {
 		chart: {
@@ -164,6 +177,9 @@ function biganShowHighChartPyramid(data, frame, options) {
 		title: {
 			text: options.title
 		},
+	    subtitle: {
+	        text: data.subtitle
+	    },		
 		//colors: ['#e15759', '#4e79a7'],
 		colors: biganColors.qualitative.slice(0, 2),
 		xAxis: [{
@@ -209,3 +225,307 @@ function biganShowHighChartPyramid(data, frame, options) {
 	return chart;
 }
 
+
+
+
+/**
+ * Muestra un gráfico de tipo Donut con la serie introducida como data
+ * @param data Objeto con las series de datos a representar
+ * @param frame Frame donde pintar el gráfico
+ * @param options Opciones del gráfico
+ * @returns Una referencia al gráfico
+ */
+function biganShowHighChartDonut(data, frame, options) {
+	var chart = Highcharts.chart(frame, {	
+	    chart: {
+	        plotBackgroundColor: null,
+	        plotBorderWidth: null,
+	        plotShadow: false,
+	        type: 'pie',
+	        events: {
+	        	click:function(e) { //subimos un nivel
+		        	if (BiganStructure) {
+		        		var level = BiganStructure.biganLevel();
+		        		if (level == 'cias')
+		        			BiganStructure.globalCIAS(undefined);
+		        		else if (level == 'zbs')
+		        			BiganStructure.setZona(undefined);
+		        		else if (level == 'sector')
+		        			BiganStructure.setSector(undefined);
+		        	}
+		        }
+	        }
+	    },
+		title: {
+            text: options.title,
+            style:  { "color": "#333333", "fontSize": "12px" }
+        },
+        subtitle: {
+        	text: options.subtitle,
+            style:  { "color": "#333333", "fontSize": "10px" }
+        },
+	    tooltip: {
+	        pointFormat: 'Total: <b>{point.y}</b></br>Porcentaje: <b>{point.percentage:.2f}%</b>',
+	        shared: true,
+	        useHTML: true
+	    },        
+        buttons: {
+            contextButton: {
+                menuItems: ['downloadPNG', 'downloadSVG']
+            }
+        },
+        legend: {
+        	enable: true,
+        	align: 'center',
+        	verticalAlign: 'bottom',
+        	layour: 'vertical'
+        },
+	    plotOptions: {
+	        pie: {
+	            allowPointSelect: true,
+	            cursor: 'pointer',
+		        innerSize: '50%'
+	        }
+	    },
+        series: data
+    });
+    
+    
+    return chart;
+}   
+
+
+
+/**
+ * Función que genera y gestiona un gráfico Highcharts de líneas para nivel Gestor.
+ * Gráfico en línea con un mapa. Todos los datos cargados en el inicio, y filtrados según nivel y detalle.
+ * @param data Datos a mostrar
+ * @param frame Frame donde se va a mostrar el gráfico
+ * @param options Opciones del gráfico
+ * @returns Instancia de objeto para gestión del gráfico
+ */
+function biganManagerHighChart(data, frame, options) {
+	
+
+	/**
+	 * Instancia de gráfico ManagerHighchart 
+	 */
+	var instance = {
+		data: data,
+		frame: frame,
+		options: options,
+		chart: null,
+		lineStruc : { "options": 
+			{ "title": "","xAxisType": "datetime","valueSuffix": options.valueSuffix, "yAxisTitle": options.yAxisTitle}, 
+			"own": [], 
+			"lines": [], 
+			"ranges": [] 
+		}
+	};
+	
+	instance.options = function (o) {
+	    if (!arguments.length) 
+	    	return instance.options;
+	    else {
+	    	for (var attrname in o) { options[attrname] = o[attrname]; }
+	    	return instance;
+	    }
+	}
+	
+	instance.options = function (o) {
+	    if (!arguments.length) 
+	    	return instance.options;
+	    else {
+	    	for (var attrname in o) { options[attrname] = o[attrname]; }
+	    	return instance;
+	    }
+	}
+
+	
+	/**
+	 * Inyecta en el gráfico la serie temporal de Aragón (código 02)
+	 */
+	instance.pushAragon = function () {
+		// Aragon
+		var lineRows = instance.data.filter(row => !row.sector);
+		var serie = { 
+			  "name": 'ARAGÓN', 
+			  "code": '02',
+			  "defaultVisible": true, 
+			  "values": []
+			}	
+		lineRows.forEach(function(element){
+			serie.values.push([element.year*1000, element.valor]);
+			});
+		instance.lineStruc.lines.push(serie);
+		
+		return instance;		
+	};
+
+
+	/**
+	 * Inyecta en el gráfico las series temporales de todos los sectores 
+	 */
+	instance.pushAllSectors = function () {
+		biganSectors.forEach(function(sector){
+			var lineRows = instance.data.filter(row => row.sector == sector && (!row.zona || row.zona == ""));
+			var serie = { 
+				  "name": lineRows[0].snombre, 
+				  "code": sector,
+				  "defaultVisible": true, 
+				  "values": []
+			}	
+			lineRows.forEach(function(element){
+				serie.values.push([element.year*1000, element.valor]);
+			});
+			instance.lineStruc.lines.push(serie);
+		});
+		
+		return instance;			
+	};
+
+	
+	/**
+	 * Inyecta en el gráfico la serie temporal de un sector especificado
+	 */
+	instance.pushSector = function (s) {
+		var lineRows = instance.data.filter(row => row.sector == s && (!row.zona || row.zona == ""));
+		var serie = { 
+			  "name": lineRows[0].snombre, 
+			  "code": s,
+			  "defaultVisible": true, 
+			  "values": []
+		}	
+		lineRows.forEach(function(element){
+			serie.values.push([element.year*1000, element.valor]);
+		});
+		instance.lineStruc.lines.push(serie);
+		
+		return instance;		
+	};
+	
+
+	
+	/**
+	 * Inyecta en el gráfico la serie temporal de una zona especificado
+	 */
+	instance.pushZbs = function  (z) {
+		lineRows = instance.data.filter(row => row.zona == z);
+		var serie = { 
+			  "name": lineRows[0].znombre, 
+			  "code": z,
+			  "defaultVisible": true, 
+			  "values": []
+		}	
+		lineRows.forEach(function(element){
+			serie.values.push([element.year*1000, element.valor]);
+		});
+		instance.lineStruc.lines.push(serie);
+		
+		return instance;
+	};	
+	
+	
+	
+	/**
+	 * Vacía las series de un gráfico 
+	 */
+	instance.empty = function () {
+		instance.lineStruc.own.length = 0;
+		instance.lineStruc.lines.length = 0;
+		instance.lineStruc.ranges.length = 0;
+		
+		return instance;
+	};
+	
+	
+	
+	/**
+	 * Pinta el gráfico en el frame especificado
+	 */
+	instance.paint = function () {
+		instance.chart = biganShowHighChartLineGraph(instance.lineStruc,instance.frame, instance.options); 
+		
+		return instance;
+		
+	};
+	
+	
+	/**
+	 * Actualiza las opciones del gráfico. Sólo se puede ejecutar después de paint, pues tiene que existir ya el gráfico highchart.
+	 */	
+	instance.update = function (options) {
+		instance.chart.update(options);
+		
+		return instance;
+	};
+
+	
+	/**
+	 * Hace visibles todas las series 
+	 */	
+	instance.setAllVisible = function () {
+		instance.chart.series.forEach(function(element) {
+		   element.setVisible(true, false);
+	   });
+		instance.chart.redraw();		
+		
+		return instance;
+	};
+	
+	
+	/**
+	 * Hace ocultas todas las series
+	 */	
+	instance.setAllInvisible = function () {
+		instance.chart.series.forEach(function(element) {
+		   element.setVisible(false, false);
+	   });
+		instance.chart.redraw();		
+		
+		return instance;
+	};	
+	
+	
+	/**
+	 * Hace todas las series ocultas salvo una
+	 */	
+	instance.setAllInvisibleExcept = function (c) {
+		instance.chart.series.forEach(function(element, index) {
+		   element.setVisible((element.userOptions.code == c), false);
+	   });
+	   instance.chart.redraw();
+		
+		return instance;
+	};
+	
+	
+	
+	/**
+	 * Hace visible una serie concreta
+	 */	
+	instance.setVisible = function (c) {
+		instance.chart.series.forEach(function(element, index) {
+			if (element.userOptions.code == c)
+				element.setVisible(true, false);
+	   });
+	   instance.chart.redraw();
+		
+		return instance;
+	};	
+	
+	
+	
+	/**
+	 * Pinta una banda en el gráfico, cubriendo el mes indicado en el parámetro (en formato TimeInMillis)
+	 */	
+	instance.markMonth = function (y) {
+		instance.chart.xAxis[0].removePlotBand('yband');
+		instance.chart.xAxis[0].addPlotBand({color: 'rgba(68, 170, 213, 0.3)', from: y-1250000000, to: y+1250000000, id: 'yband'});
+		
+		return instance;
+	};
+	
+	
+	return instance;
+}

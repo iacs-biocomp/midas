@@ -1,7 +1,7 @@
 2/**
  * Mapa de Aragón a nivel de sector, con tooltip y posibilidad de recoloreado con el cambio de valores.
  */
-function biganMapAragonS(frameid) {
+function biganMapAragonZ(frameid) {
 	
 	// padding del mapa
 	var padding = 20,
@@ -12,11 +12,17 @@ function biganMapAragonS(frameid) {
 		sectores = null,
 		zonas = null,
 		sectorPaths = null,
+		zonaPaths = null,
 		enterZonaPaths = null,
 		title = "leyenda",
 		opacity = 0.7,
+		sectorOpacity = 1,
+		zonaOpacity = 0,
 		mode = "aragon",
+		detail = "sector",
+		actualDetail = "sector",
 		selected = "0",
+		initialized = false,
 		colordomain = [20, 40, 60, 80, 100],
 		legendArray = ['0-20 %', '20 - 40 %', '40 - 60 %', '60 - 80 %', '80 - 100 %'],
 		colorArray = ['#2C7BB6', '#ABD9E9', '#FFFFBF', '#FDAE61', '#D7191C'],
@@ -115,7 +121,52 @@ function biganMapAragonS(frameid) {
     	}
 	};	
 	
+	// Accesor para colorArray
+	instance.detail = function (c) {
+	    if (!arguments.length) 
+	    	return detail; 
+	    else {
+	    	detail = c
+	    	if (mode == 'aragon') { 
+	    		if (actualDetail != c)
+	    			{setActualDetail(c)}
+	    	}
+	    	else if (actualDetail == 'sector')
+	    		{setActualDetail('zbs')}
+		    return instance;
+	    }
+	}
+	    	
+
 	
+	function setActualDetail(c) {	
+    	if (svg) {
+	        var t = d3.transition().duration(00);
+	        var zindsec = 0;
+	        var zindzon = 0;
+			zonaPaths = svg.selectAll('.zona')
+			sectorPaths = svg.selectAll('.sector')
+	    	if (c == 'zbs') {
+	    		sectorOpacity = 0
+	    		zonaOpacity = opacity
+	    		zindzon = 1000;
+	    		zonaPaths.each(function() {
+    			  this.parentNode.appendChild(this);
+    			});
+	    	} else {
+	    		sectorOpacity = opacity
+	    		zonaOpacity = 0
+	    		zindsec = 1000;
+	    		sectorPaths.each(function() {
+	    			  this.parentNode.appendChild(this);
+	    			});
+	    		
+	    	}
+            zonaPaths.style('opacity', zonaOpacity)
+            sectorPaths.style('opacity', sectorOpacity)
+    	}	    	
+    	actualDetail = c
+	}		
 	
 	
 /*	// Función para determinar el color de cada territorio
@@ -146,17 +197,19 @@ function biganMapAragonS(frameid) {
 	
 	var initialize = function (error, results) {
 			
-	    if (error) {     alert(error);
-	        throw error }
+	    if (error) {     
+	    	alert(error);
+	        throw error 
+	    }
 		
 	    // Array de features geograficas de los sectores
-	    sectores = topojson.feature(results[0], results[0].objects.sectores_WGS84).features;    
+	    sectores = topojson.feature(results[0], results[0].objects.sectores_WGS84).features;  
 	    sectores.forEach(function (f) {
 	        // Hacemos que el properties de cada sector sea el registro data
 			// correspondiente
 	        f.properties = data.find(function (d) { 
 	        	if (d.sector == f.properties.code && (!d.zona || d.zona == "")) {
-	        		d.snombre = f.properties.name;
+	        		//d.snombre = f.properties.name;
 	        		return true
 	        	} else {
 	        		return false
@@ -164,6 +217,25 @@ function biganMapAragonS(frameid) {
 	        	// return d.sector == f.properties.COD_SECTOR && d.zona == ""
 	        })
 	    })
+	    
+	    
+	    // Array de features geograficas de los sectores
+	    zonas = topojson.feature(results[1], results[1].objects.zonas_salud_WGS84).features;  
+
+	    zonas.forEach(function (f) {
+	        // Hacemos que el properties de cada sector sea el registro data
+			// correspondiente
+	        f.properties = data.find(function (d) { 
+	        	if (d.zona == parseInt(f.properties.code)) {
+	        		d.snombre = f.properties.name;
+	        		return true
+	        	} else {
+	        		return false
+	        	} 
+	        	// return d.sector == f.properties.COD_SECTOR && d.zona == ""
+	        })
+	    })	    
+	    
 
 	    
 	    // Dibujamos la leyenda
@@ -181,21 +253,14 @@ function biganMapAragonS(frameid) {
 		    
 	    instance.repaint(500)
 		
-	    // dibujamos el icono para zoom Aragón
-		d3.select("#icon-aragon")
-			.style("position", "absolute")
-			.style("left", "90%")
-			.style("height", "40px")
-			.style("width", "30px")
-			.style("z-index", 1000)
-			.on('click', instance.aragonZoom)
-		    
+		initialized = true;
 	}
 	
 	
 	
 	// Redibuja el mapa a la nueva escala
 	instance.repaint = function() {
+
 		width = parseInt(container.style("width")) - 2*padding;	
 		height = 3*width / 2 
 
@@ -214,31 +279,41 @@ function biganMapAragonS(frameid) {
 		    .attr('width', width)
 		    .attr('height', height)
 	
-	    sectorPaths = svg.selectAll('.sector')
+        // preparamos las zonas de salud
+		zonaPaths = svg.selectAll('.zona')
+     	.data(zonas)
+        .enter()
+        .append('path')
+        	.attr('class', 'zona')
+        	.attr('d', path)
+        	.style('fill', function (d) { return color(d.properties.valor) })
+        	.style('opacity', zonaOpacity)
+        	.on('click', function (d) { instance.setZbs(d.properties) })
+        	.on('dblclick', function (d) { instance.setSector(undefined) })
+		
+		sectorPaths = svg.selectAll('.sector')
         .data(sectores)
         .enter()
         .append('path')
         	.attr('class', 'sector')
         	.attr('d', path)
         	.style('fill', function (d) { return color(d.properties.valor) })
-        	.style('opacity', opacity)
+        	.style('opacity', sectorOpacity)
         	.on('click', function (d) { instance.setSector(d.properties.sector) })
-	        
+		        
 	    sectorPaths.append('title').text( function (d) { return d.properties.snombre + "\n" + d.properties.valor } )
-	    
+	    zonaPaths.append('title').text( function (d) { return d.properties.znombre + "\n" + d.properties.valor } )
+	    instance.detail(detail);
 	}
 	
 	
 	
 	// Cambiamos el color de los polígonos
 	instance.recolor = function(delay) {
-		
+
 	    sectores.forEach(function (f, i, array) {
-	        // Hacemos que el properties de cada sector sea el registro data
-			// correspondiente
 	        var dd = data.find(function (d) { 
 	        	if (d.sector == f.properties.sector) {
-	        		d.snombre = f.properties.snombre;
 	        		return true
 	        	} else {
 	        		return false
@@ -247,7 +322,19 @@ function biganMapAragonS(frameid) {
 	        array[i].properties = dd;
 	    })
 	    
-		color = d3.scaleThreshold()
+
+	    zonas.forEach(function (f, i, array) {
+	        var dd = data.find(function (d) { 
+	        	if (d.zona == parseInt(f.properties.zona)) {
+	        		return true
+	        	} else {
+	        		return false
+	        	} 
+	        })
+	        array[i].properties = dd;
+	    })	    	    
+	    
+	    color = d3.scaleThreshold()
 		    .domain(colordomain)
 		    .range(colorArray);
 	    
@@ -260,11 +347,29 @@ function biganMapAragonS(frameid) {
 	        .style('fill', function (d) { 
 	        				return color(d.properties.valor); 
 	        			})
-	        .style('opacity', opacity)
+	        .style('opacity', sectorOpacity)
 	        
+
+	    zonaPaths = svg.selectAll('.zona')
+	    zonaPaths .select('title').remove()
+	    zonaPaths 
+	    	.data(zonas)
+	        .transition()
+	        .duration(delay)	        
+	        .style('fill', function (d) { 
+	        				return color(d.properties.valor); 
+	        			})
+	        .style('opacity', zonaOpacity)
+
 	    sectorPaths
 	        .on('click', function (d) { instance.setSector(d.properties.sector) })
 	        .append('title').text( function (d) { return d.properties.snombre + "\n" + d.properties.valor } )
+
+	    zonaPaths
+	        .on('dblclick', function (d) { instance.setSector(undefined) })
+	        .on('click', function (d) { instance.setZbs(d.properties) })
+	        .append('title').text( function (d) { return d.properties.znombre + "\n" + d.properties.valor } )
+
 	        
 	    if(instance.showLegend) {
 	    	container.selectAll('.mapsLegend').remove();
@@ -279,7 +384,6 @@ function biganMapAragonS(frameid) {
 		    	//legend.append('br')
 			    }
 		    }	        
-	    
 	        
 	}
 	
@@ -289,15 +393,12 @@ function biganMapAragonS(frameid) {
 	// Carga los topojson y pinta el mapa
 	instance.paint = function() {
 
-		svg = container
-		    .append('svg')
-		    .attr('width', width)
-		    .attr('height', height)
-
+		initialized = false;
+		
 		d3.queue()
-		    .defer(d3.json, '/cdn/maps/sectores_WGS84.json')
-		    //.defer(d3.json, '/cdn/maps/zonas_salud_WGS84.json')
-		    .awaitAll(initialize)		
+			.defer(d3.json, '/cdn/maps/sectores_WGS84.json')
+		    .defer(d3.json, '/cdn/maps/zonas_salud_WGS84.json')
+		    .awaitAll(initialize)
 
 		$(window).on('resize', function(){
 			instance.repaint()
@@ -309,11 +410,17 @@ function biganMapAragonS(frameid) {
   
 	// Zoom centrado a todo Aragon
 	instance.aragonZoom = function () {
-        var t = d3.transition().duration(800)
-
+		if (!initialized) return;
+		
+		var t = d3.transition().duration(800)
+        
         mode = "aragon";
 		selected = "0";
-        if (BiganStructure)
+
+		setActualDetail(detail);
+
+		
+		if (BiganStructure)
         	BiganStructure.setSector(undefined);	
 
 
@@ -324,46 +431,78 @@ function biganMapAragonS(frameid) {
         sectorPaths.transition(t)
             .attr('d', path)
 
-        svg.selectAll('.zona')
-            .data([])
-            .exit().transition(t)
+        zonaPaths.transition(t)
             .attr('d', path)
-            .style('opacity', 0)
-            .remove()
+           
+        
             
-        d3.select("#icon-aragon")
-        	.style("display", "none")            
 	}
 
   
     // Selección del sector sobre el que hemos pulsado con el ratón.
 	instance.setSector = function(id) {
+		if (!initialized) return;		
+
+
+		if (BiganStructure){
+			if (id == undefined) {
+				BiganStructure.setZona();
+			}
+			BiganStructure.setSector(id);
+		}
+
+	}
+	
+	
+    // Selección del sector sobre el que hemos pulsado con el ratón.
+	instance.updateSector = function(id) {
+		if (!initialized) return;		
+
 		if (mode == "sector" && selected  == id) {
 			instance.aragonZoom();
 		} else { 		
-			if (BiganStructure)
-	        	BiganStructure.setSector(id);
-			else 
-				instance.sectorZoom(id);
+			instance.sectorZoom(id);
 		}
 	}
+		
+	
+    // Selección del sector sobre el que hemos pulsado con el ratón.
+	instance.setZbs = function(id) {
+		if (!initialized) return;		
+		
+		if (BiganStructure) {
+			if (BiganStructure.globalSector() == undefined) {
+				BiganStructure.setSector(id.sector)
+			}
+			// Nos aseguramos de que se ha hecho el zoom a Sector antes de seleccionar zona
+			sleep(1000).then((successMessage) => {
+				// Eliminamos el click si viene de un doble click para zoom a Aragón
+				if (BiganStructure.globalSector() != undefined)
+					BiganStructure.setZona(id.zona)
+			})
+		}
+
+	}	
 	
 	
 	
 	// Zoom al sector seleccionado
 	instance.sectorZoom = function (id) {
-		
-		/*
-		 * Control en caso de trabajar con BiganStructure
-		 */
-		if (mode == "sector" && selected  == id) {
-			// instance.aragonZoom();
+		if (!initialized) return;		
+
+		// click en modo sector, en sector seleccionado. Volvemos a Aragon
+		if (id == undefined || (mode == "sector" && selected  == id)) {
+			instance.aragonZoom();
 			return;
 		} 
 
 		selected = id;
 		mode = "sector";
-
+		
+		setActualDetail('zbs')
+        
+		// actualDetail = 'zbs'
+		
         // seleccionamos el sector con codigo id
         var sector = sectores.find(function (d) { return d.properties.sector === id })
 
@@ -376,9 +515,10 @@ function biganMapAragonS(frameid) {
 
         sectorPaths.transition(t)
             .attr('d', path)
-		
-        d3.select("#icon-aragon")
-        	.style("display", "block")
+
+        zonaPaths.transition(t)
+            .attr('d', path)
+        
 
     }
 

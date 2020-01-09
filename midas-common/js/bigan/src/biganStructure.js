@@ -1,7 +1,19 @@
 /**
  * BIGAN_STRUCTURE
+ * Estructura de datos común para la definición de contextos BIGAN
+ * Requiere: knockout.js
  */
 
+
+
+
+ko.observable.fn.silentUpdate = function(value) {
+    this.notifySubscribers = function() {};
+    this(value);
+    this.notifySubscribers = function() {
+        ko.subscribable.fn.notifySubscribers.apply(this, arguments);
+    };
+};
 
 
 /* Module for Registration form application */
@@ -17,10 +29,19 @@ var BiganStructure = function () {
   var globalYear = ko.observable();
   var globalDate = ko.observable();
 
+  var globalDetail = ko.observable('global');
+  
+  
+  const DETAIL1='global';
+  const DETAIL2='sector';
+  const DETAIL3='zbs';
+  
+  
+  
 
   //SECTORES
   var sector = {
-    codigo: "",
+    codigo: undefined,
     descripcion: ""
   }
 
@@ -48,15 +69,17 @@ var BiganStructure = function () {
     $.each(response, function (index, item) {
       addSector(item.code, item.descrip);
     });
+    
+    // Forzamos el borrado del sector global. Disparamos evento con globalSector==undefined => Aragón
+    setSector(false);
   };
 
 
   var setSector = function (s) {
     if (!s) {
       globalSector(undefined);
-      globalZona(undefined);
     } else {
-      var t = ko.utils.arrayFirst(sectores(), function (f) { return f.codigo === s });
+      var t = ko.utils.arrayFirst(sectores(), function (f) { return f.codigo == s });
       if (t && (!globalSector() || s != globalSector().codigo)) {
         //alert("seleccionado " + t.codigo)
         globalSector(t);
@@ -97,15 +120,22 @@ var BiganStructure = function () {
   };
 
 
+  
+  // enlazamos las zonas al cambio de sector
   globalSector.subscribe(function () {
-    if (typeof globalSector() != 'undefined')
-      getZonas().done(callbackZonas);
+	if (typeof globalSector() != 'undefined' && typeof globalSector().codigo != 'undefined') {
+		getZonas().done(callbackZonas);
+        // Comentado. Fuerza detalle global si se selecciona un sector
+		//if (globalDetail() === DETAIL2)
+        //	globalDetail(DETAIL1);
+    }
     else {
-      globalZona(undefined);
+    	globalZona(undefined);
     }
   });
 
 
+  // Las zonas son visibles si el sector está definido
   var zonaVisible = ko.computed(function () {
     if (typeof globalSector() === "undefined")
       return false;
@@ -114,11 +144,12 @@ var BiganStructure = function () {
   });
 
 
+  // asigna una zona global al contexto
   var setZona = function (s) {
     if (!s) {
       globalZona(undefined);
     } else {
-      var t = ko.utils.arrayFirst(zonas(), function (f) { return f.codigo === s });
+      var t = ko.utils.arrayFirst(zonas(), function (f) { return f.codigo == s });
       if (t && (!globalZona() || s != globalZona().codigo)) {
         //alert("seleccionado " + t.codigo)
         globalZona(t);
@@ -145,6 +176,8 @@ var BiganStructure = function () {
     });
   }
 
+  
+  // Obtiene los CIAS de la zona global
   function getCiasZona() {
     let zc = globalZona().codigo;
     return $.ajax({
@@ -162,23 +195,249 @@ var BiganStructure = function () {
   };
 
 
+  
+  // Vincula la lectura de CIAS a la selección de Zona
   globalZona.subscribe(function () {
     if (typeof globalZona() != "undefined") {
       getCiasZona().done(callbackCiasZona);
+      // Comentado: fuerza detalle 1 si detalle es zona, y se selecciona una zona.
+      //if (globalDetail() === DETAIL3)
+      //  globalDetail(DETAIL1);      
+    } else  {
+    	globalCIAS(undefined);
     }
+   
   });
 
 
+  
+  // Una zona es visible si la zona está definida
   var ciasVisible = ko.computed(function () {
-    if (typeof globalSector() === "undefined" || typeof globalZona() === "undefined")
+    if (typeof globalSector() === "undefined" || 
+    	typeof globalZona() === "undefined" || 
+    	cias().length == 0)
       return false;
     else
       return true;
   });
 
+  
+  // Vincula la lectura de CIAS a la selección de Zona
+  globalCIAS.subscribe(function () {
+    
+	//if (typeof globalCIAS() != "undefined" &&  globalDetail() === DETAIL3) {
+    //  	  globalDetail(DETAIL1);      
+    //}
+  });
+  
+   
+  // Habilita o deshabilita el radiobutton de detalle nivel 2 (sector)
+  var detail2Enabled = ko.computed(function() {
+	  return true;
+	  //return !zonaVisible();
+  });
+  
+  // Habilita o deshabilita el radiobutton de detalle nivel 3 (ZBS)
+  var detail3Enabled = ko.computed(function() {
+	  return true;
+	  //return !ciasVisible();
+  });  
+  
+  
+  var biganLevel = ko.computed(function() {
+	 if (globalSector() == undefined) 
+		 return 'global';
+	 else if (globalZona() == undefined) 
+		 return 'sector';
+	 else if (globalCIAS() == undefined) 
+		 return 'zbs';
+	 else 
+		 return 'cias';
+  });
+  
+  
+  
+  
+  
+  /**
+   * Funciones para acceso a datos de un microservicio REST, a partir de la URL indicada
+   * Si no lleva parámetros, devuelve datos de Aragón
+   * Sector: &level=sector&code=
+   * Zona: &level=zbs&code=
+   * CIAS: &level=cias&code=
+   */
+
+  // Lee los datos de Aragón a partir de una URL dada, para la actualización del componente
+  // colocado en el frame_id
+  function getDataAragon(frame_id, url, callback) {
+	  var options = {title:'Aragón'}  
+	  //$('#tit' + frame_id).html('Aragón');
+ 	  return $.ajax({
+	    	dataType:'json',
+	    	type: 'GET',
+	    	url: url + '&detail=' + globalDetail(),
+	    	success:function(data) {callback(data, frame_id, options)}
+ 		});
+  }  
+  
+  
+  // Lee los datos del sector seleccionado, para refrescar un componente
+  function getDataSector(frame_id, url, callback) {
+	  var options = {title:'Sector: ' + processSectorName(globalSector().descripcion)}
+	  //$('#tit' + frame_id).html('Sector: ' + processSectorName(globalSector().descripcion));
+   	return $.ajax({
+	    	dataType:'json',
+	    	type: 'GET',
+	    	url: url + '&level=sector&code=' + globalSector().codigo + '&detail=' + globalDetail(),
+	    	success:function(data) {callback(data, frame_id, options)}	 	
+	    });
+   }    
+  
+  
+  // Lee los datos de una zona seleccionada, para refrescar un componente
+  function getDataZona(frame_id, url, callback) {
+	  var options = {title:globalZona().descripcion}
+	  //$('#tit' + frame_id).html(globalZona().descripcion);
+   	return $.ajax({
+	    	dataType:'json',
+	    	type: 'GET',
+	    	url: url + '&level=zbs&code=' + globalZona().codigo + '&detail=' + globalDetail(),
+	    	success:function(data) {callback(data, frame_id, options)}	 
+   	});
+  }   
+  
+  // Obtiene por AJAX los datos a nivel de CIAS de una URL
+  function getDataCias(frame_id, url, callback) {
+	  var options = {title:globalCIAS().ciasCd}
+	  //$('#tit' + frame_id).html(globalCIAS().ciasCd);
+  	return $.ajax({
+	    	dataType:'json',
+	    	type: 'GET',
+	    	url: url + '&level=cias&code=' + globalCIAS().ciasCd,
+	    	success:function(data) {callback(data, frame_id, options)}
+  	});
+  }   
+  
+
+  // Devuelve una estructura vacía de datos, a través de la función callback especificada
+  function getDataNull(frame_id, url, callback) {
+	  var options = {title:''}
+	  callback(null, frame_id, options);
+  }   
+
+  
+  
+  
+
+  
+  /**
+   *  Vincula un frame al contexto BiganStructure
+   * @ param frame_id ID del frame que estamos vinculando
+   * @ param url URL desde la que leeremos los datos de refresco
+   * @ callback Función de Callback que llamaremos al recibir los datos, para visualizar el componente.
+   */
+  var linkContext = function (frame_id, url, callback) {
+
+	// Vinculamos CIAS al contexto global 
+	globalCIAS.subscribe(function () {
+		if(typeof globalCIAS() != "undefined") {
+	   		getDataCias(frame_id, url, callback)
+	   	} else {
+	   		if (BiganStructure.globalZona())
+	   			getDataZona(frame_id, url, callback)
+	   	}   
+	});
+	 
+	// Vinculamos Zona al contexto global
+	globalZona.subscribe(function () {
+		if(BiganStructure.globalZona() != undefined) {	
+		   	getDataZona(frame_id, url, callback)
+		} else {
+			if (BiganStructure.globalSector()) {
+			   	getDataSector(frame_id, url, callback)
+			} 
+		} 
+	});
+
+	// Vinculamos Sector al contexto global	
+	globalSector.subscribe(function () {
+		if(BiganStructure.globalSector() != undefined) {
+		   	getDataSector(frame_id, url, callback)
+		} else {
+			getDataAragon(frame_id, url, callback)
+		}
+	});
+	
+	
+	// Vinculamos Sector al contexto global	
+	globalDetail.subscribe(function () {
+		if(typeof globalCIAS() != "undefined") {
+	   		getDataCias(frame_id, url, callback)
+		} else if(typeof BiganStructure.globalZona() != "undefined") {	
+		   	getDataZona(frame_id, url, callback)
+		} else if(typeof BiganStructure.globalSector() != "undefined") {
+		   	getDataSector(frame_id, url, callback)
+		} else {
+			getDataAragon(frame_id, url, callback)
+		}
+	});	
+	
+  }
+  
+  
+  
+  /**
+   *  Vincula un frame al contexto BiganStructure de referencia. Es decir, si cambiamos zona, recargamos sector. Si cambiamos CIAS, 
+   *  recargamos zona, y si cambiamos sector, cargamos Aragón
+   * @ param frame_id ID del frame que estamos vinculando
+   * @ param url URL desde la que leeremos los datos de refresco
+   * @ callback Función de Callback que llamaremos al recibir los datos, para visualizar el componente.
+   */
+  var linkReferenceContext = function (frame_id, url, callback) {
+
+	$(globalCIAS.subscribe(function () {
+		if(typeof globalCIAS() != "undefined") {
+	   		getDataZona(frame_id, url, callback)
+	   	} else {
+		   	getDataSector(frame_id, url, callback)
+	   	}   
+	}));
+	 
+	$(globalSector.subscribe(function () {
+		if(typeof globalSector() != "undefined") {
+			getDataAragon(frame_id, url, callback)
+		} else {
+			getDataNull(frame_id, url, callback)
+		}
+	}));
+	
+	$(globalZona.subscribe(function () {
+		if(typeof globalZona() != "undefined") {	
+			if (globalSector()) {
+				getDataSector(frame_id, url, callback)
+			}
+		} else {
+			getDataAragon(frame_id, url, callback)
+		} 
+	}));
+  }
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  // Inicializamos sector global a "". De esa manera, el primer cambio de sector, aunque sea
+  // a undefined, dispara el evento para actualizar todos los componentes vinculados.
+  globalSector(sector);  
+  
+  
 
   //INIT
-
   var init = function () {
     getSectores().done(callbackSectores);
     $(".str-bindable").each(function () {
@@ -191,8 +450,9 @@ var BiganStructure = function () {
   $(init);
 
 
+
+  /* interfaz público del objeto BiganStructure */
   return {
-    /* add members that will be exposed publicly */
     globalSector: globalSector,
     globalZona: globalZona,
     globalCIAS: globalCIAS,
@@ -203,122 +463,16 @@ var BiganStructure = function () {
     setZona: setZona,
     cias: cias,
     ciasVisible: ciasVisible,
+    detail2Enabled: detail2Enabled,
+    detail3Enabled: detail3Enabled,
     globalYear: globalYear,
-    globalDate: globalDate
+    globalDate: globalDate,
+    linkContext: linkContext,
+    linkReferenceContext: linkReferenceContext,
+    globalDetail: globalDetail,
+    biganLevel: biganLevel
   };
 }();
 
 
 
-/**
- * BIGAN_COLORS
- */
-
-/**
- * biganColors: Object to define common color schemes in Bigan
- */
-var biganColors = {
-  qualitative: [
-    '#65B32E',
-    '#7CBDC4',
-    '#C0D236',
-    '#3E5B84',
-    '#008C75',
-    '#82428D',
-    '#E8683F',
-    '#B81A5D'
-  ],
-  positive: [
-    '#0C4828',
-    '#1A6E31',
-    '#207732',
-    '#208135',
-    '#289337',
-    '#429E35',
-    '#65B32E',
-    '#89BE47',
-    '#9CC65A',
-    '#B2CF6E',
-    '#C0D47A',
-    '#C9D985',
-    '#E7E7B9'
-  ],
-  neutral: [
-    '#003C50',
-    '#1A6B85',
-    '#27758E',
-    '#3C8EA2',
-    '#4999AB',
-    '#5FA7B5',
-    '#7CBDC4',
-    '#93C7CF',
-    '#A5CED7',
-    '#ADD2DD',
-    '#BBD8E5',
-    '#C2DAE8',
-    '#E3E8F0'
-  ],
-  negative: [
-    '#7C170F',
-    '#A82D17',
-    '#AE3417',
-    '#B63D17',
-    '#C34A17',
-    '#C74F1B',
-    '#CC6B21',
-    '#D6852B',
-    '#DC9635',
-    '#E1A744',
-    '#E6B04D',
-    '#E9B855',
-    '#F1D676'
-  ],
-  neutralOrder: [[6], [3, 9], [1, 6, 11], [1, 4, 8, 11], [0, 3, 6, 9, 12], [0, 2, 5, 7, 10, 12], [0, 1, 4, 6, 8, 11, 12], [0, 1, 2, 4, 6, 8, 10, 12]],
-  negativeOrder: [[1], [1, 9], [1, 6, 11], [1, 4, 8, 11], [12,9,6,3,0], [0, 2, 5, 7, 10, 12], [0, 1, 4, 6, 8, 11, 12], [0, 1, 2, 4, 6, 8, 10, 12]],
-  positiveOrder: [[6], [4, 10], [1, 6, 11], [1, 4, 8, 11], [0, 3, 6, 9, 12], [0, 2, 5, 7, 10, 12], [0, 1, 4, 6, 8, 11, 12], [0, 1, 2, 4, 6, 8, 10, 12]],
-  QUALITATIVE: 2,
-  POSITIVE : 1,
-  NEUTRAL : 0,
-  NEGATIVE : -1
-}
-
-
-
-/**
- * Returns a color from a list
- * @param index number of color in a list
- * @param steps number of steps in a list
- * @param family 2 = qualitative; 1 = positive; 0 = neutral; otherwise negative
- * @returns
- */
-function getBiganColor(family, steps, index ) {
-  if (family == 2) {
-	  return biganColors.qualitative[index];
-  } else if (family == 1) {
-    return biganColors.positive[biganColors.positiveOrder[steps - 1][index]]
-  } else if (family == 0) {
-    return biganColors.neutral[biganColors.neutralOrder[steps - 1][index]]
-  } else {
-    return biganColors.negative[biganColors.negativeOrder[steps - 1][index]]
-  }
-}
-
-
-/**
- * return a list of colors from a given family
- * @param family
- * @param steps
- * @returns
- */
-function getBiganColorList(family, steps) {
-   var colors=[];  
-   for (i=0;i<steps;++i){
-	   colors.push(getBiganColor(family, steps, i));
-   }
-   return colors;
-}
-
-
-function sleep(ms) {
-  return new Promise(resolve => setTimeout(resolve, ms));
-}

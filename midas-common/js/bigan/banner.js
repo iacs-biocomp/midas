@@ -1,1 +1,1 @@
-$("#bannertext").text("Descubre el Big data sanitario de Aragón diseñado para profesionales como tú");
+$("#bannertext").text("Descubre el Big Data sanitario de Aragón diseñado para profesionales como tú");

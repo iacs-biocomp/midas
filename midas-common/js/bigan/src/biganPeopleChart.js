@@ -3,59 +3,63 @@
  */	
 	
 
-	
-function biganPeopleChart(frame, data) {
-    var peop_elem = "#peop" + frame;
+function biganPeopleChart(d, frame, options) {
+
+    var colorFore = getBiganColor(biganColors.NEGATIVE, 8, 1);
+    var colorBack = biganColors.negative[12];	
+	var peop_elem = "#peop" + frame;
     var val_elem = "#val" + frame;
     var text = "";
     var i;    
     
-    if (!data) {
+    if (!d) {
     	text = "";
-    } else if (data.value < data.ref) {
-        text = "<span style='color: " + data.color + "; background: " + data.shadow + ";'>";
-        for (i = 1; i <= Math.round(data.value) ; ++i) {
-            text += randomText();
-            if (i%25 == 0) text +='&nbsp;<br>';
-        }
-        text += '</span>';
-        text += "<span style='background:" + data.shadow + "'>";
-        for (i = i; i <= Math.round(data.ref) ; ++i) {
-            text += randomText();
-            if (i%25 == 0) text +='&nbsp;<br>';
-        }
-        text += '</span>';
-        for (i = i; i <= 100; ++i) {
-            text += randomText();   
-            if (i%25 == 0) text +='&nbsp;<br>';
-
-        }
     } else {
-        text = "<span style='color: " + data.color + "; background: " + data.shadow + ";'>";
-        for (i = 1; i <= Math.round(data.ref) ; ++i) {
-            text += randomText();
-            if (i%25 == 0) text +='&nbsp;<br>';
-        }
-        text += '</span>';
-        text += "<span style='color:" + data.color + ";'>";
-        for (i = i; i <= Math.round(data.value) ; ++i) {
-            text += randomText();
-            if (i%25 == 0) text +='&nbsp;<br>';
-        }
-        text += '</span>';
-        for (i = i; i <= 100; ++i) {
-            text += randomText();   
-            if (i%25 == 0) text +='&nbsp;<br>';
-
-        }
-
+    	data = d.data;
+    	if (data[0].value < data[1].value) {
+	        text = "<span style='color: " + colorFore + "; background: " + colorBack + ";'>";
+	        for (i = 1; i <= Math.round(data[0].value) ; ++i) {
+	            text += randomText();
+	            if (i%25 == 0) text +='&nbsp;<br>';
+	        }
+	        text += '</span>';
+	        text += "<span style='background:" + colorBack + "'>";
+	        for (i = i; i <= Math.round(data[1].value) ; ++i) {
+	            text += randomText();
+	            if (i%25 == 0) text +='&nbsp;<br>';
+	        }
+	        text += '</span>';
+	        for (i = i; i <= 100; ++i) {
+	            text += randomText();   
+	            if (i%25 == 0) text +='&nbsp;<br>';
+	
+	        }
+	    } else {
+	        text = "<span style='color: " + colorFore + "; background: " + colorBack + ";'>";
+	        for (i = 1; i <= Math.round(data[1].value) ; ++i) {
+	            text += randomText();
+	            if (i%25 == 0) text +='&nbsp;<br>';
+	        }
+	        text += '</span>';
+	        text += "<span style='color:" + colorFore + ";'>";
+	        for (i = i; i <= Math.round(data[0].value) ; ++i) {
+	            text += randomText();
+	            if (i%25 == 0) text +='&nbsp;<br>';
+	        }
+	        text += '</span>';
+	        for (i = i; i <= 100; ++i) {
+	            text += randomText();   
+	            if (i%25 == 0) text +='&nbsp;<br>';
+	
+	        }
+	    }
     }
 
     $(peop_elem).html(text);
 
     if (data) {
-	    text2 = "<span class='valdesc'>" + data.descValue + "</span><br><span class='pctval'  style='color:" + data.color + "'><span style='font-family: WeePeople;'>" + randomText() +" </span>" + data.value + "%</span><br>";
-	    text2 += "<span class='refdesc'>" + data.descRef + "</span><br><span class='pctref'   style='background:" + data.shadow + "'>" + data.ref + "%</span>";
+	    text2 = "<span class='valdesc' style='color:" + colorFore + "'>" + data[0].descvalue + "</span><br><span class='pctval'  style='color:" + colorFore + "'><span style='font-family: WeePeople;'>" + randomText() +" </span>" + data[0].value + "%</span><br>";
+	    text2 += "<span class='refdesc' style='color:" + colorFore + "'>" + data[1].descvalue + "</span><br><span class='pctref'   style='background:" + colorBack + "'>" + data[1].value + "%</span>";
     } else {
     	text2 = "";
     }
@@ -63,33 +67,22 @@ function biganPeopleChart(frame, data) {
 }
 
 
-function PWData (value, ref, descValue, descRef, color, shadow) {
-	if (color == undefined) color='#ff3030';
-	if (shadow == undefined) shadow ='#ff8080';
-    this.value = value;
-    this.ref = ref;
-    this.descValue = descValue;
-    this.descRef = descRef;
-    this.color = color;
-    this.shadow = shadow;
-}	
 
-
-
-function biganPeopleNChart(frame, d) {
-	var colors = ['#1b9e77', '#d95f02', '#7570b3', '#e7298a', '#e6ab02', '#666666', '#00ff00', '#0000ff'];
-    var peop_elem = "#peop" + frame;
+function biganPeopleNChart(d, frame, options) {
+	//var colors = ['#1b9e77', '#d95f02', '#7570b3', '#e7298a', '#e6ab02', '#666666', '#00ff00', '#0000ff'];
+    var colors = biganColors.qualitative;
+	var peop_elem = "#peop" + frame;
     var val_elem = "#val" + frame;
     var text = "";
     var text2 = "";
     var total = 0;
     var parcial = 0;
-    var data = d.data;
-
+    var data = {};
     
     if (!d) {
     	text = "";
     } else {
+    	data = d.data;
     	acum = 0;
     	for (c = 0; c < data.length; ++c) {
     		acum += data[c].value;
@@ -134,6 +127,11 @@ function biganPeopleNChart(frame, d) {
     
     
     $(val_elem).html(text2);
+    
+    //console.log('frame=' + '#peoptit' + frame + ":" + options.title);
+    
+    $('#peoptit' + frame).html(options.title);		
+
 
     $('.tooltip-container').mouseover(function(){
     	tooltip = $( this ).find( 'span.tooltiptext' );

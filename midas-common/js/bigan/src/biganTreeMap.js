@@ -16,6 +16,9 @@ function biganStaticTreeMap(frameid, config) {
 			format = config.format,
 			suffix = config.suffix,
 			root = null; //root node of the data hierarchy
+
+		var parent = svgRoot.node().parentNode;
+		var baseHeight = parent.clientHeight;
 		
 		var instance = {};	
 		
@@ -74,7 +77,7 @@ function biganStaticTreeMap(frameid, config) {
 		  
 		  var computedStyle = getComputedStyle(element);
 		  width = element.clientWidth;   // width with padding
-		  height = parseInt(width * 0.75) - 30; // reserve space for x-axis
+		  height = baseHeight;
 		  height -= parseFloat(computedStyle.paddingTop) + parseFloat(computedStyle.paddingBottom);
 		  width -= parseFloat(computedStyle.paddingLeft) + parseFloat(computedStyle.paddingRight);	  
 

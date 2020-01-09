@@ -33,9 +33,17 @@
 	font-size:40px;
 	font-weight:400;
 	letter-spacing:-12px;
-    color: #D0D0D0;
+    color: #C0D47A; /*D0D0D0;*/
     line-height: 80%;
 }
+
+ @media (max-width : 1400px) {
+	.peoplegraph     {
+		font-size:25px
+		font-weight:250;
+		letter-spacing:-15px;
+	}
+ }
 
 .peoplelegend {
 	font-size:20px;
@@ -144,8 +152,8 @@ td.peoplelegend {
 	color: #555;
 	float: right;
 	padding: 4px 4px;
-	font: 8px/10px Arial, Helvetica, sans-serif; /* 14-16 */
-    line-height: 12px; /*18*/
+	font: 14px/16px Arial, Helvetica, sans-serif; /* 14-16 */
+    /*line-height: 12px; /*18*/
 	background: rgba(255,255,255,0.8);
 	box-shadow: 0 0 12px rgba(0,0,0,0.2);
 	border-radius: 3px;

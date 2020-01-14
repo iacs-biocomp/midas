@@ -25,6 +25,9 @@ import org.hibernate.annotations.LazyCollectionOption;
 					 + "FROM MidGrant g JOIN g.midRoleList r " 
 					 + "JOIN r.midUserList u "
 					 + "WHERE u.userName = :username"),
+//    @NamedQuery(name = "findGrantsByRole", query="SELECT g "
+//					 + "FROM MidGrant g JOIN g.midRoleList r " 
+//1					 + "WHERE r.roleId = :roleId"),    
 //    @NamedQuery(name = "findGrantsByLdap", query="SELECT g "
 //					 + "FROM MidGrant g JOIN g.midRoleList r " 
 //					 + "WHERE :roleLdap like r.roleLdap "),    
@@ -36,10 +39,15 @@ import org.hibernate.annotations.LazyCollectionOption;
 	@NamedNativeQuery(name = "findGrantsByLdap", query = "select gr_id, gr_desc from " +
 													 "mid_grants join mid_rolegrants on gr_id = rg_grant " + 
 													 "join mid_roles_ldap on rg_role = role_id " + 
-													 "where :roleLdap like role_ldap", resultClass = MidGrant.class)
+													 "where :roleLdap like role_ldap", resultClass = MidGrant.class),
+	@NamedNativeQuery(name = "findGrantsByRole", query = "select gr_id, gr_desc from " +
+			 "(select gr_id, gr_desc from mid_grants where gr_id = :role_id union " + 
+			 " select rg_grant, rg_role from mid_rolegrants where rg_role = :role_id) t1 ", resultClass = MidGrant.class)
 })
 
-	public class MidGrant implements Serializable {
+
+
+public class MidGrant implements Serializable {
     private static final long serialVersionUID = 1L;
     @Id
     @Basic(optional = false)

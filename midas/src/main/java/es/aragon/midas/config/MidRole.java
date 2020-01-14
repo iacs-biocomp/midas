@@ -26,6 +26,9 @@ import org.hibernate.annotations.LazyCollectionOption;
     @NamedQuery(name = "MidRole.findAllUngiven", 
     	query = "SELECT m FROM MidRole m WHERE m NOT IN " +
     			"	(SELECT r FROM MidRole r join r.midUserList u WHERE u.userName = :userName) ORDER BY m.roleId"),
+    @NamedQuery(name = "MidRole.findByUser", 
+        	query = "SELECT m FROM MidRole m WHERE m IN " +
+			"	(SELECT r FROM MidRole r join r.midUserList u WHERE u.userName = :userName) ORDER BY m.roleId"),
     @NamedQuery(name = "MidRole.findByRoleId", query = "SELECT m FROM MidRole m WHERE m.roleId = :roleId"),
     //@NamedQuery(name = "MidRole.findByRoleLdap", query = "SELECT m FROM MidRole m WHERE m.roleLdap = :roleLdap"),
     @NamedQuery(name = "MidRole.findByRoleDesc", query = "SELECT m FROM MidRole m WHERE m.roleDesc = :roleDesc")

@@ -82,6 +82,39 @@ public class UsersDAO {
 				.createNamedQuery("MidUser.findByUserName")
 				.setParameter("userName", userName).getSingleResult();
 	}
+	
+
+	/**
+	 * Devuelve si existe o no un usuario
+	 * @param userName
+	 * @return
+	 */
+	public boolean userExists(String userName) {
+		boolean existe = false;
+		int size = midasEntityManager
+				.createNamedQuery("MidUser.findByUserName")
+				.setParameter("userName", userName).getResultList().size();
+		if(size!=0) {
+			existe=true;
+		}
+		return existe;
+	}
+	/**
+	 * Devuelve un MidUser si existe o null en caso contrario
+	 * @param userName
+	 * @return
+	 */
+	@SuppressWarnings("unchecked")
+	public MidUser getUserIfExists(String userName) {
+		List<MidUser> list = midasEntityManager
+				.createNamedQuery("MidUser.findByUserName")
+				.setParameter("userName", userName).getResultList();
+		if(list.size()!=0) {
+			return list.get(0);
+		}else {
+			return null;
+		}
+	}
 
 	/**
 	 * 

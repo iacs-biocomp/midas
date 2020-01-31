@@ -1,8 +1,6 @@
 function format ( d ) {
     // `d` is the original data object for the row
-    console.log(d)
-    var campos = JSON.parse(d['fields'])
-    console.log(campos)
+    var campos = d['fields']
     var html='<table cellpadding="5" cellspacing="0" border="0" style="padding-left:50px;">'+
         '<tr>'+ '<td>Nombre del campo</td>'+ '<td>Descripción del campo</td></tr>'
         jQuery.each(campos, function(i, val) {

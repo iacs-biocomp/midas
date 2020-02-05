@@ -3,6 +3,9 @@
  */
 package es.aragon.midas.security;
 
+//
+import java.util.Arrays;
+//
 import java.util.Calendar;
 
 import java.util.List;
@@ -232,7 +235,12 @@ public class LoginAction extends ActionSupport implements SessionAware, ServletR
 				lopd.setUser(user.getUserName());
 				accessLogService.access();
 				log.debug("Creando sesion de usuario " + username);
-	
+				//
+				// Poner proyectos de dicho usuario
+				//session.put("main_project", "Project 1");
+				//List<String> listprojects = Arrays.asList("Project1","Project2", "Project3", "Project4");
+				//session.put(Constants.LIST_PROJS, listprojects);
+				//
 				// Si se ha especificado una accion de struts intenta cargarla
 				try {
 					if (!StringUtils.nb(action)) {

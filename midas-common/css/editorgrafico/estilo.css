@@ -1,0 +1,48 @@
+main {
+  width: 1000px;
+  height: 664px;
+  position: relative;
+  margin: 0 auto;
+  overflow:hidden;
+}
+
+header {
+  width: 100%;
+}
+
+h1 {
+  width: 1000px;
+  position: relative;
+  margin: 0 auto;
+  color: #fff;
+  font-size: 1.8em;
+  line-height: 2.4em;
+}
+
+.mode-blockly {
+  display: block;
+}
+
+.blockly-editor {
+  width: 1000px;
+  height: 600px;
+  position: absolute;
+  top: 64px;
+  left: 0px;
+  transition: left .4s;
+  background-color: #eee;
+  overflow:visible;
+}
+
+.blockly-div {
+  width: 1000px;
+  height: 600px;
+}
+
+.mdl-button {
+  margin: 1em 0;
+  float: right;
+  color: #fff;
+  font-weight: bold;
+ 
+}

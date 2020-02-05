@@ -58,7 +58,7 @@ public class Constants {
     final public static String ROLE_SUPPORT = "SUPPORT";
     final public static String ROLE_ALIAS = "ALIAS";
     
-
-    
-
+    // Project constants
+    final public static String MAIN_PROJ = "projectmainObject";
+    final public static String LIST_PROJS = "projectListObject";
 }

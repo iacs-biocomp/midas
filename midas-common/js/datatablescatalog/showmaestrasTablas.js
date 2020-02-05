@@ -27,7 +27,7 @@ function capitalizeFirstLetter(string) {
 $(document).ready(function() {
   var tabla=parseQueryString()
   getData(function( data ) {
-    var campos = JSON.parse(data)
+    var campos = data
     var columns=[]
     var columndefs=[]
     for (var i in campos) {
@@ -69,4 +69,7 @@ $(document).ready(function() {
   });
   
 } );
+
+
+
 

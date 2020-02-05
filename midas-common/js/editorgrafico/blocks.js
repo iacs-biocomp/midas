@@ -1,13 +1,3 @@
-Blockly.Blocks['cohorte_entrada'] = {
-  init: function () {
-    this.jsonInit({
-      "type": "cohorte",
-      "message0": "cohorte",
-      "colour": 00,
-      "nextStatement": ["join", "salida"],
-    });
-  },
-};
 
 Blockly.Blocks['atributo'] = {
   init: function () {
@@ -217,19 +207,30 @@ Blockly.Blocks['join'] = {
   init: function () {
     this.jsonInit({
       "type": "join",
-      "message0": "join %1",
+      "message0": "join %1 %2",
       "args0": [
         {
           "type": "field_dropdown",
           "name": "JOIN",
           "options": [
-            ["Seleccione", "Seleccione"],
+            ["LEFT", "LEFT"],
+            ["RIGHT", "RIGHT"],
+            ["FULL", "FULL"],
+            ["INNER", "INNER"],
           ],
         },
+        {
+          "type": "field_dropdown",
+          "name": "JOIN",
+          "options": [
+            ["cias", "cias"],
+            ["atc", "atc"]
+          ],
+        }
       ],
       "colour": 120,
-      "previousStatement": ["entrada", "operacion", "join"],
-      "joinStatement": ["entrada", "operacion", "join"],
+      "previousStatement": ["cohortejoin"],
+      "joinStatement": ["cohortejoin"],
       "nextStatement": ["operacion", "salida"],
     });
   },
@@ -263,3 +264,4 @@ Blockly.Blocks['cohorte'] = {
     });
   },
 };
+

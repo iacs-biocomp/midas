@@ -45,9 +45,11 @@ function yearSliderSetLabels(data) {
 
 /**
  * HIGHCHARTS
+ * Opciones generales para todos los gráficos
+ * 
+ * @param date
+ * @returns
  */
-
-
 Highcharts.setOptions({
     lang: {
         months: [
@@ -74,6 +76,13 @@ Highcharts.setOptions({
 });
         
 
+
+/**
+ * Formatea una fecha en español
+ * 
+ * @param date
+ * @returns
+ */
 function formatDateES(date) {
 	console.log(date);
 	d = new Date(date);
@@ -85,6 +94,15 @@ function formatDateES(date) {
 }	
 
 
+
+/**
+ * Crea un gráfico de líneas estándar
+ * 
+ * @param data
+ * @param frame
+ * @param options
+ * @returns
+ */
 function biganShowHighChartLineGraph(data, frame, options) {
 	
 	var series = []
@@ -159,7 +177,8 @@ function biganShowHighChartLineGraph(data, frame, options) {
         yAxis: {
             title: {
                 text: data.options.yAxisTitle
-            }
+            },
+            min: data.options.min
         },
         tooltip: {
             crosshairs: true,
@@ -177,6 +196,22 @@ function biganShowHighChartLineGraph(data, frame, options) {
             series: {
                 marker: {
                     enabled: false
+                },
+                events: {
+                    click: function (event) {
+                    	console.log(this.showall);
+                    	if (this.showall) {
+	                		this.chart.series.forEach(function(element) {
+	                			element.setVisible(true, false);
+	                 	   	});
+	                		this.showall = false;
+                    	} else {
+                    		this.chart.series.forEach(function(element) {
+	                			element.setVisible((event.point.series._i == element._i), false);
+	                 	   	});
+	                		this.showall = true;
+                    	}
+                    }                
                 }
             }
         },
@@ -185,8 +220,6 @@ function biganShowHighChartLineGraph(data, frame, options) {
         },
         series: series
     });
-    
-    
     return chart;
 }    	
 
@@ -574,6 +607,232 @@ function biganManagerHighChart(data, frame, options) {
 	
 	return instance;
 }
+
+
+
+
+
+/**
+ * Muestra las series en un gráfico de áreas apiladas
+ * @param data
+ * @param frame
+ * @param options
+ * @returns
+ */
+function biganShowHighChartStackedArea(data, frame, options) {
+	
+	var series = [];
+
+    data.lines.forEach(function(element, index){
+        series.push({
+            name: element.name,
+            code: element.code,
+            color: biganColors.qualitative[index],
+            data: element.values,
+            type: 'area',
+            lineWidth: 2,
+            zIndex: 1,
+            visible: element.defaultVisible,
+            marker: {
+                //fillColor: 'white',
+                lineWidth: 2
+                //lineColor: Highcharts.getOptions().colors[]
+            }            
+        })
+    });
+
+    var chart = Highcharts.chart(frame, {	
+        title: {
+            text: options.title,
+            style:  { "color": "#333333", "fontSize": "12px" }
+        },
+        buttons: {
+            contextButton: {
+                menuItems: ['downloadPNG', 'downloadSVG']
+            }
+        },
+        xAxis: {
+            title: {
+                text: data.options.xAxisTitle
+            },
+            type: data.options.xAxisType,
+        },
+        yAxis: {
+            title: {
+                text: data.options.yAxisTitle
+            },
+            min: data.options.min
+        },
+        tooltip: {
+            crosshairs: true,
+            shared: true,
+            valueSuffix: data.options.valueSuffix,
+            headerFormat: '<span style="font-size: 10px">{point.key}</span><br/>',
+            formatter: function() {
+                return this.points.reduce(function (s, point) {
+                    return s + '<br/>' + '<tspan style="color:' + point.series.color + '">●</tspan><span style="color: #000000">' + point.series.name + '</span>: <b>' +
+                        point.percentage.toFixed(2) + '%</b> ('+ point.y + ' altas)<br/>';
+                }, '<b>' + this.x + '</b>');
+            }
+        },	
+        legend: {
+            itemStyle: {
+                fontWeight: 'normal',
+                fontSize: '10px'
+            }
+        },
+        plotOptions: {
+            area: {
+                stacking: 'percent',
+                lineWidth: 1,
+                marker: {
+                    lineWidth: 1
+              	}
+            },        	
+            series: {
+                marker: {
+                    enabled: false
+                },
+                events: {
+                    click: function (event) {
+                    	console.log(this.showall);
+                    	if (this.showall) {
+	                		this.chart.series.forEach(function(element) {
+	                			element.setVisible(true, false);
+	                 	   	});
+	                		this.showall = false;
+                    	} else {
+                    		this.chart.series.forEach(function(element) {
+	                			element.setVisible((event.point.series._i == element._i), false);
+	                 	   	});
+	                		this.showall = true;
+                    	}
+                    }                
+                }
+            }
+        },
+        chart:{
+        	type: 'area',
+        	height: options.height
+        },
+        series: series
+    });
+    return chart;
+}    	
+
+
+
+
+/**
+ * Muestra las series en un gráfico de barras apiladas
+ * @param data
+ * @param frame
+ * @param options
+ * @returns
+ */
+function biganShowHighChartStackedBar(data, frame, options) {
+	
+	var series = [];
+
+    data.lines.forEach(function(element, index){
+        series.push({
+            name: element.name,
+            code: element.code,
+            color: biganColors.qualitative[index],
+            data: element.values,
+            lineWidth: 2,
+            zIndex: 1,
+            visible: element.defaultVisible,
+            marker: {
+                //fillColor: 'white',
+                lineWidth: 2
+                //lineColor: Highcharts.getOptions().colors[]
+            }            
+        })
+    });
+
+    var chart = Highcharts.chart(frame, {	
+        title: {
+            text: options.title,
+            style:  { "color": "#333333", "fontSize": "12px" }
+        },
+        buttons: {
+            contextButton: {
+                menuItems: ['downloadPNG', 'downloadSVG']
+            }
+        },
+        xAxis: {
+            title: {
+                text: data.options.xAxisTitle
+            },
+            categories: data.options.categories,
+        },
+        yAxis: {
+            title: {
+                text: data.options.yAxisTitle
+            },
+            min: data.options.min
+        },
+        tooltip: {
+            crosshairs: true,
+            shared: true,
+            valueSuffix: data.options.valueSuffix,
+            headerFormat: '<span style="font-size: 10px">{point.key}</span><br/>',
+            formatter: function() {
+                return this.points.reduce(function (s, point) {
+                    return s + '<br/>' + '<tspan style="color:' + point.series.color + '">●</tspan><span style="color: #000000">' + point.series.name + '</span>: <b>' +
+                        point.percentage.toFixed(2) + '%</b> ('+ point.y + ' altas)<br/>';
+                }, '<b>' + this.x + '</b>');
+            }
+        },	
+        legend: {
+            itemStyle: {
+                fontWeight: 'normal',
+                fontSize: '10px'
+            }
+        },
+        plotOptions: {
+            column: {
+                stacking: data.options.plotStacking,
+                lineWidth: 1,
+                marker: {
+                    lineWidth: 1
+              	}
+            },        	
+            series: {
+                marker: {
+                    enabled: false
+                },
+                events: {
+                    click: function (event) {
+                    	console.log(this.showall);
+                    	if (this.showall) {
+	                		this.chart.series.forEach(function(element) {
+	                			element.setVisible(true, false);
+	                 	   	});
+	                		this.showall = false;
+                    	} else {
+                    		this.chart.series.forEach(function(element) {
+	                			element.setVisible((event.point.series._i == element._i), false);
+	                 	   	});
+	                		this.showall = true;
+                    	}
+                    }                
+                }
+            }
+        },
+        chart:{
+        	type: 'column',
+        	height: options.height
+        },
+        series: series
+    });
+    return chart;
+}    	
+
+
+
+
 /**
  * Clase que implementa un mapa Leaflet
  * @param frameid Frame en el que representar el mapa
@@ -2372,18 +2631,20 @@ var BiganStructure = function () {
   var globalSector = ko.observable();
   var globalZona = ko.observable();
   var globalCIAS = ko.observable();
+  var globalHospital = ko.observable();
 
   //DATE
   var globalYear = ko.observable();
   var globalDate = ko.observable();
 
   var globalDetail = ko.observable('global');
+  var globalAggLevel = ko.observable();
   
   
   const DETAIL1='global';
   const DETAIL2='sector';
   const DETAIL3='zbs';
-  
+  const DETAIL4='hospital';
   
   
 
@@ -2435,6 +2696,19 @@ var BiganStructure = function () {
     }
   }
 
+  
+  // Sectores visibles en nivel de agregación
+  var sectorSelectVisible = ko.computed(function () {
+	  return globalDetail() == DETAIL2;
+  });
+  
+  // Sectores visibles en nivel de agregación
+  var hospitalSelectVisible = ko.computed(function () {
+	  return globalDetail() == DETAIL4;
+  });
+  
+  
+  
 
   // ZONA
   var zona = {
@@ -2462,9 +2736,11 @@ var BiganStructure = function () {
 
   var callbackZonas = function (response) {
     zonas.removeAll();
-    $.each(response, function (index, item) {
-      addZona(item.code, item.descrip);
-    });
+    if (response != undefined) {
+	    $.each(response, function (index, item) {
+	      addZona(item.code, item.descrip);
+	    });
+    }
   };
 
 
@@ -2485,7 +2761,7 @@ var BiganStructure = function () {
 
   // Las zonas son visibles si el sector está definido
   var zonaVisible = ko.computed(function () {
-    if (typeof globalSector() === "undefined")
+    if (typeof globalSector() === "undefined" || zonas().length == 0)
       return false;
     else
       return true;
@@ -2607,6 +2883,73 @@ var BiganStructure = function () {
   
   
   
+  // HOSPITAL
+  var hospital = {
+    codigo: "",
+    descripcion: "",
+    sector: ""
+  }
+
+  var hospitales = ko.observableArray();
+
+
+  function addHospital(c, d, s) {
+    hospitales.push({
+      codigo: c,
+      descripcion: d,
+      sector, s
+    });
+  }
+
+  function getHospitales() {
+    return $.ajax({
+      dataType: 'json',
+      type: 'GET',
+      url: 'rest/structure/biganhosp'
+    });
+  }
+
+  var callbackHospitales = function (response) {
+    hospitales.removeAll();
+    $.each(response, function (index, item) {
+      addHospital(item.facilityId, item.facilitySt, item.sectorCd);
+    });
+  };  
+  
+  
+  
+  // NIVELES AGREGACION
+  var aggLevel = {
+    codigo: "",
+    descripcion: ""
+  }
+
+  var aggLevels = ko.observableArray();
+
+
+  function addAggLevel(c, d) {
+    aggLevels.push({
+      codigo: c,
+      descripcion: d
+    });
+  }
+
+  
+  function initAggLevels() {
+    // Niveles de agregación para selector de nivel
+    addAggLevel(DETAIL1,'Aragón');
+    addAggLevel(DETAIL2, 'Sector');
+    addAggLevel(DETAIL4, 'Hospital');
+    globalAggLevel(aggLevels()[0]);
+  }
+  
+  /*
+  globalDetail.subscribe(function () {
+		alert("global detail changed to " + globalDetail());
+  });
+  */
+  
+  
   /**
    * Funciones para acceso a datos de un microservicio REST, a partir de la URL indicada
    * Si no lleva parámetros, devuelve datos de Aragón
@@ -2673,7 +3016,6 @@ var BiganStructure = function () {
 	  callback(null, frame_id, options);
   }   
 
-  
   
   
 
@@ -2788,6 +3130,10 @@ var BiganStructure = function () {
   //INIT
   var init = function () {
     getSectores().done(callbackSectores);
+    getHospitales().done(callbackHospitales);
+    // Niveles de agregación para selector de nivel
+    initAggLevels();
+    
     $(".str-bindable").each(function () {
       ko.applyBindings(BiganStructure, this);
     });
@@ -2818,7 +3164,13 @@ var BiganStructure = function () {
     linkContext: linkContext,
     linkReferenceContext: linkReferenceContext,
     globalDetail: globalDetail,
-    biganLevel: biganLevel
+    biganLevel: biganLevel,
+    aggLevels: aggLevels,
+    globalAggLevel:globalAggLevel,
+    sectorSelectVisible:sectorSelectVisible,
+    hospitalSelectVisible:hospitalSelectVisible,
+    hospitales:hospitales,
+    globalHospital:globalHospital
   };
 }();
 

@@ -24,18 +24,20 @@ var BiganStructure = function () {
   var globalSector = ko.observable();
   var globalZona = ko.observable();
   var globalCIAS = ko.observable();
+  var globalHospital = ko.observable();
 
   //DATE
   var globalYear = ko.observable();
   var globalDate = ko.observable();
 
   var globalDetail = ko.observable('global');
+  var globalAggLevel = ko.observable();
   
   
   const DETAIL1='global';
   const DETAIL2='sector';
   const DETAIL3='zbs';
-  
+  const DETAIL4='hospital';
   
   
 
@@ -87,6 +89,19 @@ var BiganStructure = function () {
     }
   }
 
+  
+  // Sectores visibles en nivel de agregación
+  var sectorSelectVisible = ko.computed(function () {
+	  return globalDetail() == DETAIL2;
+  });
+  
+  // Sectores visibles en nivel de agregación
+  var hospitalSelectVisible = ko.computed(function () {
+	  return globalDetail() == DETAIL4;
+  });
+  
+  
+  
 
   // ZONA
   var zona = {
@@ -114,9 +129,11 @@ var BiganStructure = function () {
 
   var callbackZonas = function (response) {
     zonas.removeAll();
-    $.each(response, function (index, item) {
-      addZona(item.code, item.descrip);
-    });
+    if (response != undefined) {
+	    $.each(response, function (index, item) {
+	      addZona(item.code, item.descrip);
+	    });
+    }
   };
 
 
@@ -137,7 +154,7 @@ var BiganStructure = function () {
 
   // Las zonas son visibles si el sector está definido
   var zonaVisible = ko.computed(function () {
-    if (typeof globalSector() === "undefined")
+    if (typeof globalSector() === "undefined" || zonas().length == 0)
       return false;
     else
       return true;
@@ -259,6 +276,73 @@ var BiganStructure = function () {
   
   
   
+  // HOSPITAL
+  var hospital = {
+    codigo: "",
+    descripcion: "",
+    sector: ""
+  }
+
+  var hospitales = ko.observableArray();
+
+
+  function addHospital(c, d, s) {
+    hospitales.push({
+      codigo: c,
+      descripcion: d,
+      sector, s
+    });
+  }
+
+  function getHospitales() {
+    return $.ajax({
+      dataType: 'json',
+      type: 'GET',
+      url: 'rest/structure/biganhosp'
+    });
+  }
+
+  var callbackHospitales = function (response) {
+    hospitales.removeAll();
+    $.each(response, function (index, item) {
+      addHospital(item.facilityId, item.facilitySt, item.sectorCd);
+    });
+  };  
+  
+  
+  
+  // NIVELES AGREGACION
+  var aggLevel = {
+    codigo: "",
+    descripcion: ""
+  }
+
+  var aggLevels = ko.observableArray();
+
+
+  function addAggLevel(c, d) {
+    aggLevels.push({
+      codigo: c,
+      descripcion: d
+    });
+  }
+
+  
+  function initAggLevels() {
+    // Niveles de agregación para selector de nivel
+    addAggLevel(DETAIL1,'Aragón');
+    addAggLevel(DETAIL2, 'Sector');
+    addAggLevel(DETAIL4, 'Hospital');
+    globalAggLevel(aggLevels()[0]);
+  }
+  
+  /*
+  globalDetail.subscribe(function () {
+		alert("global detail changed to " + globalDetail());
+  });
+  */
+  
+  
   /**
    * Funciones para acceso a datos de un microservicio REST, a partir de la URL indicada
    * Si no lleva parámetros, devuelve datos de Aragón
@@ -325,7 +409,6 @@ var BiganStructure = function () {
 	  callback(null, frame_id, options);
   }   
 
-  
   
   
 
@@ -440,6 +523,10 @@ var BiganStructure = function () {
   //INIT
   var init = function () {
     getSectores().done(callbackSectores);
+    getHospitales().done(callbackHospitales);
+    // Niveles de agregación para selector de nivel
+    initAggLevels();
+    
     $(".str-bindable").each(function () {
       ko.applyBindings(BiganStructure, this);
     });
@@ -470,7 +557,13 @@ var BiganStructure = function () {
     linkContext: linkContext,
     linkReferenceContext: linkReferenceContext,
     globalDetail: globalDetail,
-    biganLevel: biganLevel
+    biganLevel: biganLevel,
+    aggLevels: aggLevels,
+    globalAggLevel:globalAggLevel,
+    sectorSelectVisible:sectorSelectVisible,
+    hospitalSelectVisible:hospitalSelectVisible,
+    hospitales:hospitales,
+    globalHospital:globalHospital
   };
 }();
 

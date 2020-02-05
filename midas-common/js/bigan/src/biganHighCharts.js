@@ -1,8 +1,10 @@
 /**
  * HIGHCHARTS
+ * Opciones generales para todos los gráficos
+ * 
+ * @param date
+ * @returns
  */
-
-
 Highcharts.setOptions({
     lang: {
         months: [
@@ -29,6 +31,13 @@ Highcharts.setOptions({
 });
         
 
+
+/**
+ * Formatea una fecha en español
+ * 
+ * @param date
+ * @returns
+ */
 function formatDateES(date) {
 	console.log(date);
 	d = new Date(date);
@@ -40,6 +49,15 @@ function formatDateES(date) {
 }	
 
 
+
+/**
+ * Crea un gráfico de líneas estándar
+ * 
+ * @param data
+ * @param frame
+ * @param options
+ * @returns
+ */
 function biganShowHighChartLineGraph(data, frame, options) {
 	
 	var series = []
@@ -114,7 +132,8 @@ function biganShowHighChartLineGraph(data, frame, options) {
         yAxis: {
             title: {
                 text: data.options.yAxisTitle
-            }
+            },
+            min: data.options.min
         },
         tooltip: {
             crosshairs: true,
@@ -132,6 +151,22 @@ function biganShowHighChartLineGraph(data, frame, options) {
             series: {
                 marker: {
                     enabled: false
+                },
+                events: {
+                    click: function (event) {
+                    	console.log(this.showall);
+                    	if (this.showall) {
+	                		this.chart.series.forEach(function(element) {
+	                			element.setVisible(true, false);
+	                 	   	});
+	                		this.showall = false;
+                    	} else {
+                    		this.chart.series.forEach(function(element) {
+	                			element.setVisible((event.point.series._i == element._i), false);
+	                 	   	});
+	                		this.showall = true;
+                    	}
+                    }                
                 }
             }
         },
@@ -140,8 +175,6 @@ function biganShowHighChartLineGraph(data, frame, options) {
         },
         series: series
     });
-    
-    
     return chart;
 }    	
 
@@ -529,3 +562,229 @@ function biganManagerHighChart(data, frame, options) {
 	
 	return instance;
 }
+
+
+
+
+
+/**
+ * Muestra las series en un gráfico de áreas apiladas
+ * @param data
+ * @param frame
+ * @param options
+ * @returns
+ */
+function biganShowHighChartStackedArea(data, frame, options) {
+	
+	var series = [];
+
+    data.lines.forEach(function(element, index){
+        series.push({
+            name: element.name,
+            code: element.code,
+            color: biganColors.qualitative[index],
+            data: element.values,
+            type: 'area',
+            lineWidth: 2,
+            zIndex: 1,
+            visible: element.defaultVisible,
+            marker: {
+                //fillColor: 'white',
+                lineWidth: 2
+                //lineColor: Highcharts.getOptions().colors[]
+            }            
+        })
+    });
+
+    var chart = Highcharts.chart(frame, {	
+        title: {
+            text: options.title,
+            style:  { "color": "#333333", "fontSize": "12px" }
+        },
+        buttons: {
+            contextButton: {
+                menuItems: ['downloadPNG', 'downloadSVG']
+            }
+        },
+        xAxis: {
+            title: {
+                text: data.options.xAxisTitle
+            },
+            type: data.options.xAxisType,
+        },
+        yAxis: {
+            title: {
+                text: data.options.yAxisTitle
+            },
+            min: data.options.min
+        },
+        tooltip: {
+            crosshairs: true,
+            shared: true,
+            valueSuffix: data.options.valueSuffix,
+            headerFormat: '<span style="font-size: 10px">{point.key}</span><br/>',
+            formatter: function() {
+                return this.points.reduce(function (s, point) {
+                    return s + '<br/>' + '<tspan style="color:' + point.series.color + '">●</tspan><span style="color: #000000">' + point.series.name + '</span>: <b>' +
+                        point.percentage.toFixed(2) + '%</b> ('+ point.y + ' altas)<br/>';
+                }, '<b>' + this.x + '</b>');
+            }
+        },	
+        legend: {
+            itemStyle: {
+                fontWeight: 'normal',
+                fontSize: '10px'
+            }
+        },
+        plotOptions: {
+            area: {
+                stacking: 'percent',
+                lineWidth: 1,
+                marker: {
+                    lineWidth: 1
+              	}
+            },        	
+            series: {
+                marker: {
+                    enabled: false
+                },
+                events: {
+                    click: function (event) {
+                    	console.log(this.showall);
+                    	if (this.showall) {
+	                		this.chart.series.forEach(function(element) {
+	                			element.setVisible(true, false);
+	                 	   	});
+	                		this.showall = false;
+                    	} else {
+                    		this.chart.series.forEach(function(element) {
+	                			element.setVisible((event.point.series._i == element._i), false);
+	                 	   	});
+	                		this.showall = true;
+                    	}
+                    }                
+                }
+            }
+        },
+        chart:{
+        	type: 'area',
+        	height: options.height
+        },
+        series: series
+    });
+    return chart;
+}    	
+
+
+
+
+/**
+ * Muestra las series en un gráfico de barras apiladas
+ * @param data
+ * @param frame
+ * @param options
+ * @returns
+ */
+function biganShowHighChartStackedBar(data, frame, options) {
+	
+	var series = [];
+
+    data.lines.forEach(function(element, index){
+        series.push({
+            name: element.name,
+            code: element.code,
+            color: biganColors.qualitative[index],
+            data: element.values,
+            lineWidth: 2,
+            zIndex: 1,
+            visible: element.defaultVisible,
+            marker: {
+                //fillColor: 'white',
+                lineWidth: 2
+                //lineColor: Highcharts.getOptions().colors[]
+            }            
+        })
+    });
+
+    var chart = Highcharts.chart(frame, {	
+        title: {
+            text: options.title,
+            style:  { "color": "#333333", "fontSize": "12px" }
+        },
+        buttons: {
+            contextButton: {
+                menuItems: ['downloadPNG', 'downloadSVG']
+            }
+        },
+        xAxis: {
+            title: {
+                text: data.options.xAxisTitle
+            },
+            categories: data.options.categories,
+        },
+        yAxis: {
+            title: {
+                text: data.options.yAxisTitle
+            },
+            min: data.options.min
+        },
+        tooltip: {
+            crosshairs: true,
+            shared: true,
+            valueSuffix: data.options.valueSuffix,
+            headerFormat: '<span style="font-size: 10px">{point.key}</span><br/>',
+            formatter: function() {
+                return this.points.reduce(function (s, point) {
+                    return s + '<br/>' + '<tspan style="color:' + point.series.color + '">●</tspan><span style="color: #000000">' + point.series.name + '</span>: <b>' +
+                        point.percentage.toFixed(2) + '%</b> ('+ point.y + ' altas)<br/>';
+                }, '<b>' + this.x + '</b>');
+            }
+        },	
+        legend: {
+            itemStyle: {
+                fontWeight: 'normal',
+                fontSize: '10px'
+            }
+        },
+        plotOptions: {
+            column: {
+                stacking: data.options.plotStacking,
+                lineWidth: 1,
+                marker: {
+                    lineWidth: 1
+              	}
+            },        	
+            series: {
+                marker: {
+                    enabled: false
+                },
+                events: {
+                    click: function (event) {
+                    	console.log(this.showall);
+                    	if (this.showall) {
+	                		this.chart.series.forEach(function(element) {
+	                			element.setVisible(true, false);
+	                 	   	});
+	                		this.showall = false;
+                    	} else {
+                    		this.chart.series.forEach(function(element) {
+	                			element.setVisible((event.point.series._i == element._i), false);
+	                 	   	});
+	                		this.showall = true;
+                    	}
+                    }                
+                }
+            }
+        },
+        chart:{
+        	type: 'column',
+        	height: options.height
+        },
+        series: series
+    });
+    return chart;
+}    	
+
+
+
+

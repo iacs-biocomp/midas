@@ -25,25 +25,31 @@ public abstract class LoginValidatorBase implements LoginValidator {
         UsersDAO dao; 
 
 
+        // Si la propiedad  'ignorepass' es nula o FALSE, debemos verificar el password 
         boolean checkPassword = (AppProperties.getParameter(Constants.CFG_AUTH_IGNOREPASS) == null
         		|| AppProperties.getParameter(Constants.CFG_AUTH_IGNOREPASS).equals(Constants.FALSE));
         
         
+        // Si usuario o contraseña son nulos, el procedimiento no es válido
         if (StringUtils.nb(username) || StringUtils.nb(password)) {
             return null;
+            
         } else {
             try {
                 dao = (UsersDAO) new InitialContext().lookup("java:module/UsersDAO");
+                // Buscamos el usuario en la B.D. Si no existe previamente, creamos un usuario básico
                 savedUser = dao.find(username);
                 if (savedUser == null) {// el usuario no existia previamente
                     savedUser = new MidUser();
                     savedUser.setActive('Y');
                     savedUser.setUserName(username);
                     savedUser.setName(username);
+                    savedUser.setAuthMode('S');
                     dao.create(savedUser);
                 }
                 
-                if (!specificValidation(username, password, checkPassword)) {
+                // Si no autentica, devolvemos NULL
+                if (!delegatedValidation(username, password, savedUser, checkPassword)) {
                 	savedUser = null;
                 }
                 
@@ -55,12 +61,14 @@ public abstract class LoginValidatorBase implements LoginValidator {
         }
     }
 
+
+    // Por defecto, authenticate a partir de ticket, devuelve nulo
     public MidUser authenticate(String ticket) {
         return null;
     }
 
-
-    protected abstract boolean specificValidation(String username, String password, boolean checkPassword);
+    // Declaración abstracta del método de validación por usuario y password
+    protected abstract boolean delegatedValidation(String username, String password, MidUser user, boolean checkPassword);
 
 }
 

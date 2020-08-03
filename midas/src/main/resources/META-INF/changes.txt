@@ -1,0 +1,7 @@
+v4.6
+- Añadida clase utils.FileZip
+  bigan.css y bigan.js salen de DashboardLayout.jsp. 
+  	Se incluyen dos tags tiles: appstyle y appjs, que apuntan a ficheros en /jsp para
+  	personalizar el estilo y las funciones en cada aplicación
+  	
+  	

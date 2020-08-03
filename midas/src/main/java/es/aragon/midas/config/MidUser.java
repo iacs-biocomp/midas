@@ -18,6 +18,8 @@ import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.Id;
 import javax.persistence.ManyToMany;
+import javax.persistence.NamedNativeQueries;
+import javax.persistence.NamedNativeQuery;
 import javax.persistence.NamedQueries;
 import javax.persistence.NamedQuery;
 import javax.persistence.Table;
@@ -50,6 +52,11 @@ import es.aragon.midas.ws.guia.InfoUserResponse;
 		@NamedQuery(name = "MidUser.findByUserName", query = "SELECT m FROM MidUser m WHERE m.userName = :userName"),
 		@NamedQuery(name = "MidUser.findByIdd", query = "SELECT m FROM MidUser m WHERE m.idd = :idd"),
 		@NamedQuery(name = "MidUser.findByActive", query = "SELECT m FROM MidUser m WHERE m.active = :active") })
+@NamedNativeQueries({
+	@NamedNativeQuery(name = "MidUser.findCryptedPasswd", 
+					query = "select public.crypt(text(:pwd), text(bd_pw.pwd)) crp_pwd, bd_pw.pwd pwd " +
+							"from (select pwd from mid_users where user_name = :userName) bd_pw") })
+
 public class MidUser implements Serializable {
 
 	private static final long serialVersionUID = 1L;
@@ -90,7 +97,7 @@ public class MidUser implements Serializable {
 	/**
 	 * Email del usuario, no se persiste en BBDD
 	 */
-	@Transient
+	@Column(name = "email")
 	private String email;
 
 	/**
@@ -120,6 +127,16 @@ public class MidUser implements Serializable {
 	 */
 	@Column(name = "active")
 	private Character active;
+	
+	
+	/**
+	 * Método de autenticación de usuario:
+	 * L - Local
+	 * S - Server
+	 */
+	@Column(name = "auth_mode")
+	private Character authMode;
+	
 
 	/**
 	 * Lista de Roles a los que esta asociado el usuario
@@ -145,12 +162,22 @@ public class MidUser implements Serializable {
 	private Set<String> grants = new HashSet<String>(0);
 
 
+	/**
+	 * Detalles de usuario desde infoUser
+	 */
 	@Transient
 	private InfoUserDetails infoUser;
 	
+	
+	/**
+	 * Usuario impersonado S/N
+	 */
 	@Transient
 	boolean isAliased;
 	
+	/**
+	 * Usuario real (físico) en caso de impersonación
+	 */
 	@Transient
 	MidUser actualUser;
 	
@@ -323,6 +350,23 @@ public class MidUser implements Serializable {
 	 */
 	public void setActive(Character active) {
 		this.active = active;
+	}
+
+
+	/**
+	 * 
+	 * @return
+	 */
+	public Character getAuthMode() {
+		return authMode;
+	}
+
+	/**
+	 * 
+	 * @param authMode
+	 */
+	public void setAuthMode(Character authMode) {
+		this.authMode = authMode == null ? new Character('L') : authMode;
 	}
 
 	/**
@@ -676,7 +720,8 @@ public class MidUser implements Serializable {
 		this.obtainContexts();
 			
 		// Si la opción GET_INFOUSER está activa, leemos toda la información del usuario desde GUIA
-		if (AppProperties.getParameter(Constants.CFG_GUIA_GET_INFOUSER).equals("true")) {
+		if (AppProperties.getParameter(Constants.CFG_GUIA_GET_INFOUSER).equals("true") &&
+				(this.getAuthMode().equals(new Character('S')) || this.getAuthMode() == null ) ) {
 	    	GuiaConnection con = new GuiaConnection();
 			String username = this.getUserName();
 	    	InfoUserResponse response = con.infoUser(username);
@@ -779,6 +824,9 @@ public class MidUser implements Serializable {
 		this.actualUser = actualUser;
 	}
 
-
+	
 
 }
+
+
+

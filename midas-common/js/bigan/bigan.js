@@ -2609,6 +2609,38 @@ function biganPeopleNChart(d, frame, options) {
  * BIGAN_STRUCTURE
  * Estructura de datos común para la definición de contextos BIGAN
  * Requiere: knockout.js
+ * 
+ *  globalSector: variable global Sector
+    globalZona: variable global Zona
+    globalCIAS: variable global CIAS
+    globalHospital: variable global Hospital
+    globalYear: variable global año
+    globalDate: variable global Fecha
+
+    globalDetail: variable global nivel de detalle en visualización. Puede ser "global", "sector", "zbs", "hospital"
+    biganLevel: Computado. nivel de detalle según selección de sector/zona/cias
+    globalAggLevel: variable global nivel de agregación
+
+    
+    sectores: Lista sectores
+    zonas: Lista zonas del sector seleccionado
+    cias: Lista CIAS de la zona seleccionada
+    hospitales: Lista de hospitales
+    aggLevels: Lista niveles de agregación
+
+    
+    setSector: setSector,
+    zonaVisible: zonaVisible,
+    setZona: setZona,
+    ciasVisible: ciasVisible,
+    detail2Enabled: detail2Enabled,
+    detail3Enabled: detail3Enabled,
+    linkContext: linkContext,
+    linkReferenceContext: linkReferenceContext,
+    sectorSelectVisible: sectorSelectVisible,
+    hospitalSelectVisible: hospitalSelectVisible,
+ * 
+ * 
  */
 
 
@@ -2997,6 +3029,7 @@ var BiganStructure = function () {
    	});
   }   
   
+  
   // Obtiene por AJAX los datos a nivel de CIAS de una URL
   function getDataCias(frame_id, url, callback) {
 	  var options = {title:globalCIAS().ciasCd}
@@ -3010,6 +3043,18 @@ var BiganStructure = function () {
   }   
   
 
+  // Obtiene por AJAX los datos a nivel de hospital
+  function getDataHospital(frame_id, url, callback) {
+	  var options = {title:globalHospital().descripcion}
+  	return $.ajax({
+	    	dataType:'json',
+	    	type: 'GET',
+	    	url: url + '&level=hospital&code=' + globalHospital().codigo,
+	    	success:function(data) {callback(data, frame_id, options)}
+  	});
+  }   
+  
+  
   // Devuelve una estructura vacía de datos, a través de la función callback especificada
   function getDataNull(frame_id, url, callback) {
 	  var options = {title:''}
@@ -3049,6 +3094,16 @@ var BiganStructure = function () {
 		} 
 	});
 
+	
+	// Vinculamos Sector al contexto global	
+	globalHospital.subscribe(function () {
+		if(BiganStructure.globalHospital() != undefined) {
+		   	getDataHospital(frame_id, url, callback)
+		} else {
+			getDataAragon(frame_id, url, callback)
+		}
+	});	
+	
 	// Vinculamos Sector al contexto global	
 	globalSector.subscribe(function () {
 		if(BiganStructure.globalSector() != undefined) {

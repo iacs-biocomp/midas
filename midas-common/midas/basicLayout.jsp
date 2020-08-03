@@ -24,6 +24,7 @@
 		<%= "<link href='" + request.getContextPath() + "/css/" + es.aragon.midas.config.EnvProperties.getProperty("midas.style") + "' rel='stylesheet'>" %>
 		<link href="<s:url value="/css/mouldifi-forms.css"/>" rel="stylesheet">
 
+		<tiles:insertAttribute name="appstyle" ignore="true"/>
 	    
 		<!--Load JQuery-->
 	    <script type="text/javascript" src="<s:url value="/js/jquery.min.js"/>"></script>

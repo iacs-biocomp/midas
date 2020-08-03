@@ -65,8 +65,15 @@ public class ContextsDAO {
 		return context; 
 	}
 	
+	
 	public void save(MidContext context){
 		midasEntityManager.merge(context);
+	}
+	
+	
+	public void create(MidContext context) {
+		midasEntityManager.persist(context);
+		midasEntityManager.flush();
 	}
 
 	public void delete(MidContext context) {

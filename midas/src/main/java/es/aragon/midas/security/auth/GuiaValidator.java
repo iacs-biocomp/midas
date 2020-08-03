@@ -2,6 +2,7 @@ package es.aragon.midas.security.auth;
 
 import javax.enterprise.inject.Alternative;
 
+import es.aragon.midas.config.MidUser;
 import es.aragon.midas.ws.guia.AuthGuiaResponse;
 import es.aragon.midas.ws.guia.GuiaConnection;
 
@@ -25,7 +26,7 @@ public class GuiaValidator extends LoginValidatorBase {
      * @param password
      * @return
      */
-    protected boolean specificValidation(String username, String password, boolean checkPassword) {
+    protected boolean delegatedValidation(String username, String password, MidUser user, boolean checkPassword) {
         boolean retval = false;
 
         if (checkPassword) {

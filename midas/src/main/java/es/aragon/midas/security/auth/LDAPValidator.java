@@ -2,6 +2,7 @@ package es.aragon.midas.security.auth;
 
 import es.aragon.midas.config.AppProperties;
 import es.aragon.midas.config.Constants;
+import es.aragon.midas.config.MidUser;
 import es.aragon.midas.ldap.FiltroLdap;
 import es.aragon.midas.ldap.LdapUtils;
 import es.aragon.midas.ldap.UserLdap;
@@ -27,7 +28,7 @@ public class LDAPValidator extends LoginValidatorBase {
 	 * @param password
 	 * @return
 	 */
-	protected boolean specificValidation(String username, String password, boolean checkPassword) {
+	protected boolean delegatedValidation(String username, String password, MidUser user, boolean checkPassword) {
 		// Borra anteriores excepciones del LDAP
 		ldapException = null;
 

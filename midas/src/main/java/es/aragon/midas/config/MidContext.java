@@ -35,8 +35,10 @@ import com.fasterxml.jackson.annotation.JsonIgnore;
     @NamedQuery(name = "MidContext.findByCxId", query = "SELECT m FROM MidContext m WHERE m.cxId = :cxId"),
     @NamedQuery(name = "MidContext.findByCxKey", query = "SELECT m FROM MidContext m WHERE m.cxKey = :cxKey"),
     @NamedQuery(name = "MidContext.findByCxValue", query = "SELECT m FROM MidContext m WHERE m.cxValue = :cxValue")})
+
 public class MidContext implements Serializable {
-    private static final long serialVersionUID = 1L;
+
+	private static final long serialVersionUID = 1L;
     // @Max(value=?)  @Min(value=?)//if you know range of your decimal fields consider using these annotations to enforce field validation
     @Id
     @Basic(optional = false)
@@ -75,6 +77,12 @@ public class MidContext implements Serializable {
         this.cxValue = value;
     }
 
+    public MidContext(Integer id, String key, String value) {
+    	this.cxId = id;
+        this.cxKey = key;
+        this.cxValue = value;
+    }    
+    
     public Integer getCxId() {
         return cxId;
     }

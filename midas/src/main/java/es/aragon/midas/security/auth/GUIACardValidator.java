@@ -63,7 +63,7 @@ public class GUIACardValidator extends LoginValidatorBase {
      * @param password
      * @return
      */
-    public boolean specificValidation(String username, String password, boolean checkPassword) {
+    public boolean delegatedValidation(String username, String password, MidUser user, boolean checkPassword) {
     	boolean retval;
     	
     	try {

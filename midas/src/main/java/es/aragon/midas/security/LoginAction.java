@@ -3,9 +3,6 @@
  */
 package es.aragon.midas.security;
 
-//
-import java.util.Arrays;
-//
 import java.util.Calendar;
 
 import java.util.List;
@@ -214,14 +211,22 @@ public class LoginAction extends ActionSupport implements SessionAware, ServletR
 			// TODO autenticacion con estados: red, incorrecto, no autorizado...
 			if (user != null) {
 				
-				user.assignGrants();
+				user.assignGrants(); // assignGrants llama a infoUser
 
 				user.setLastLogin(Calendar.getInstance().getTime());
-				if (user.getIdd() == null || user.getIdd().isEmpty()) {
-					user.setIdd(user.getInfoUser().getNif());
-					user.setName(user.getInfoUser().getName());
-					user.setLastname1(user.getInfoUser().getSurname1());
-					user.setLastname2(user.getInfoUser().getSurname2());
+				if (user.getInfoUser() != null ) {
+					// Si no tenemos IDD, lo tomamos de infoUser
+					if (user.getIdd() == null || user.getIdd().isEmpty()) {
+						user.setIdd(user.getInfoUser().getNif());
+						user.setName(user.getInfoUser().getName());
+						user.setLastname1(user.getInfoUser().getSurname1());
+						user.setLastname2(user.getInfoUser().getSurname2());
+					}
+					// si no hay email registrado y infouser lo tiene...
+					if (user.getInfoUser().getEmail() != null) {
+						user.setEmail(user.getInfoUser().getEmail());
+					}
+
 				}
 				dao.update(user);
 				

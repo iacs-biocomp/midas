@@ -21,14 +21,12 @@
 		<link href="<s:url value="/css/entypo.css"/>" rel="stylesheet">
 		<link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.7.2/css/all.css" integrity="sha384-fnmOCqbTlWIlj8LyTjo7mOUStjsKC4pOpQbqyi7RrhN7udi9RwhKkMHpvLbHG9Sr" crossorigin="anonymous">
  		<link href="<s:url value="/css/bootstrap.min.css"/>" rel="stylesheet">
-<!-- 		<link href="<s:url value="/css/mouldifi-core.css"/>" rel="stylesheet">  -->
  		<%= "<link href='" + request.getContextPath() + "/css/" + es.aragon.midas.config.EnvProperties.getProperty("midas.style") + "' rel='stylesheet'>" %>
 		<link href="<s:url value="/css/mouldifi-forms.css"/>" rel="stylesheet"> 
 		<link href="/js/jquery-ui/themes/smoothness/jquery-ui.css" rel="stylesheet">
 		<link href="/cdn/css/midas.css"  rel="stylesheet" type="text/css">
-		<link type="text/css" href="/cdn/css/bigan.css" rel="stylesheet"> 
 
-
+		<tiles:insertAttribute name="appstyle" ignore="true"/>
 
 		<script src="<s:url value="/js/jquery.min.js"/>"></script>
 		<script src="<s:url value="/js/bootstrap.min.js"/>"></script>
@@ -36,10 +34,10 @@
 		<script src="<s:url value="/js/plugins/blockui-master/jquery.blockUI.js"/>"></script>
 		<script src="<s:url value="/js/plugins/metismenu/jquery.metisMenu.js"/>"></script>
 
-  		<script src="<s:url value="/cdn/js/highcharts/highcharts.js"/>"></script>
- 		<script src="<s:url value="/cdn/js/highcharts/highcharts-more.js"/>"></script>
- 		<script src="<s:url value="/cdn/js/highcharts/modules/exporting.js"/>"></script>
- 		<script src="<s:url value="/cdn/js/d3/d3.v4.min.js"/>"></script>
+  		<script src="/cdn/js/highcharts/highcharts.js"></script>
+ 		<script src="/cdn/js/highcharts/highcharts-more.js"></script>
+ 		<script src="/cdn/js/highcharts/modules/exporting.js"></script>
+ 		<script src="/cdn/js/d3/d3.v4.min.js"></script>
    
 	    
 	<!-- HTML5 shim and Respond.js for IE8 support of HTML5 elements and media queries -->
@@ -93,7 +91,7 @@
 		<!-- Main header -->
 <!-- 		<nav class="navbar navbar-fixed-top"> -->
 		<div class="main-header row">
-		  <div class="col-sm-6 col-xs-7">
+		  <div class="col-sm-2 col-xs-3">
 		  
 			<!-- User info -->
 			<ul class="user-info pull-left">          
@@ -119,10 +117,12 @@
 			  </li>
 			</ul>
 			<!-- /user info -->
-			
+		  </div>
+		  <div class="col-sm-8 col-xs-6">
+		 <tiles:insertAttribute name="topbar" ignore="true" />
 		  </div>
 		  
-		  <div class="col-sm-6 col-xs-5">
+		  <div class="col-sm-2 col-xs-3">
 			<div class="pull-right">
 				<!-- User alerts -->
 				<ul class="user-info pull-left">
@@ -187,8 +187,12 @@
 
 <script src="/cdn/js/midas/midas.js"></script>
 <script src="/cdn/js/knockout.js"></script>	
+<s:if test="%{#notActive=='true'}">
 <script src="/cdn/js/midas/mid-message.js"></script>
-<script src="/cdn/js/bigan/bigan.js"></script>
+</s:if>
+
+<tiles:insertAttribute name="appjs" ignore="true"/>
+
 <script>
 
 window.open = function (url, name, features, replace) {
@@ -201,7 +205,10 @@ function resizeIframe(obj) {
 
 
 // Set sender in message form
-CauMessageForm.cauMessage.sender('<s:property value="#session.userObject.userName" />');
+ <s:if test="%{#cauFormActive=='true'}">
+	 CauMessageForm.cauMessage.sender('<s:property value="#session.userObject.userName" />');
+ </s:if>				  
+
 
 </script>
 

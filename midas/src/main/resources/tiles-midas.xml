@@ -13,6 +13,7 @@
 	</definition>
 	
 	<definition name="login" extends="basicLayout">
+        <put-attribute name="appstyle" 	value="/jsp/appstyle.jsp" />	
 	    <put-attribute name="body"   value="/midas/login.jsp"/>      
 	</definition>
 
@@ -28,6 +29,8 @@
 		<put-attribute name="messages"  value="/midas/messages.jsp"/>
 		<put-attribute name="notifications"   value="/midas/notifications_ko.jsp"/>
 		<put-attribute name="cauForm"   value="/midas/cauForm.jsp"/>
+        <put-attribute name="appstyle" 	value="/jsp/appstyle.jsp" />	
+        <put-attribute name="appjs" 	value="/jsp/appjs.jsp" />	
 	</definition>
 
 	<definition name="forbidden" extends="basicLayout">

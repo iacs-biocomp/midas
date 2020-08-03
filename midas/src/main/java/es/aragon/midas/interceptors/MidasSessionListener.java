@@ -34,9 +34,9 @@ public class MidasSessionListener implements HttpSessionListener {
 		} else if (user == null) {
 			log.warn("Session destroyed with null user");
 		} else {
+			log.debug("Eliminando sesión del usuario " + user.getUserName());
 			us.removeUserSession(user.getUserName());
 		}
-		log.debug("Eliminando sesión del usuario " + user.getUserName());
 	}
 	
 

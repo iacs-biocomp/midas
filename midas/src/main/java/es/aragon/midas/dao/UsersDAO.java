@@ -30,7 +30,22 @@ public class UsersDAO {
 	public MidUser find(String username) {
 		return (MidUser) midasEntityManager.find(MidUser.class, username);
 	}
+	
+	
+	/**
+	 * 
+	 * @param username
+	 * @return
+	 */
+	public MidUser findByIdd(String idd) {
+		return (MidUser) midasEntityManager
+				.createNamedQuery("MidUser.findByIdd")
+				.setParameter("idd", idd).getSingleResult();
+	}	
 
+	
+	
+	
 	/**
 	 * 
 	 * @param user
@@ -99,6 +114,33 @@ public class UsersDAO {
 		}
 		return existe;
 	}
+	
+	
+	/**
+	 * Devuelve true si la contraseña y el usuario indicados se corresponden en validación local
+	 * @param userName
+	 * @return
+	 */
+	public boolean validateLocalUser(String userName, String password) {
+	    boolean retval = false;
+		
+		@SuppressWarnings("unchecked")
+		List<Object[]> data =  midasEntityManager
+				.createNamedQuery("MidUser.findCryptedPasswd")
+				.setParameter("userName", userName)
+				.setParameter("pwd", password)
+				.getResultList();
+		
+		if (data.size() == 1) {	
+			String crp_pwd = (String) data.get(0)[0];
+			String pwd = (String) data.get(0)[1];
+			retval = crp_pwd.equals(pwd);
+		}
+		
+		return retval;
+	}	
+	
+	
 	/**
 	 * Devuelve un MidUser si existe o null en caso contrario
 	 * @param userName

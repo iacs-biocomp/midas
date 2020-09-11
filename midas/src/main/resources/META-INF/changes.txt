@@ -1,7 +1,15 @@
 v4.6
 - Añadida clase utils.FileZip
-  bigan.css y bigan.js salen de DashboardLayout.jsp. 
+- bigan.css y bigan.js salen de DashboardLayout.jsp. 
   	Se incluyen dos tags tiles: appstyle y appjs, que apuntan a ficheros en /jsp para
   	personalizar el estilo y las funciones en cada aplicación
-  	
+ - Permitidos los audit logs en las acciones REST.
+ - LogChangerAction permite bajarse el fichero de log
+ - Autenticator definido desde MidAppProperties, en lugar de beans.xml
+ - Gestión de usuario "root" con contraseña midas.security.root.password (MD5). Debe estar definido el usuario en base de datos.
+ - user.isInContext. Se puede buscar por ID o por VALUE indistintamente.
+ 
+ 
+ 
+ 
   	

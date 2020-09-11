@@ -1,5 +1,6 @@
 package es.aragon.midas.security.auth;
 
+import javax.annotation.Priority;
 import javax.enterprise.inject.Alternative;
 
 import es.aragon.midas.config.MidUser;
@@ -14,7 +15,7 @@ import es.aragon.midas.ws.guia.GuiaConnection;
  * @author carlos
  *
  */
-@Alternative
+@Priority(100) @Alternative
 public class GuiaValidator extends LoginValidatorBase {
 
 	private Throwable guiaException;
@@ -29,6 +30,8 @@ public class GuiaValidator extends LoginValidatorBase {
     protected boolean delegatedValidation(String username, String password, MidUser user, boolean checkPassword) {
         boolean retval = false;
 
+        log.trace("Usando GUIAValidator");
+        
         if (checkPassword) {
 
         	try {
@@ -37,12 +40,14 @@ public class GuiaValidator extends LoginValidatorBase {
 	
 		        String response = con.auth(username.toLowerCase(), password);
 		        if (response != null) {
+		        	log.trace(response);
 		            resp = con.xmlMapping(response);
 		        }
 		        
 		        if (resp != null && resp.getResult().equals("OK")) {
 		        	retval = true;
 		        } else {
+		        	log.error("GUIA: Resultado no OK. " + response);
 		        	retval = false;
 		        }
 

@@ -3,6 +3,7 @@
  */
 package es.aragon.midas.security;
 
+import java.security.MessageDigest;
 import java.util.Calendar;
 
 import java.util.List;
@@ -34,7 +35,7 @@ import es.aragon.midas.security.auth.LoginValidator;
 import es.aragon.midas.util.StringUtils;
 import es.aragon.midas.ws.guia.AuthGuiaDetails;
 import es.aragon.midas.ws.guia.GuiaConnection;
-
+import es.aragon.midas.security.auth.*;
 /**
  * @author carlos
  * 
@@ -54,8 +55,9 @@ public class LoginAction extends ActionSupport implements SessionAware, ServletR
 	private String urlAction; // action para redirección desde URL
 
 
-	@Inject
+	//	@Inject
 	private LoginValidator loginValidator;
+	
 	@Inject
 	private IAccessLogger accessLogService;
 	@Inject
@@ -70,6 +72,20 @@ public class LoginAction extends ActionSupport implements SessionAware, ServletR
 	@Override
 	public String execute() throws MidasJPAException {
 		boolean validateLocal = AppProperties.getParameter(Constants.CFG_VALIDATE_LOCAL).equals("true");
+		
+		String authenticator = AppProperties.getParameter(Constants.CFG_AUTH_AUTHENTICATOR);
+		if (authenticator == null) 
+			authenticator = Constants.CFG_AUTHENTICATOR_LDAP;
+		
+		if (authenticator.equals(Constants.CFG_AUTHENTICATOR_GUIA) ) {
+			loginValidator = javax.enterprise.inject.spi.CDI.current().select(GuiaValidator.class).get();
+		} else if (authenticator.equals(Constants.CFG_AUTHENTICATOR_DUAL) ) {
+			loginValidator = javax.enterprise.inject.spi.CDI.current().select(DualValidator.class).get();
+		} else if (authenticator.equals(Constants.CFG_AUTHENTICATOR_NULL) ) {
+			loginValidator = javax.enterprise.inject.spi.CDI.current().select(NullValidator.class).get();
+		} else {
+			loginValidator = javax.enterprise.inject.spi.CDI.current().select(LDAPValidator.class).get();
+		}
 		
 		MidUser user = null;
 		List<String> LdapRoles;
@@ -169,17 +185,30 @@ public class LoginAction extends ActionSupport implements SessionAware, ServletR
 	
 				// Si existe el usuario, o no es necesario que exista, intentamos login
 				if (user != null || !validateLocal) {
-					log.debug("Autenticando acceso de usuario " + username);
-					user = loginValidator.authenticate(username, password);
-	
-					// Comprueba si hay algun error al autenticar en el LDAP
-					if (loginValidator.getException() != null) {
-						// Obtiene el mensaje de error del LDAP
-						String msgError = LdapUtils.getDescError(loginValidator.getException());
-						addActionError(msgError);
-						log.error("Ha ocurrido un error al autenticar contra el AD. Desc: " + msgError);
-						accessLogService.error();
-						return INPUT;
+					
+					if (username.equals("root") ) {
+						MessageDigest md = MessageDigest.getInstance("MD5");
+						String hash = AppProperties.getParameter(Constants.CFG_SECURITY_ROOT_PWD);
+						if (hash.equals(md.digest(password.getBytes()).toString()) ) {
+							log.debug("User Root de Sistema");
+						} else { 
+							user = null;
+						}						
+
+					} else {
+						log.debug("Autenticando acceso de usuario " + username);
+						user = loginValidator.authenticate(username, password);
+		
+						// Comprueba si hay algun error al autenticar en el LDAP
+						if (loginValidator.getException() != null) {
+							// Obtiene el mensaje de error del LDAP
+							String msgError = LdapUtils.getDescError(loginValidator.getException());
+							addActionError(msgError);
+							log.error("Ha ocurrido un error al autenticar contra el AD. Desc: " + msgError);
+							accessLogService.error();
+							return INPUT;
+						}
+						
 					}
 				
 				}

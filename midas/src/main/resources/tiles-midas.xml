@@ -65,6 +65,10 @@
     	<put-attribute name="body" value="/midas/aliasForm.jsp" />
     </definition>
     
+     <definition name="logChanger" extends="loggedLayout">
+    	<put-attribute name="body" value="/midas/logChanger.jsp" />
+    </definition>   
+    
 	<definition name="cauManager" extends="loggedLayout">
 		<put-attribute name="body" value="/midas/cauManager.jsp"/>
 		<put-attribute name="script" value="/jsp/scriptContent.jsp"/>	

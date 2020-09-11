@@ -4,56 +4,32 @@
  */
 package es.aragon.midas.action;
 
-import com.opensymphony.xwork2.ActionSupport;
-
 import es.aragon.midas.config.AppProperties;
 import es.aragon.midas.util.StringUtils;
-
-import java.io.File;
-import java.io.FileInputStream;
-import java.io.InputStream;
 import java.util.Enumeration;
 import java.util.HashMap;
-
+import java.util.List;
 import java.util.Map;
-
-import org.apache.log4j.Appender;
-import org.apache.log4j.FileAppender;
 import org.apache.log4j.Level;
 import org.apache.log4j.LogManager;
 import org.apache.log4j.Logger;
-import org.jfree.util.Log;
 
 /**
  *
  * @author j2ee.salud
  */
-public class LoggerLevelChangerAction extends MidasActionSupport {
+public class LoggerAction extends MidasActionSupport {
 
     private static final long serialVersionUID = 1L;
     private static final String LOGLEVEL_PROPERTY = "LOGLEVEL";
     private Map<String, String> loggers;
     private String logName;
     private String logLevel;
-    private InputStream fileInputStream;
-    
-    
-    @Override
-    public String execute() {
-    	return change();
-    }
-    
-    
-    public String change() {
-        // Si especificamos logName y logLevel, modificamos ese log puntualmente
-        if (!StringUtils.nb(logName) && !StringUtils.nb(logLevel)) {
-            setLogLevel(logName, logLevel);
-            addActionMessage("Nivel del log '" + logName + "' fijado a " + logLevel);
-            loggers = getActiveLoggers();
-            return INPUT;
-        }
-        
-        loggers = getActiveLoggers();
+   
+
+    public String get() {
+
+    	loggers = getActiveLoggers();
         if (loggers == null || loggers.isEmpty()) {
             addActionError("No se encontraron loggers");
             return INPUT;
@@ -68,43 +44,23 @@ public class LoggerLevelChangerAction extends MidasActionSupport {
         return INPUT;
     }
 
+    public String list() {
 
-    public String download() {
-    	log.debug("Download log");
-    	File logFile = null;
-    	Logger logger = null;
+    	loggers = getActiveLoggers();
+        if (loggers == null || loggers.isEmpty()) {
+            addActionError("No se encontraron loggers");
+            return INPUT;
+        }
 
-    	@SuppressWarnings("unchecked")
-    	Enumeration<Logger> allLoggers = LogManager.getCurrentLoggers();
-        
-    	while (allLoggers.hasMoreElements()) {
-            Logger l = (Logger) allLoggers.nextElement();
-            // only show loggers that have appenders attached to them
-            if (l.getAllAppenders().hasMoreElements()) {
-        		log.debug(l.getName());
-        		logger = l;
-            }
-    	}    	
-    	
-    	@SuppressWarnings("unchecked")
-		Enumeration<Appender> appenders = logger.getAllAppenders();
-        while (appenders.hasMoreElements()) {
-            Appender appender = (Appender) appenders.nextElement();
-            log.debug(appender.getName());
-            // only show loggers that have appenders attached to them
-            if (appender instanceof FileAppender) {
-            	log.debug("Appender es FileAppender");
-            	logFile = new File( ( (FileAppender) appender).getFile());
-            	try {
-            		fileInputStream = new FileInputStream(logFile);
-            	} catch (Exception e) {
-            		Log.error("No se ha encontrado el fichero de log ", e);            	
-            		return ERROR;
-            	}
-            }
-        }   	
-    	return "download";
+        // Si no especificamos logLevel, leemos el logLevel de properties
+        if (logLevel == null) {
+            AppProperties.reload();
+            logLevel = AppProperties.getParameter(LOGLEVEL_PROPERTY);
+        }
+
+        return INPUT;
     }
+
     
     
     
@@ -166,8 +122,5 @@ public class LoggerLevelChangerAction extends MidasActionSupport {
         }
     }
     
-	public InputStream getFileInputStream() {
-		return fileInputStream;
-	}
-	
+
 }

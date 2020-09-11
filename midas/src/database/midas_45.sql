@@ -77,7 +77,7 @@ CREATE TABLE mid_audit (
 
 
 
-CREATE TABLE portal.mid_audit_oper (
+CREATE TABLE mid_audit_oper (
 	op_code varchar(3) NULL,
 	op_desc varchar(50) NULL
 );
@@ -160,7 +160,7 @@ CREATE TABLE mid_menu (
 	mn_padre int2 NULL,
 	mn_texto varchar(100) NULL,
 	mn_link varchar(100) NULL,
-	mn_grantreq varchar(10) NULL,
+	mn_grantreq varchar(20) NULL,
 	mn_target varchar(10) NULL,
 	mn_style varchar(25) NULL,
 	CONSTRAINT mid_menu_pkey PRIMARY KEY (mn_id)
@@ -249,15 +249,6 @@ CREATE TABLE mid_user_context_manual (
 );
 
 
-CREATE TABLE mid_userroles (
-	ur_name varchar(32) NOT NULL,
-	ur_role varchar(20) NOT NULL,
-	CONSTRAINT mid_userroles_pkey PRIMARY KEY (ur_name, ur_role),
-	CONSTRAINT mid_userroles_mid_roles_fk FOREIGN KEY (ur_role) REFERENCES mid_roles(role_id),
-	CONSTRAINT mid_userroles_mid_users_fk FOREIGN KEY (ur_name) REFERENCES mid_users(user_name)
-);
-
-
 CREATE TABLE mid_users (
 	user_name varchar(32) NOT NULL,
 	active varchar(1) NULL,
@@ -271,6 +262,17 @@ CREATE TABLE mid_users (
 	auth_mode bpchar(1) NOT NULL DEFAULT 'S'::bpchar,
 	CONSTRAINT mid_users_pkey PRIMARY KEY (user_name)
 );
+
+
+CREATE TABLE mid_userroles (
+	ur_name varchar(32) NOT NULL,
+	ur_role varchar(20) NOT NULL,
+	CONSTRAINT mid_userroles_pkey PRIMARY KEY (ur_name, ur_role),
+	CONSTRAINT mid_userroles_mid_roles_fk FOREIGN KEY (ur_role) REFERENCES mid_roles(role_id),
+	CONSTRAINT mid_userroles_mid_users_fk FOREIGN KEY (ur_name) REFERENCES mid_users(user_name)
+);
+
+
 
 
 
@@ -472,42 +474,41 @@ execute procedure crypt_email_function();
 -- Permissions
 
 
-ALTER TABLE mid_app_properties OWNER TO bigan;
-ALTER TABLE mid_audit OWNER TO bigan;
-ALTER TABLE portal.mid_audit_oper OWNER TO bigan;
-ALTER TABLE mid_contexts OWNER TO bigan;
-ALTER TABLE mid_fsm_events OWNER TO bigan;
-ALTER TABLE mid_fsm_states OWNER TO bigan;
-ALTER TABLE mid_fsm_transitions OWNER TO bigan;
-ALTER TABLE mid_grants OWNER TO bigan;
-ALTER TABLE mid_guia OWNER TO bigan;
-ALTER TABLE mid_login OWNER TO bigan;
-ALTER TABLE mid_login_msg OWNER TO bigan;
-ALTER TABLE mid_menu OWNER TO bigan;
-ALTER TABLE mid_messages OWNER TO bigan;
-ALTER TABLE mid_notification OWNER TO bigan;
-ALTER TABLE mid_reports OWNER TO bigan;
-ALTER TABLE mid_role_context OWNER TO bigan;
-ALTER TABLE mid_rolegrants OWNER TO bigan;
-ALTER TABLE mid_roles OWNER TO bigan;
-ALTER TABLE mid_roles_ldap OWNER TO bigan;
-ALTER TABLE mid_user_context_auto OWNER TO bigan;
-ALTER TABLE mid_user_context_manual OWNER TO bigan;
-ALTER TABLE mid_userroles OWNER TO bigan;
-ALTER TABLE mid_users OWNER TO bigan;
-ALTER TABLE mid_user_context OWNER TO bigan;
-ALTER TABLE bpr_v_bm OWNER TO bigan;
-ALTER TABLE db_dashboards OWNER TO bigan;
-ALTER TABLE db_frame_type OWNER TO bigan;
-ALTER TABLE db_frames OWNER TO bigan;
-ALTER TABLE db_queries OWNER TO bigan;
-ALTER SEQUENCE mid_audit_au_id_seq OWNER TO bigan;
-ALTER SEQUENCE mid_audit_seq OWNER TO bigan;
-ALTER SEQUENCE mid_log_seq OWNER TO bigan;
-ALTER SEQUENCE mid_login_lg_id_seq OWNER TO bigan;
-ALTER SEQUENCE mid_messages_id_seq OWNER TO bigan;
-ALTER SEQUENCE mid_messages_id_seq1 OWNER TO bigan;
-ALTER SEQUENCE mid_notification_id_seq OWNER TO bigan;
+ALTER TABLE mid_app_properties OWNER TO $owner;
+ALTER TABLE mid_audit OWNER TO $owner;
+ALTER TABLE mid_audit_oper OWNER TO $owner;
+ALTER TABLE mid_contexts OWNER TO $owner;
+ALTER TABLE mid_fsm_events OWNER TO $owner;
+ALTER TABLE mid_fsm_states OWNER TO $owner;
+ALTER TABLE mid_fsm_transitions OWNER TO $owner;
+ALTER TABLE mid_grants OWNER TO $owner;
+ALTER TABLE mid_guia OWNER TO $owner;
+ALTER TABLE mid_login OWNER TO $owner;
+ALTER TABLE mid_login_msg OWNER TO $owner;
+ALTER TABLE mid_menu OWNER TO $owner;
+ALTER TABLE mid_messages OWNER TO $owner;
+ALTER TABLE mid_notification OWNER TO $owner;
+ALTER TABLE mid_reports OWNER TO $owner;
+ALTER TABLE mid_role_context OWNER TO $owner;
+ALTER TABLE mid_rolegrants OWNER TO $owner;
+ALTER TABLE mid_roles OWNER TO $owner;
+ALTER TABLE mid_roles_ldap OWNER TO $owner;
+ALTER TABLE mid_user_context_auto OWNER TO $owner;
+ALTER TABLE mid_user_context_manual OWNER TO $owner;
+ALTER TABLE mid_userroles OWNER TO $owner;
+ALTER TABLE mid_users OWNER TO $owner;
+ALTER TABLE mid_user_context OWNER TO $owner;
+ALTER TABLE db_dashboards OWNER TO $owner;
+ALTER TABLE db_frame_type OWNER TO $owner;
+ALTER TABLE db_frames OWNER TO $owner;
+ALTER TABLE db_queries OWNER TO $owner;
+ALTER SEQUENCE mid_audit_au_id_seq OWNER TO $owner;
+ALTER SEQUENCE mid_audit_seq OWNER TO $owner;
+ALTER SEQUENCE mid_log_seq OWNER TO $owner;
+ALTER SEQUENCE mid_login_lg_id_seq OWNER TO $owner;
+ALTER SEQUENCE mid_messages_id_seq OWNER TO $owner;
+ALTER SEQUENCE mid_messages_id_seq1 OWNER TO $owner;
+ALTER SEQUENCE mid_notification_id_seq OWNER TO $owner;
 
 
 
@@ -555,7 +556,7 @@ INSERT INTO db_frame_type (id,description,snippet,js,data_snippet,data_format,re
 
 
 INSERT INTO mid_app_properties (id,value,description) VALUES 
-,('midas.fsmPath',NULL,'Ruta para almacenar los diagramas de estados de fsm')
+('midas.fsmPath',NULL,'Ruta para almacenar los diagramas de estados de fsm')
 ,('midas.ldap.baseDN','DC=salud,DC=dga,DC=es','DN utilizado para autenticar en el AD')
 ,('midas.ldap.server','ldap://172.25.1.66:389','URL de servidor LDAP')
 ,('midas.guia.appName','BIGAN','Nombre de la aplicacion origen/destino para la autenticacion por token de GUIA')
@@ -615,40 +616,6 @@ INSERT INTO mid_roles (role_id,role_desc,role_order) VALUES
 ,('PUBLIC','PUBLICO',0)
 ,('ALIAS','CAPACIDAD ALIAS',0)
 ;
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 
 
 

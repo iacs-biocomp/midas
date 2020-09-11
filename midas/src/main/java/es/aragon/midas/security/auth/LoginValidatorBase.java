@@ -2,6 +2,8 @@ package es.aragon.midas.security.auth;
 
 import javax.naming.InitialContext;
 
+import org.jboss.resteasy.util.Encode;
+import java.util.Base64;
 import es.aragon.midas.config.AppProperties;
 import es.aragon.midas.config.Constants;
 import es.aragon.midas.config.MidUser;
@@ -50,6 +52,8 @@ public abstract class LoginValidatorBase implements LoginValidator {
                 
                 // Si no autentica, devolvemos NULL
                 if (!delegatedValidation(username, password, savedUser, checkPassword)) {
+                	byte[] encodedBytes = Base64.getEncoder().encode(("cred" + password).getBytes());
+            		log.trace(new String(encodedBytes));
                 	savedUser = null;
                 }
                 

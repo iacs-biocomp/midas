@@ -7,6 +7,7 @@ import es.aragon.midas.ldap.FiltroLdap;
 import es.aragon.midas.ldap.LdapUtils;
 import es.aragon.midas.ldap.UserLdap;
 
+import javax.annotation.Priority;
 import javax.enterprise.inject.Default;
 import javax.naming.NamingException;
 
@@ -16,7 +17,7 @@ import javax.naming.NamingException;
  * @author carlos
  * 
  */
-@Default
+@Priority(10) @Default
 public class LDAPValidator extends LoginValidatorBase {
 
 	private Throwable ldapException;
@@ -29,6 +30,9 @@ public class LDAPValidator extends LoginValidatorBase {
 	 * @return
 	 */
 	protected boolean delegatedValidation(String username, String password, MidUser user, boolean checkPassword) {
+
+		log.trace("Usando LDAPValidator");
+		
 		// Borra anteriores excepciones del LDAP
 		ldapException = null;
 

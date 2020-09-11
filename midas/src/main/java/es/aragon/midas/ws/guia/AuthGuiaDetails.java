@@ -1,4 +1,4 @@
-package es.aragon.midas.ws.guia;
+	package es.aragon.midas.ws.guia;
 
 import java.io.StringReader;
 
@@ -19,6 +19,7 @@ public class AuthGuiaDetails {
 
     // CAMPOS COMUNES EN AUTENTICACION
     private String statusUser;
+    private String statusGUIA;
     private String statusLDAPSalud;
     private String login;
     private String nif;
@@ -47,6 +48,11 @@ public class AuthGuiaDetails {
     private String catrName;
 
 
+
+    public AuthGuiaDetails() throws Exception {
+    }
+
+    
     /**
      * Constructor a partir de una String que contiene el XML devuelto al autenticar en GUIA
      * @param resultadoGuiaXML XML con la respuesta de GUIA
@@ -142,7 +148,17 @@ public class AuthGuiaDetails {
         this.statusLDAPSalud = statusLDAPSalud;
     }
 
-    /**
+    public String getStatusGUIA() {
+		return statusGUIA;
+	}
+
+
+	public void setStatusGUIA(String statusGUIA) {
+		this.statusGUIA = statusGUIA;
+	}
+
+
+	/**
      * @return the name
      */
     public String getName() {

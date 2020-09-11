@@ -11,6 +11,7 @@ import es.aragon.midas.ws.guia.AuthGuiaResponse;
 import es.aragon.midas.ws.guia.AuthGuiaTicketResponse;
 import es.aragon.midas.ws.guia.GuiaConnection;
 
+import javax.annotation.Priority;
 import javax.enterprise.inject.Alternative;
 import javax.naming.InitialContext;
 
@@ -18,7 +19,7 @@ import javax.naming.InitialContext;
  *
  * @author j2ee.salud
  */
-@Alternative
+@Priority(100) @Alternative
 public class GUIACardValidator extends LoginValidatorBase {
 	
 	private Throwable guiaException;

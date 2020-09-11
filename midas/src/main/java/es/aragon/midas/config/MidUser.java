@@ -523,12 +523,22 @@ public class MidUser implements Serializable {
 	 */
 	public boolean isInContext(String context) {
 		boolean isIn = false;
-		Integer ctx = new Integer(context);
+		Integer ctx = -1;
+
+		try {
+			 ctx = new Integer(context);
+		} catch (NumberFormatException e) {
+		}
+
+		// comparamos con valor y con id
 		for (MidContext m : midContextList) {
-			if (m.getCxId().compareTo(ctx) == 0) {
+			if (m.getCxValue().equals(context)) {
 				isIn = true;
 				break;
-			}
+			} else if (m.getCxId().compareTo(ctx) == 0) {
+				isIn = true;
+				break;
+			} 
 		}
 		return isIn;
 	}
@@ -544,16 +554,29 @@ public class MidUser implements Serializable {
 	 */
 	public boolean isInContext(String context, String key) {
 		boolean isIn = false;
-		Integer ctx = new Integer(context);
+		Integer ctx = -1;
+
+		try {
+			 ctx = new Integer(context);
+		} catch (NumberFormatException e) {
+		}
+
 		for (MidContext m : midContextList) {
-			if ((m.getCxId().compareTo(ctx) == 0) && m.getCxKey().equals(key)) {
-				isIn = true;
-				break;
+			if (m.getCxKey().equals(key)) {
+				if (m.getCxValue().equals(context)) {
+					isIn = true;
+					break;
+				} else 	if (m.getCxId().compareTo(ctx) == 0) {
+					isIn = true;
+					break;
+				}
+
 			}
 		}
 		return isIn;
 	}
 
+	
 	/**
 	 * Devuelve un Set con todos los contextos asociados al usuario
 	 * 

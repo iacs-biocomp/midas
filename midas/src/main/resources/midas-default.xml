@@ -97,9 +97,18 @@
             <result type="redirectAction" name="success">index</result>
         </action>
 
-        <action name="logChanger" class="es.aragon.midas.action.LoggerLevelChangerAction">
+        <action name="*Log" class="es.aragon.midas.action.LoggerLevelChangerAction" method="{1}">
             <result name="input">logChanger</result>
+           	<result name="download" type="stream">
+			  <param name="contentType">application/octet-stream</param>
+			  <param name="inputName">fileInputStream</param>
+			  <param name="contentDisposition">attachment;filename="log.txt"</param>
+			  <param name="bufferSize">1024</param>
+			</result>
         </action>
+        
+        
+        
 
         <action name="reloadParameters" class="es.aragon.midas.action.ReloadAction">
             <result>blank</result>

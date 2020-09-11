@@ -30,6 +30,14 @@ public class Constants {
     final public static String CFG_VALIDATE_LOCAL = "midas.validateLocal";
     final public static String CFG_AUTH_CERT = "midas.authenticateCert";
     final public static String CFG_AUTH_IGNOREPASS = "midas.authenticate.ignorePass";
+    final public static String CFG_AUTH_AUTHENTICATOR = "midas.security.authenticator";
+    final public static String CFG_AUTHENTICATOR_GUIA = "GUIA";
+    final public static String CFG_AUTHENTICATOR_GUIACERT = "GUIACERT";
+    final public static String CFG_AUTHENTICATOR_LDAP = "LDAP";
+    final public static String CFG_AUTHENTICATOR_DUAL = "DUAL";
+    final public static String CFG_AUTHENTICATOR_LOCAL = "LOCAL";
+    final public static String CFG_AUTHENTICATOR_NULL = "NULL";
+    final public static String CFG_SECURITY_ROOT_PWD = "midas.security.root.pasword";
     final public static String CFG_LDAP_SERVER = "midas.ldap.server";
     final public static String CFG_LDAP_DOMAIN = "midas.ldap.dominio";
     

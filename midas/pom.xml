@@ -193,7 +193,7 @@
 	  <profile>
 	    <id>java8-doclint-disabled</id>
 	    <activation>
-	      <jdk>[1.8,)</jdk>
+	      <jdk>[1.8,1.11,11)</jdk>
 	    </activation>
 	    <properties>
 	      <javadoc.opts>-Xdoclint:none</javadoc.opts>
@@ -251,6 +251,10 @@
 		                </configuration>						
 					</execution>
 				</executions>
+				<configuration>
+			      <sourcepath>${project.basedir}/src;${project.basedir}/target/generated-sources/annotations</sourcepath>
+					<additionalparam>-Xdoclint:none</additionalparam>
+				</configuration>
 			</plugin>
 			<!-- END SNIPPET: javadoc -->
 		</plugins>

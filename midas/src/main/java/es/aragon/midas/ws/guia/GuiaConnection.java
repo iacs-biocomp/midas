@@ -30,7 +30,7 @@ import org.apache.commons.httpclient.methods.GetMethod;
 import org.apache.commons.httpclient.methods.PostMethod;
 import org.apache.commons.httpclient.params.HttpMethodParams;
 import org.apache.commons.httpclient.protocol.Protocol;
-import org.codehaus.jackson.map.ObjectMapper;
+//import org.codehaus.jackson.map.ObjectMapper;
 
 /**
  * Encapsula una conexion a GUIA
@@ -285,7 +285,6 @@ public class GuiaConnection {
 	 * 
 	 * @param src
 	 * @return
-	 */
 	public AuthGuiaResponse mapping(String src) {
 		ObjectMapper mapper = new ObjectMapper();
 		AuthGuiaResponse value = null;
@@ -297,6 +296,7 @@ public class GuiaConnection {
 		}
 		return value;
 	}
+	 */
 
 	/**
 	 * 

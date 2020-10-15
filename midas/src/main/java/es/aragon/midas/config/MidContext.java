@@ -22,8 +22,6 @@ import javax.persistence.Table;
 import org.hibernate.annotations.LazyCollection;
 import org.hibernate.annotations.LazyCollectionOption;
 
-import com.fasterxml.jackson.annotation.JsonIgnore;
-
 /**
  *
  * @author Carlos
@@ -54,7 +52,6 @@ public class MidContext implements Serializable {
         @JoinColumn(name = "role_id", referencedColumnName = "role_id")})
     @ManyToMany
     @LazyCollection(LazyCollectionOption.FALSE)
-    @JsonIgnore
     private List<MidRole> midRoleList;
     
     @JoinTable(name = "mid_user_context", joinColumns = {
@@ -62,7 +59,6 @@ public class MidContext implements Serializable {
         @JoinColumn(name = "user_name", referencedColumnName = "user_name")})
     @ManyToMany(cascade=CascadeType.ALL)
     @LazyCollection(LazyCollectionOption.FALSE)
-    @JsonIgnore
     private List<MidUser> midUserList;
 
     public MidContext() {

@@ -2,7 +2,6 @@ package es.aragon.midas.security.auth;
 
 import javax.naming.InitialContext;
 
-import org.jboss.resteasy.util.Encode;
 import java.util.Base64;
 import es.aragon.midas.config.AppProperties;
 import es.aragon.midas.config.Constants;

@@ -8,8 +8,7 @@ import es.aragon.midas.ldap.FiltroLdap;
 import es.aragon.midas.ldap.LdapUtils;
 import es.aragon.midas.ldap.UserLdap;
 
-import javax.annotation.Priority;
-import javax.enterprise.inject.Alternative;
+
 import javax.naming.InitialContext;
 import javax.naming.NamingException;
 
@@ -18,7 +17,7 @@ import javax.naming.NamingException;
  * 
  * @author carlos
  */
-@Priority(200) @Alternative
+
 public class DualValidator extends LoginValidatorBase {
     UsersDAO dao; 
 	

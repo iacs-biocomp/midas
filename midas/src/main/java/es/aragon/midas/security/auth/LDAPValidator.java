@@ -7,8 +7,7 @@ import es.aragon.midas.ldap.FiltroLdap;
 import es.aragon.midas.ldap.LdapUtils;
 import es.aragon.midas.ldap.UserLdap;
 
-import javax.annotation.Priority;
-import javax.enterprise.inject.Default;
+
 import javax.naming.NamingException;
 
 /**
@@ -17,7 +16,7 @@ import javax.naming.NamingException;
  * @author carlos
  * 
  */
-@Priority(10) @Default
+
 public class LDAPValidator extends LoginValidatorBase {
 
 	private Throwable ldapException;

@@ -14,7 +14,7 @@ import javax.inject.Inject;
 import javax.naming.InitialContext;
 import javax.naming.NamingException;
 import javax.servlet.http.HttpServletRequest;
-
+//import javax.enterprise.inject.spi.CDI;
 import org.apache.struts2.interceptor.ServletRequestAware;
 import org.apache.struts2.interceptor.SessionAware;
 import org.json.JSONObject;
@@ -77,14 +77,24 @@ public class LoginAction extends ActionSupport implements SessionAware, ServletR
 		if (authenticator == null) 
 			authenticator = Constants.CFG_AUTHENTICATOR_LDAP;
 		
-		if (authenticator.equals(Constants.CFG_AUTHENTICATOR_GUIA) ) {
-			loginValidator = javax.enterprise.inject.spi.CDI.current().select(GuiaValidator.class).get();
+/*		if (authenticator.equals(Constants.CFG_AUTHENTICATOR_GUIA) ) {
+			loginValidator = CDI.current().select(GuiaValidator.class).get();
 		} else if (authenticator.equals(Constants.CFG_AUTHENTICATOR_DUAL) ) {
-			loginValidator = javax.enterprise.inject.spi.CDI.current().select(DualValidator.class).get();
+			loginValidator = CDI.current().select(DualValidator.class).get();
 		} else if (authenticator.equals(Constants.CFG_AUTHENTICATOR_NULL) ) {
-			loginValidator = javax.enterprise.inject.spi.CDI.current().select(NullValidator.class).get();
+			loginValidator = CDI.current().select(NullValidator.class).get();
 		} else {
-			loginValidator = javax.enterprise.inject.spi.CDI.current().select(LDAPValidator.class).get();
+			loginValidator = CDI.current().select(LDAPValidator.class).get();
+		}
+*/
+		if (authenticator.equals(Constants.CFG_AUTHENTICATOR_GUIA) ) {
+			loginValidator = new GuiaValidator();
+		} else if (authenticator.equals(Constants.CFG_AUTHENTICATOR_DUAL) ) {
+			loginValidator = new DualValidator();
+		} else if (authenticator.equals(Constants.CFG_AUTHENTICATOR_NULL) ) {
+			loginValidator = new NullValidator();
+		} else {
+			loginValidator = new LDAPValidator();
 		}
 		
 		MidUser user = null;

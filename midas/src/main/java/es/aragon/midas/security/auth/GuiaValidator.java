@@ -1,7 +1,6 @@
 package es.aragon.midas.security.auth;
 
-import javax.annotation.Priority;
-import javax.enterprise.inject.Alternative;
+
 
 import es.aragon.midas.config.MidUser;
 import es.aragon.midas.ws.guia.AuthGuiaResponse;
@@ -15,7 +14,7 @@ import es.aragon.midas.ws.guia.GuiaConnection;
  * @author carlos
  *
  */
-@Priority(100) @Alternative
+
 public class GuiaValidator extends LoginValidatorBase {
 
 	private Throwable guiaException;

@@ -278,7 +278,7 @@ a.text-purple:hover, a.text-purple:focus {
 	color: #b4b5b8;
 	display: table-cell;
 	height: 100%;
-	position: relative;
+	position: fixed;
 	vertical-align: top;
 	width: 280px;
 	z-index: 101;

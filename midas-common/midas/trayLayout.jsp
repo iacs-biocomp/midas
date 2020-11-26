@@ -7,14 +7,14 @@
 <head>
 	<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
 	<title><tiles:insertAttribute name="title" ignore="true" /></title>
-        <link rel="stylesheet" href="<s:url value="/css/validationEngine.jquery.css"/>" type="text/css"/>    
-        <link rel="stylesheet" href="<s:url value="/css/bootstrap.min.css"/>" type="text/css"/>
-        <link rel="stylesheet" href="<s:url value="/css/midas.css"/>" media="screen" type="text/css"  />
-        <script type="text/javascript" src="<s:url value="/js/jquery.min.js"/>"></script>
-        <script type="text/javascript" src="<s:url value="/js/jquery.maskedinput.min.js"/>"></script>
-        <script type="text/javascript" src="<s:url value="/js/jquery.validationEngine-es.js"/>"></script>
-        <script type="text/javascript" src="<s:url value="/js/jquery.validationEngine.js"/>"></script>
-        <script type="text/javascript" src="<s:url value="/js/jquery.datePicker.js"/>"></script>
+        <link rel="stylesheet" href="<s:url value="/cdn/css/validationEngine.jquery.css"/>" type="text/css"/>    
+        <link rel="stylesheet" href="<s:url value="/cdn/css/bootstrap.min.css"/>" type="text/css"/>
+        <link rel="stylesheet" href="<s:url value="/cdn/css/midas.css"/>" media="screen" type="text/css"  />
+        <script type="text/javascript" src="<s:url value="/cdn/js/jquery.min.js"/>"></script>
+        <script type="text/javascript" src="<s:url value="/cdn/js/jquery.maskedinput.min.js"/>"></script>
+        <script type="text/javascript" src="<s:url value="/cdn/js/jquery.validationEngine-es.js"/>"></script>
+        <script type="text/javascript" src="<s:url value="/cdn/js/jquery.validationEngine.js"/>"></script>
+        <script type="text/javascript" src="<s:url value="/cdn/js/jquery.datePicker.js"/>"></script>
         <script type="text/javascript" src="/cdn/js/midas.js"></script>
     <s:head/>
     </head>

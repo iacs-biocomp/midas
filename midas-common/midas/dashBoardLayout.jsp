@@ -20,19 +20,19 @@
 	
 		<link href="<s:url value="/css/entypo.css"/>" rel="stylesheet">
 		<link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.7.2/css/all.css" integrity="sha384-fnmOCqbTlWIlj8LyTjo7mOUStjsKC4pOpQbqyi7RrhN7udi9RwhKkMHpvLbHG9Sr" crossorigin="anonymous">
- 		<link href="<s:url value="/css/bootstrap.min.css"/>" rel="stylesheet">
- 		<%= "<link href='" + request.getContextPath() + "/css/" + es.aragon.midas.config.EnvProperties.getProperty("midas.style") + "' rel='stylesheet'>" %>
-		<link href="<s:url value="/css/mouldifi-forms.css"/>" rel="stylesheet"> 
-		<link href="/js/jquery-ui/themes/smoothness/jquery-ui.css" rel="stylesheet">
+ 		<link href="/cdn/css/bootstrap.min.css" rel="stylesheet">
+ 		<%= "<link href='/cdn/css/" + es.aragon.midas.config.EnvProperties.getProperty("midas.style") + "' rel='stylesheet'>" %>
+		<link href="/cdn/css/mouldifi-forms.css" rel="stylesheet"> 
+		<link href="/cdn/js/jquery-ui/themes/smoothness/jquery-ui.css" rel="stylesheet">
 		<link href="/cdn/css/midas.css"  rel="stylesheet" type="text/css">
 
 		<tiles:insertAttribute name="appstyle" ignore="true"/>
 
-		<script src="<s:url value="/js/jquery.min.js"/>"></script>
-		<script src="<s:url value="/js/bootstrap.min.js"/>"></script>
-		<script src="<s:url value="/js/jquery-ui/jquery-ui.js"/>"></script>
-		<script src="<s:url value="/js/plugins/blockui-master/jquery.blockUI.js"/>"></script>
-		<script src="<s:url value="/js/plugins/metismenu/jquery.metisMenu.js"/>"></script>
+		<script src="<s:url value="/cdn/js/jquery.min.js"/>"></script>
+		<script src="<s:url value="/cdn/js/bootstrap.min.js"/>"></script>
+		<script src="<s:url value="/cdn/js/jquery-ui/jquery-ui.js"/>"></script>
+		<script src="<s:url value="/cdn/js/plugins/blockui-master/jquery.blockUI.js"/>"></script>
+		<script src="<s:url value="/cdn/js/plugins/metismenu/jquery.metisMenu.js"/>"></script>
 
   		<script src="/cdn/js/highcharts/highcharts.js"></script>
  		<script src="/cdn/js/highcharts/highcharts-more.js"></script>
@@ -205,9 +205,9 @@ function resizeIframe(obj) {
 
 
 // Set sender in message form
- <s:if test="%{#cauFormActive=='true'}">
+<s:if test="%{#cauFormActive=='true'}">
 	 CauMessageForm.cauMessage.sender('<s:property value="#session.userObject.userName" />');
- </s:if>				  
+</s:if>				  
 
 
 </script>

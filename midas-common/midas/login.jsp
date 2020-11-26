@@ -13,7 +13,6 @@
 
 
 
-
 <body class="login-page">
 <div class="row">
 	<div class="col-lg-6">
@@ -88,11 +87,12 @@
 		</div>			
 	</div>
 </div>
+</body>
 
 
-<script type="text/javascript" src='<s:url value="/js/jquery.jsonp-2.4.0.min.js"/>'></script>
+<script type="text/javascript" src='<s:url value="/cdn/js/jquery.jsonp-2.4.0.min.js"/>'></script>
 
-<script type="text/javascript" src='<s:url value="/js/midas/mid-loginGUIA.js"/>'></script>
+<script type="text/javascript" src='<s:url value="/cdn/js/midas/mid-loginGUIA.js"/>'></script>
 
 <!--<script type="text/javascript">
 	$(document).ready(function() {

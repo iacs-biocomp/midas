@@ -16,7 +16,7 @@ body {
 }
 body.login-page {
 	/*background-color: #1f7a74; #01538F;*/
-	background-image: url("../images/background.svg");
+	background-image: url("../../images/background.svg");
 	background-position: bottom left;
 	background-size: cover;
 	background-repeat: no-repeat;

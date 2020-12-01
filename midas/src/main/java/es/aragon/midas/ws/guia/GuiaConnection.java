@@ -308,9 +308,10 @@ public class GuiaConnection {
 		try {
 			JAXBContext jc = JAXBContext.newInstance(AuthGuiaResponse.class);
 			Unmarshaller unmarshaller = jc.createUnmarshaller();
-			StringReader reader = new StringReader(
-					"<?xml version=\"1.0\" encoding=\"UTF-8\" standalone=\"yes\"?>"
-							+ src);
+			if (!src.startsWith("<?xml")) {
+				src = "<?xml version=\"1.0\" encoding=\"UTF-8\" standalone=\"yes\"?>" + src;
+			}
+			StringReader reader = new StringReader(src);
 			resp = (AuthGuiaResponse) unmarshaller.unmarshal(reader);
 		} catch (Exception e) {
 			log.error("Error parseando respuesta de Guia / Auth", e);

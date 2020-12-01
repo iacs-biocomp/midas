@@ -18,17 +18,17 @@
 		<!-- /site favicon -->
 		
 	
-		<link href="<s:url value="/cdn/css/entypo.css"/>" rel="stylesheet">
-		<link href="<s:url value="/cdn/css/font-awesome.min.css"/>" rel="stylesheet">
-		<link href="<s:url value="/cdn/css/bootstrap.min.css"/>" rel="stylesheet">
+		<link href="/cdn/css/entypo.css" rel="stylesheet">
+		<link href="/cdn/css/font-awesome.min.css" rel="stylesheet">
+		<link href="/cdn/css/bootstrap.min.css" rel="stylesheet">
 		<%= "<link href='/cdn/css/" + es.aragon.midas.config.EnvProperties.getProperty("midas.style") + "' rel='stylesheet'>" %>
 		<link href="/cdn/css/mouldifi-forms.css" rel="stylesheet">
 
 		<tiles:insertAttribute name="appstyle" ignore="true"/>
 	    
 		<!--Load JQuery-->
-	    <script type="text/javascript" src="<s:url value="/cdn/js/jquery.min.js"/>"></script>
-	    <script type="text/javascript" src="<s:url value="/cdn/js/bootstrap.min.js"/>"></script>
+	    <script id="jquery" type="text/javascript" src="/cdn/js/jquery.min.js"></script>
+	    <script type="text/javascript" src="/cdn/js/bootstrap.min.js"></script>
 		<script src="/cdn/js/plugins/metismenu/jquery.metisMenu.js"></script>
 	    <script type="text/javascript" src="/cdn/js/midas/midas.js"></script>	 
 	    

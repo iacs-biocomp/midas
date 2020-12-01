@@ -90,9 +90,9 @@
 </body>
 
 
-<script type="text/javascript" src='<s:url value="/cdn/js/jquery.jsonp-2.4.0.min.js"/>'></script>
+<script type="text/javascript" src="/cdn/js/jquery.jsonp-2.4.0.min.js"></script>
 
-<script type="text/javascript" src='<s:url value="/cdn/js/midas/mid-loginGUIA.js"/>'></script>
+<script type="text/javascript" src="/cdn/js/midas/mid-loginGUIA.js"></script>
 
 <!--<script type="text/javascript">
 	$(document).ready(function() {

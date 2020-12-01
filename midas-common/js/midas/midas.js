@@ -1,5 +1,6 @@
-(function ($) {
-    $('#side-nav').metisMenu();
+document.getElementById('jquery').addEventListener('load', function () {
+
+	$('#side-nav').metisMenu();
 
     $(function () {
         $('[data-toggle="popover"]').popover()
@@ -179,6 +180,26 @@
         lastPositionScrollTop = position;
     }); */
     
+    /**
+     * Atributo maxlength en textareas
+     */
+    $.fn.maxlength = function(){
+         
+        $("textarea[@maxlength]").keypress(function(event){
+            var key = event.which;
+             
+            //all keys including return.
+            if(key >= 33 || key == 13) {
+                var maxLength = $(this).attr("maxlength");
+                var length = this.value.length;
+                if(length >= maxLength) {
+                     
+                    event.preventDefault();
+                }
+            }
+        });
+    };    
+    
     
 	$('.hidable').on('dblclick', function(e) {
 
@@ -209,9 +230,8 @@
 			$('.hidable').show();
 		}
 		window.dispatchEvent(new Event('resize'));
-	});
-    
-})(jQuery);
+	}); 
+});
 
 function showTooltip(x, y, contents) {
     var $windowWidth = $(window).width();
@@ -307,25 +327,7 @@ function ajaxLoadDiv(divId, url){
 }
 
 
-/**
- * Atributo maxlength en textareas
- */
-jQuery.fn.maxlength = function(){
-     
-    $("textarea[@maxlength]").keypress(function(event){
-        var key = event.which;
-         
-        //all keys including return.
-        if(key >= 33 || key == 13) {
-            var maxLength = $(this).attr("maxlength");
-            var length = this.value.length;
-            if(length >= maxLength) {
-                 
-                event.preventDefault();
-            }
-        }
-    });
-};
+
 
 
 

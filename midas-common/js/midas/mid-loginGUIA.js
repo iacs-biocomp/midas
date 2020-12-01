@@ -1,6 +1,6 @@
 function proccessJSONPAnswer(data)
 {
-    console.log(data);
+    //console.log(data);
     try {				
         var status = data.result;
         var sesion = data.msg;
@@ -20,7 +20,7 @@ function proccessJSONPAnswer(data)
 
 function doJSONP(uri,data)
 {    
-    console.log('4: doJSONP');
+    //console.log('4: doJSONP');
     $.jsonp({
         "url": uri+"?method=?",
         "data":data,
@@ -49,7 +49,7 @@ function toggleCardRetry(){
 function inicioLoginSession(){
     var _urlGuia =  $("#urlGUIA").val();    
     if(_urlGuia != null && _urlGuia != ''){	//Si urlGUIA se encuentra informado -> CONFIG = GUIA
-        console.log('1: ' + _urlGuia);
+        //console.log('1: ' + _urlGuia);
          loginCert();
     } else {
          loginUP();
@@ -57,7 +57,7 @@ function inicioLoginSession(){
 }	
 
 function loginCert() {
-    console.log('2: loginCert');
+    //console.log('2: loginCert');
 	    $("#marco").hide();
     var _urlGuia =  $("#urlGUIA").val();
     toggleCardRetry();
@@ -66,7 +66,7 @@ function loginCert() {
 }    
 
 function loginUP() {
-    console.log('2: loginUP');
+    //console.log('2: loginUP');
     $("#marco").show();
     $("#mensaje").hide();        
 }

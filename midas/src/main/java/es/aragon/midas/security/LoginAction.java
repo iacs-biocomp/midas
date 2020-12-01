@@ -89,6 +89,8 @@ public class LoginAction extends ActionSupport implements SessionAware, ServletR
 */
 		if (authenticator.equals(Constants.CFG_AUTHENTICATOR_GUIA) ) {
 			loginValidator = new GuiaValidator();
+		} else if (authenticator.equals(Constants.CFG_AUTHENTICATOR_GUIACERT) ) {
+			loginValidator = new GuiaCertValidator();
 		} else if (authenticator.equals(Constants.CFG_AUTHENTICATOR_DUAL) ) {
 			loginValidator = new DualValidator();
 		} else if (authenticator.equals(Constants.CFG_AUTHENTICATOR_NULL) ) {

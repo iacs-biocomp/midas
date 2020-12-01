@@ -335,6 +335,7 @@ a.text-purple:hover, a.text-purple:focus {
 	position: fixed;
 	height: 100%;
 	width: 280px;
+	background-color: #1f7a74;
 }
 .sidebar-collapsed .page-sidebar, .sidebar-collapsed .page-sidebar .sidebar-fixed {
 	width: 66px;

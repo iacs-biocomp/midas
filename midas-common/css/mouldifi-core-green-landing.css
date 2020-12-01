@@ -337,6 +337,7 @@ a.text-purple:hover, a.text-purple:focus {
 	padding: 18px 20px;
 }
 .page-sidebar .sidebar-fixed {
+	background-color: #1f7a74;
 	position: fixed;
 	height: 100%;
 	width: 280px;

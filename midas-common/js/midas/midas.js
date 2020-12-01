@@ -1,5 +1,4 @@
-document.getElementById('jquery').addEventListener('load', function () {
-
+(function ($) {
 	$('#side-nav').metisMenu();
 
     $(function () {
@@ -231,7 +230,8 @@ document.getElementById('jquery').addEventListener('load', function () {
 		}
 		window.dispatchEvent(new Event('resize'));
 	}); 
-});
+    
+})(jQuery);
 
 function showTooltip(x, y, contents) {
     var $windowWidth = $(window).width();

@@ -28,11 +28,11 @@
 
 		<tiles:insertAttribute name="appstyle" ignore="true"/>
 
-		<script src="<s:url value="/cdn/js/jquery.min.js"/>"></script>
-		<script src="<s:url value="/cdn/js/bootstrap.min.js"/>"></script>
-		<script src="<s:url value="/cdn/js/jquery-ui/jquery-ui.js"/>"></script>
-		<script src="<s:url value="/cdn/js/plugins/blockui-master/jquery.blockUI.js"/>"></script>
-		<script src="<s:url value="/cdn/js/plugins/metismenu/jquery.metisMenu.js"/>"></script>
+		<script id="jquery" src="cdn/js/jquery.min.js"/></script>
+		<script src="/cdn/js/bootstrap.min.js"></script>
+		<script src="/cdn/js/jquery-ui/jquery-ui.js"></script>
+		<script src="/cdn/js/plugins/blockui-master/jquery.blockUI.js"></script>
+		<script src="/cdn/js/plugins/metismenu/jquery.metisMenu.js"></script>
 
   		<script src="/cdn/js/highcharts/highcharts.js"></script>
  		<script src="/cdn/js/highcharts/highcharts-more.js"></script>

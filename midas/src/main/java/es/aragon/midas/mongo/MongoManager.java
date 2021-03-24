@@ -5,7 +5,17 @@ import java.util.List;
 
 import org.bson.Document;
 
-import com.mongodb.MongoClient;
+import com.mongodb.client.MongoClients;
+import com.mongodb.client.MongoClient;
+import com.mongodb.MongoClientSettings;
+import com.mongodb.ConnectionString;
+import com.mongodb.ServerAddress;
+import com.mongodb.MongoCredential;
+
+
+//import com.mongodb.MongoClientOptions;
+
+import java.util.Arrays;
 import com.mongodb.MongoWriteException;
 import com.mongodb.client.FindIterable;
 import com.mongodb.client.MongoDatabase;
@@ -24,8 +34,8 @@ import es.aragon.midas.mongo.update.UpdateList;
  */
 public class MongoManager {
 
-	private String host;
-	private int port;
+	private String connString;
+
 	private String dataBase;
 
 	private MongoClient mongoClient;
@@ -41,9 +51,8 @@ public class MongoManager {
 	 * @param dataBase
 	 *            Nombre de la base de datos contra la que se conecta
 	 */
-	public MongoManager(String host, int port, String dataBase) {
-		this.host = host;
-		this.port = port;
+	public MongoManager(String connString, String dataBase) {
+		this.connString = connString;
 		this.dataBase = dataBase;
 	}
 
@@ -51,7 +60,7 @@ public class MongoManager {
 	 * Abre la conexion con mongo
 	 */
 	public void open() {
-		mongoClient = new MongoClient(host, port);
+		mongoClient = MongoClients.create(connString);
 		mongoDatabase = mongoClient.getDatabase(dataBase);
 	}
 

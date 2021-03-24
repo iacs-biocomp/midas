@@ -5,7 +5,7 @@
 		<div class="row iconRow">
 	    	<s:iterator value="#parent.children" var="child">
 	 			<div class="col-lg-2">
-					<a href="<s:property value="mnLink"/>" target="<s:property value="mnTarget"/>"><img src='/static/img/icons/<s:property value="mnStyle"/>' class="iconImage" alt='<s:property value="mnTexto"/>' title='<s:property value="mnTexto"/>'/></a>                            
+					<a href="<s:property value="mnLink"/>" target="<s:property value="mnTarget"/>"><img src='images/icons/<s:property value="mnStyle"/>' class="iconImage" alt='<s:property value="mnTexto"/>' title='<s:property value="mnTexto"/>'/></a>                            
 	           	</div>
 			</s:iterator>
 		</div>

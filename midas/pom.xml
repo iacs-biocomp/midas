@@ -10,6 +10,8 @@
 		<strutsVersion>2.3.34</strutsVersion>
 		<activitiVersion>5.22.0</activitiVersion>
 		<droolsVersion>6.3.0.Final</droolsVersion>
+		<mongoVersion>4.1.1</mongoVersion>
+		
     	<maven.compiler.source>1.8</maven.compiler.source>
     	<maven.compiler.target>1.8</maven.compiler.target>		
 	    <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
@@ -17,14 +19,14 @@
 	    
     </properties>
 
-	<repositories>
-		<!-- Repositorio propio del departamento -->
+	<!--<repositories>
+		 Repositorio propio del departamento 
 		<repository>
 			<id>sersalud1</id>
 			<name>sersalud1-releases</name>
 			<url>http://1.40.1.197:8081/artifactory/libs-release-local</url>
 		</repository>
-	</repositories>
+	</repositories>-->
 
 	<dependencies>
 		<!-- API utilizada por Java EE -->
@@ -41,15 +43,19 @@
 			<scope>provided</scope>
 		</dependency>
 
-
-
 		<!-- Librerias para conexiones de base de datos -->
-		<dependency>
+	    <dependency>
+	        <groupId>org.mongodb</groupId>
+	        <artifactId>mongodb-driver-sync</artifactId>
+	        <version>${mongoVersion}</version>
+	    </dependency>
+<!--    <dependency>
 			<groupId>org.mongodb</groupId>
 			<artifactId>mongo-java-driver</artifactId>
 			<version>3.2.1</version>
 			<optional>true</optional>
 		</dependency>
+ -->		
 		<dependency>
 			<groupId>org.hibernate</groupId>
 			<artifactId>hibernate-core</artifactId>
@@ -75,24 +81,6 @@
 			<version>${strutsVersion}</version>
 		</dependency>
 
-<!-- 		<dependency>
-			<groupId>com.jgeppert.struts2.bootstrap</groupId>
-			<artifactId>struts2-bootstrap-plugin</artifactId>
-			<version>1.5.2</version>
-		</dependency>
-
-		<dependency>
-		    <groupId>org.apache.struts</groupId>
-		    <artifactId>struts2-convention-plugin</artifactId>
-		    <version>${strutsVersion}</version>
-		</dependency>
-		<dependency>
-		    <groupId>org.apache.struts</groupId>
-		    <artifactId>struts2-rest-plugin</artifactId>
-		    <version>${strutsVersion}</version>
-		</dependency>
-		 -->
-		 
 		 
 		<!-- Librerias de commons -->
 		<dependency>
@@ -186,18 +174,7 @@
 			<artifactId>log4j</artifactId>
 			<version>1.2.14</version>
 		</dependency>
-<!-- 		<dependency>
-			<groupId>org.codehaus.jackson</groupId>
-			<artifactId>jackson-mapper-asl</artifactId>
-			<version>1.9.13</version>
-		</dependency>
-		
-		<dependency>
-			<groupId>org.jboss.resteasy</groupId>
-			<artifactId>resteasy-jaxrs</artifactId>
-			<version>3.6.3.Final</version>
-		</dependency>
- -->		
+	
 	</dependencies>
 	
 	

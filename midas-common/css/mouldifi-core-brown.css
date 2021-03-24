@@ -3422,6 +3422,44 @@ ul.mail-attachment li {
 	color: #000;
 }
 
+.login-banner {
+	font-family: "IBM Plex Sans Bold", sans-serif;
+	font-size: 45px;
+	padding: 100px;
+	text-align: center;
+}
+
+
+@media screen and (max-width : 1200px)
+{
+	.login-banner {
+		font-family: "IBM Plex Sans Bold", sans-serif;
+		font-size: 35px;
+		padding: 50px;
+		text-align: center;
+	}
+}
+
+@media screen and (max-width : 992px)
+{
+	.login-banner {
+		font-family: "IBM Plex Sans Bold", sans-serif;
+		font-size: 25px;
+		padding: 40px;
+		text-align: center;
+	}
+}
+
+.login-logo {
+	display: block; 
+	margin-left: auto; 
+	margin-right: auto;
+	max-width: 50%;	
+}
+ 
+ 
+
+
 /**
  * Error Page
  */

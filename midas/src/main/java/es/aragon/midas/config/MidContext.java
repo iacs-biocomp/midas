@@ -18,6 +18,7 @@ import javax.persistence.ManyToMany;
 import javax.persistence.NamedQueries;
 import javax.persistence.NamedQuery;
 import javax.persistence.Table;
+import javax.xml.bind.annotation.XmlTransient;
 
 import org.hibernate.annotations.LazyCollection;
 import org.hibernate.annotations.LazyCollectionOption;
@@ -47,6 +48,7 @@ public class MidContext implements Serializable {
     @Column(name = "cx_value")
     private String cxValue;
     
+    @XmlTransient 
     @JoinTable(name = "mid_role_context", joinColumns = {
         @JoinColumn(name = "cx_id", referencedColumnName = "cx_id")}, inverseJoinColumns = {
         @JoinColumn(name = "role_id", referencedColumnName = "role_id")})
@@ -54,6 +56,7 @@ public class MidContext implements Serializable {
     @LazyCollection(LazyCollectionOption.FALSE)
     private List<MidRole> midRoleList;
     
+    @XmlTransient 
     @JoinTable(name = "mid_user_context", joinColumns = {
         @JoinColumn(name = "cx_id", referencedColumnName = "cx_id")}, inverseJoinColumns = {
         @JoinColumn(name = "user_name", referencedColumnName = "user_name")})
